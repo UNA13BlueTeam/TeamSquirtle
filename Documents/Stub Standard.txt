@@ -1,0 +1,16 @@
+Stub Standard
+---------------
+
+In comments, at the top, write the name of the function for which the stub was written, as well as the function's source file.
+
+Ex.
+-----------------------------
+//LotsOFunctions.cpp		|
+//void doStuff(int)			|
+							|
+int main(){					|
+	int blah = 0;			|
+	cout<<doStuff(blah);	|
+	return 0;				|
+}							|
+-----------------------------
