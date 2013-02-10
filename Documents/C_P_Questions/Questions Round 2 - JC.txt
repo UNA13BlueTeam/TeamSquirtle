@@ -1,0 +1,25 @@
+1. Since the application is for a single department (but will be cloned), does the admin username need to reflect the department it belongs to or should it be generic/arbitrary?
+2. If a faculty account is created from a text file, is there a pre-existing format for faculty usernames that the application needs to follow?  Or should the username be specified in the text file the account is created from?
+3. What information about a faculty member is made available by the application, if any?  If information is made available, should outside viewers be able to see this information? (Such as a full faculty roster, or a professor’s teaching schedule)
+4. Should text files used to create faculty accounts be kept or deleted after the account is created?  If they are kept, should a text file be created for a faculty account created by the application’s input form?
+5. What information is needed for a single faculty member aside from the information specified in the handout of input file format specifications?
+6. When adding a new class or editing class information would you rather have a step-by-step submission process or have every piece of information available to edit in one form?
+7. Should the contents of each text files be sorted in any particular way?
+8. Do you want text files to be generated (and if so, updated) when a course listing or faculty member is added/deleted/edited, essentially creating a backup of each entry in case of an entry being deleted in the application?
+9. Do you want the spreadsheet view of the schedule to be a downloadable file, display in the application, or display in a new window?  Same question for the graphical representation.
+10. What kind of representation do you want for the courses that could not be scheduled?
+11. When should faculty be able to access the application?  When should they not be able to?
+12. Can the faculty do anything besides set their preferences for the schedule? Can they view the standalone schedule?
+13. What should happen if a teacher selects no preferences?
+14. What if a professor with the highest priority selects all courses in their preferences?  How should this be handled?
+15. Should the department head and/or secretary have higher priority than all faculty members in regards to setting preferences for scheduling?
+16. What if a course is not preferred by any faculty member?  Who should get the course?
+17. Should outside viewers be able to see who is teaching each course?  Or should they only be able to see the list of classes?  (This seems like quite an obvious question, but it came to mind and here it is.  Feel free to remove this one.)
+18. What is the format for the password?  Including but not limited to special characters (shift 0-9), numbers, case-sensitivity, and alphabetic characters.
+19. How should the admin be notified that a professor (or all professor’s) have selected their preferences?
+20. Is there a maximum room size in this department, or can accommodations be made to support any room size? Similarly, is there a minimum room size?
+21. Apply question 20 to the maximum number of students allowed in a class, as well as the minimum number of students required for a course to be taught in the first place.
+22. What is the maximum number of sections a course may have?  Is this number different for different types of sections? (Day sections, night sections, internet sections)
+23. Does the application need to define what department it is working within?
+24. How are department course labels defined?  (e.g. Math – MA, Computer Science – CS)
+25. How should Saturday and Sunday be denoted on the class schedule in the event a course is taught on a Saturday or Sunday?
