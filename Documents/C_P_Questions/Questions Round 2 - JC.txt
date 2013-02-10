@@ -19,6 +19,7 @@
 19. How should the admin be notified that a professor (or all professor’s) have selected their preferences?
 20. Is there a maximum room size in this department, or can accommodations be made to support any room size? Similarly, is there a minimum room size?
 21. Apply question 20 to the maximum number of students allowed in a class, as well as the minimum number of students required for a course to be taught in the first place.
+22. Are there courses below the 100 level or above the 400 level (beyond 499)?
 22. What is the maximum number of sections a course may have?  Is this number different for different types of sections? (Day sections, night sections, internet sections)
 23. Does the application need to define what department it is working within?
 24. How are department course labels defined?  (e.g. Math – MA, Computer Science – CS)
