@@ -100,4 +100,8 @@ th:first-child{
     border-radius: 0 6px 0 0;
 }
 
-td
+.inClass{
+	background: PaleGreen;
+	border-color: green;
+	border-width: 4px;
+}
