@@ -1,0 +1,37 @@
+Questions #2
+I. Admin login for the 1st time. From the main page of admin’s website he/she will have several options to choose from. Such as the following:
+1. input faculty information
+2. input available room information
+3.  input class conflict times
+4.  input prerequisites 
+b. Submission preference (seniority or order of submission)
+c. Print schedule
+d. View schedule
+e. View conflict course list
+f. Print conflict list
+g. Logout
+h. Other misc. operations not known yet.
+          
+II. If the admin chooses to input information manually, then he/she will be taken to a page where the data is inputted.
+III. If the admin chooses to upload information via file, then they will have to specify the location of the file to upload. The administrator should also be provided with the opportunity to update any file uploaded.
+
+I. First time faculty login. From the faulty main page they should have the following options:
+a. Change existing password. (on first login)
+b. View the existing list of courses to teach.
+c. Add class to their teaching list.
+d. Provide their preferred time to teach the class.
+e. An option to notify administrator that they are done with their selection.
+f. Logout
+g. Other misc. options not known yet.
+
+Questions
+Login: what are the guidelines regarding acceptable passwords? 
+Login: do you want to provide the administrator with the ability to change their user name?
+What is the name of the website?
+Do you want the application to detect duplicate faculty or class input? 
+Are there any specific file names for the various input files?
+Is there maximum class duration?
+Do you want to provide either faculty or administrator with the ability to recover a forgotten username or password?
+Do you want the “list of courses to teach” that is viewed by the faculty members to be a dynamic list? That is, the courses that have not been selected yet by any other faulty member? 
+Do you want to provide faculty with the option to revert any changes made?
+Would you like to provide faculty with the option to view the final schedule when it is ready?
