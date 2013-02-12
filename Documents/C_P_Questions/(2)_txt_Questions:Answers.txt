@@ -1,0 +1,133 @@
+Questions to ask: 
+Date To Assess: 2/12/13
+
+Client:
+1.	Is file name of the course needed?
+a.	
+2.	Should the admin be able to delete classes from the database?
+a.	
+3.	Emails vs. username for login?
+a.	
+4.	Format for username and password?
+a.	
+5.	Suppose a Department Head retires. The admin account needs to be filled. Will the Department Head or Secretary administer (create) a new admin account? Or is the admin account an arbitrary username passed on to a new admin?
+a.	
+6.	Does this software require the full course name when adding new classes?
+a.	
+7.	Is it allowed to have a class from one department in the listing of another department? (Ex: CS in CIS).
+a.	
+8.	When inputting/editing information interactively, should a text file be generated as a backup after the task is completed?
+a.	
+9.	How does the admin know the faculty members have made their preferences?
+a.	
+10.	How long does a faculty member have to make their preferences? Follow-up: What happens if a faculty member makes no preferences?
+a.	
+11.	Should the administrator change their password on first logon?
+a.	
+12.	If the Department Head/Secretary teaches as well, should they have a separate faculty account or will the admin account apply as a faculty account as well?
+a.	
+13.	Password format? (Length/Special Chars/etc)
+a.	
+14.	While the schedule is not constructed, can anyone aside from the administrator access the software?
+a.	
+15.	When should we allow students to view the schedule app?
+a.	
+16.	Login: what are the guidelines regarding acceptable passwords? 
+a.	
+17.	Login: do you want to provide the administrator with the ability to change their user name?
+a.	
+18.	What is the name of the website?
+a.	
+19.	Do you want the application to detect duplicate faculty or class input? 
+a.	
+20.	Are there any specific file names for the various input files?
+a.	
+21.	Is there maximum class duration?
+a.	
+22.	Do you want to provide either faculty or administrator with the ability to recover a forgotten username or password?
+a.	
+23.	Do you want the “list of courses to teach” that is viewed by the faculty members to be a dynamic list? That is, the courses that have not been selected yet by any other faulty member? 
+a.	
+24.	Do you want to provide faculty with the option to revert any changes made?
+a.	
+25.	Would you like to provide faculty with the option to view the final schedule when it is ready?
+a.	
+26.	Since the application is for a single department (but will be cloned), does the admin username need to reflect the department it belongs to or should it be generic/arbitrary?
+a.	
+27.	If a faculty account is created from a text file, is there a pre-existing format for faculty usernames that the application needs to follow?  Or should the username be specified in the text file the account is created from?
+a.	
+28.	What information about a faculty member is made available by the application, if any?  If information is made available, should outside viewers be able to see this information? (Such as a full faculty roster, or a professorís teaching schedule)
+a.	
+29.	Should text files used to create faculty accounts be kept or deleted after the account is created?  If they are kept, should a text file be created for a faculty account created by the applicationís input form?
+a.	
+30.	What information is needed for a single faculty member aside from the information specified in the handout of input file format specifications?
+a.	
+31.	When adding a new class or editing class information would you rather have a step-by-step submission process or have every piece of information available to edit in one form?
+a.	
+32.	Should the contents of each text files be sorted in any particular way?
+a.	
+33.	Do you want text files to be generated (and if so, updated) when a course listing or faculty member is added/deleted/edited, essentially creating a backup of each entry in case of an entry being deleted in the application?
+a.	
+34.	Do you want the spreadsheet view of the schedule to be a downloadable file, display in the application, or display in a new window?  Same question for the graphical representation.
+a.	
+35.	What kind of representation do you want for the courses that could not be scheduled?
+a.	
+36.	When should faculty be able to access the application?  When should they not be able to?
+a.	
+37.	Can the faculty do anything besides set their preferences for the schedule? Can they view the standalone schedule?
+a.	
+38.	What should happen if a teacher selects no preferences?
+a.	
+39.	What if a professor with the highest priority selects all courses in their preferences?  How should this be handled?
+a.	
+40.	Should the department head and/or secretary have higher priority than all faculty members in regards to setting preferences for scheduling?
+a.	
+41.	What if a course is not preferred by any faculty member?  Who should get the course?
+a.	
+42.	Should outside viewers be able to see who is teaching each course?  Or should they only be able to see the list of classes?  (This seems like quite an obvious question, but it came to mind and here it is.  Feel free to remove this one.)
+a.	
+43.	What is the format for the password?  Including but not limited to special characters (shift 0-9), numbers, case-sensitivity, and alphabetic characters.
+a.	
+44.	How should the admin be notified that a professor (or all professorís) have selected their preferences?
+a.	
+45.	Is there a maximum room size in this department, or can accommodations be made to support any room size? Similarly, is there a minimum room size?
+a.	
+46.	Apply question 20 to the maximum number of students allowed in a class, as well as the minimum number of students required for a course to be taught in the first place.
+a.	
+47.	Are there courses below the 100 level or above the 400 level (beyond 499)?
+a.	
+48.	What is the maximum number of sections a course may have?  Is this number different for different types of sections? (Day sections, night sections, internet sections)
+a.	
+49.	Does the application need to define what department it is working within?
+a.	
+50.	How are department course labels defined?  (e.g. Math ñ MA, Computer Science ñ CS)
+a.	
+51.	How should Saturday and Sunday be denoted on the class schedule in the event a course is taught on a Saturday or Sunday?
+a.	
+INSITE:
+Questions #17
+I.	For admin login for the first time, from the main page of admin’s website he/she will have several options to choose from. Such as the following:
+1.	input faculty information
+2.	input available room information
+3.	 input class conflict times
+4.	 input prerequisites 
+b.	Submission preference (seniority or order of submission)
+c.	Print schedule
+d.	View schedule
+e.	View conflict course list
+f.	Print conflict list
+g.	Logout
+h.	Other misc. operations not known yet.
+          
+II.	If the admin chooses to input information manually, then he/she will be taken to a page where the data is inputted.
+III.	If the admin chooses to upload information via file, then they will have to specify the location of the file to upload. The administrator should also be provided with the opportunity to update any file uploaded.
+
+I.	First time faculty login. From the faulty main page they should have the following options:
+a.	Change existing password. (on first login)
+b.	View the existing list of courses to teach.
+c.	Add class to their teaching list.
+d.	Provide their preferred time to teach the class.
+e.	An option to notify administrator that they are done with their selection.
+f.	Logout
+g.	Other misc. options not known yet.
+
