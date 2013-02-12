@@ -10,8 +10,11 @@
 	background-color: black;
 	font-size: 16pt;
 	/*position: fixed;*/
-	position: absolute;
 	width: 100%;
+}
+.navbar{
+	margin-bottom: 20px;
+	clear: both;
 }
 
 .header a{
@@ -60,6 +63,8 @@ body{
 	border-color: black;
 	-webkit-border-radius: 10px;
 			border-radius: 10px;
+
+	box-shadow: 0.5 0.5 0.5 0.5 darkgray;
 	border-width: 3px;
 	border-style: solid;
 	width: 100%;
@@ -85,23 +90,45 @@ body{
 th:last-child{
 	-moz-border-radius: 0 6px 0 0;
     -webkit-border-radius: 0 6px 0 0;
-    border-radius: 0 6px 0 0;
+    border-radius: 6px;
 }
 
 th:only-child{
 	-moz-border-radius: 0 6px 0 0;
     -webkit-border-radius: 0 6px 0 0;
-    border-radius: 0 6px 0 0;
+    border-radius: 6px;
 }
 
 th:first-child{
 	-moz-border-radius: 0 6px 0 0;
     -webkit-border-radius: 0 6px 0 0;
-    border-radius: 0 6px 0 0;
+    border-radius: 6px;
 }
 
-.inClass{
+.fresh{
 	background: PaleGreen;
 	border-color: green;
 	border-width: 4px;
+	border-style: solid;
+}
+
+.soph{
+	background: PowderBlue;
+	border-color: blue;
+	border-width: 4px;
+	border-style: solid;	
+}
+
+.jun{
+	background: LightGoldenRodYellow;
+	border-color: yellow;
+	border-width: 4px;
+	border-style: solid;
+}
+
+.sen{
+	background: LightSalmon;
+	border-color: red;
+	border-width: 4px;
+	border-style: solid;
 }
