@@ -1,0 +1,37 @@
+<?xml version = "1.0"  encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+  <title>Course Schedule</title>
+</head>
+<html>
+<body>
+	<legend style="font-size:30px">Course Schedule</legend>
+	<form name="scheduleForm" method="post" action="addclass.php" onSubmit="return InputCheck(this)">
+	<table height="300" border = "2">
+	<tr height="30%">
+		<td><p style="font-size:30px">Course</p></td>
+		<td><p style="font-size:30px">Days Sections</p></td>
+		<td><p style="font-size:30px">Night Sections</p></td>
+		<td><p style="font-size:30px">Internet Sections</p></td>
+		<td><p style="font-size:30px">Class Size</p></td>
+		<td><p style="font-size:30px">Room</p></td>
+	</tr>
+	<tr>
+		<td><input id="course" name="course" type="text" size="15" maxlength="6" style="height:50px; font-size:20px"/></td>
+		<td><input id="dsection" name="dsection" type="text" size="15" maxlength="6" style="height:50px; font-size:20px"/></td>
+		<td><input id="nsection" name="nsection" type="text" size="15" maxlength="6" style="height:50px; font-size:20px"/></td>
+		<td><input id="isection" name="isection" type="text" size="15" maxlength="6" style="height:50px; font-size:20px"/></td>
+		<td><input id="size" name="size" type="text" size="15" maxlength="6" style="height:50px; font-size:20px"/></td>
+		<td><select name="type"/><option value="class">C</option><option value="lab">L</option></td>
+	</tr>
+	</table>
+	<p>
+		<input type="submit" name="submit" value="  submit  " />
+		<input type="reset" name="submit" value="  reset  "  />
+	</p>
+</form>
+</body>
+</html>
