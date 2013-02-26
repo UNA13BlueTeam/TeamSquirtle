@@ -1,0 +1,32 @@
+<?xml version = "1.0"  encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+  <title>Add Class Time</title>
+</head>
+<html>
+<body>
+	<legend style="font-size:30px">Conflict times</legend>
+	<form name="ConflicttimesForm" method="post" action="conflicttime.php" onSubmit="return InputCheck(this)">
+	<table border = "2">
+	<tr>
+		<td><p style="font-size:30px">Course</p></td>
+		<td><p style="font-size:30px">Conflict Days/Time</p></td>
+	</tr>
+	<tr>
+		<td><input id="Course" name="Course" type="text" size="15" maxlength="6" style="height:50px; font-size:20px"/></td>
+		<td>
+			<input id="daytime" name="daytime" type="text" size="25" style="height:40px; font-size:20px"/>
+			<p>MWF/00:00 Format separated by space</p>
+		</td>
+	</tr>
+	</table>
+	<p>
+		<input type="submit" name="submit" value="  submit  " />
+		<input type="reset" name="submit" value="  reset  "  />
+	</p>
+</form>
+</body>
+</html>
