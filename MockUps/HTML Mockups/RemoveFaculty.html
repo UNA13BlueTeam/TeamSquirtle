@@ -1,0 +1,35 @@
+<?xml version = "1.0"  encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+  <title>Remove Faculty</title>
+</head>
+<html>
+<body>
+	<legend style="font-size:30px">Add Faculty members</legend>
+	<form name="RemoveFacultyForm" method="post" action="RemoveFaculty.php" onSubmit="return InputCheck(this)">
+	<table height="200" border = "2">
+	<tr height="30%">
+		<td><p style="font-size:20px">Name</p></td>
+		<td><p style="font-size:20px">Years of Service</p></td>
+		<td><p style="font-size:20px">Email</p></td>
+		<td><p style="font-size:20px">Hours</p></td>
+		<td><p style="font-size:20px">Remove</p></td>
+	</tr>
+	<tr>
+		<td>Lyle</td>
+		<td>20</td>
+		<td>Lyle@una.edu</td>
+		<td>15</td>
+		<td><input type="checkbox" /></td>
+	</tr>
+	</table>
+	<p>
+		<input type="submit" name="submit" value="  submit  " />
+		<input type="reset" name="submit" value="  reset  "  />
+	</p>
+</form>
+</body>
+</html>
