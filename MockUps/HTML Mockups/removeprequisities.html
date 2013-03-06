@@ -1,0 +1,35 @@
+<?xml version = "1.0"  encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+  <title>Remove prequisities</title>
+</head>
+<html>
+<body>
+	<legend style="font-size:30px">Remove prequisities</legend>
+	<form name="removeprequisitiesForm" method="post" action="removeprequisities.php" onSubmit="return InputCheck(this)">
+	<table height="300" border = "2">
+	<tr height="30%">
+		<td><p style="font-size:30px">Course</p></td>
+		<td><p style="font-size:30px">Remove prequisities</p></td>
+	</tr>
+	<tr>
+		<td>AB400</td>
+		<td><label><input type="checkbox" name="p1"/>AB100</label></td>
+	</tr>
+	<tr>
+		<td>AB400</td>
+		<td><label><input type="checkbox" name="p2"/>AB355</label>
+		    <label><input type="checkbox" name="p3"/>AB245</label>
+		</td>
+	</tr>
+	</table>
+	<p>
+		<input type="submit" name="submit" value="  submit  " />
+		<input type="reset" name="submit" value="  reset  "  />
+	</p>
+</form>
+</body>
+</html>
