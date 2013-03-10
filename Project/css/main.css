@@ -1,0 +1,7 @@
+.nav li{
+	display: inline;
+}
+
+.nav div{
+	background: #333;
+}
