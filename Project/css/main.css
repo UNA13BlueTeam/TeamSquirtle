@@ -1,7 +1,39 @@
 .nav li{
 	display: inline;
+	margin-right: 4px;
 }
 
-.nav div{
+.nav img{
+	float:right;
+}
+.nav{
 	background: #333;
+	color: white;
+	width: 100%;
+	padding: 30px;
+	padding-bottom: 14px;
+	margin: -30px;
+	margin-bottom: 5px;
+	-webkit-box-shadow:  0px 5px 10px 2px #ccc;
+        	box-shadow:  0px 5px 10px 2px #ccc;
+}
+.nav a{
+	font-family: helvetica;
+	margin-right: 3px;
+	font-size: 16pt;
+	color: white;
+	text-decoration: none;
+	border-right-style: solid;
+	border-width: 1px;
+	border-color: white;
+	padding-right: 3px;
+}
+
+.nav a:hover{
+	color: #ddd;
+}
+
+body{
+	font-family: Helvetica;
+	background: #eee;
 }

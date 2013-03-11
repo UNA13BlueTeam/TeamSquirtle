@@ -3,19 +3,33 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 
 <html>
-	<head></head>
+	<head>
+		<link rel="stylesheet" href="css/main.css" type="text/css" />
+	</head>
+	<div class="nav">
+		<!-- <ul>
+			<li class="nav" id="logo">UNA-Dept Name</li>
+			<li class="nav" id="home">Dashboard</li>
+			<li class="nav" id="class">Manage Classes</li>
+			<li class="nav" id="building">Manage Building</li>
+			<li class="nav" id="schedule">Manage Schedule</li>
+			<li class="nav" id="conflicts">Conflicts</li>
+			<li class="nav" id="help">Help</li>
+			<li class="nav" id="logout">Log Out</li>
+			<li class="nav" id="pic"><img src="img/unaLogo.png" alt="UNA Logo"/></li>
+		</ul> -->
+		<nav>
+			<a href="index.php">UNA-Dept. Name</a>
+			<a href="dashboard.php">Dashboard</a>
+			<a href="class.php">Manage Classes</a>
+			<a href="building.php">Manage Building</a>
+			<a href="schedule.php">Manage Schedule</a>
+			<a href="conflicts.php">Conflicts</a>
+			<a href="help.php">Help</a>
+			<a href="logout.php">Log Out</a>
+			<img src="img/unaLogo.png" alt="UNA Logo"/>
+		</nav>
+	</div>
 	<body>
-		<div class="nav">
-			<ul>
-				<li class="nav" id="logo"><h3>UNA</h3><h5>Dept. Name</h5></li>
-				<li class="nav" id="home">Dashboard</li>
-				<li class="nav" id="class">Manage Classes</li>
-				<li class="nav" id="building">Manage Building</li>
-				<li class="nav" id="schedule">Manage Schedule</li>
-				<li class="nav" id="conflicts">Conflicts</li>
-				<li class="nav" id="help">Help</li>
-				<li class="nav" id="logout">Log Out</li>
-			</ul>
-		</div>
 		<div class="content">
 		
