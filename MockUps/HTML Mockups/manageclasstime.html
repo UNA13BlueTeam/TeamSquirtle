@@ -1,0 +1,65 @@
+<?xml version = "1.0"  encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+  <title>Manage Class Time</title>
+	<link rel="stylesheet" href="css/main.css" type="text/css" />
+</head>
+<html>
+	<div class= "nav">
+		<nav>
+			<a href="index.php">UNA-Dept. Name</a>
+			<a href="dashboard.php">Dashboard</a>
+			<a href="manageclass.html">Manage Classes</a>
+			<a href="manageclassroom.html">Manage Building</a>
+			<a href="manageschedule.html">Manage Schedule</a>
+			<a href="manageconflicts.html">Conflicts</a>
+			<a href="help.php">Help</a>
+			<a style="border-width:0px" href="logout.php">Log Out</a>
+			<img src="img/unaLogo.png" alt="UNA Logo"/>
+		</nav>
+	</div>
+<body>
+	<h1>Manage Class Time</h1><br />
+	<a href="addclass.html"><p style = "font-size:30px">Add Class time</p></a><br />
+	<hr /><br />
+	<legend style="font-size:30px">Remove Class Time</legend>
+	<form name="RemoveclassForm" method="post" action="Removeclass.php" onSubmit="return InputCheck(this)">
+	<table border = "2">
+	<tr>
+		<td><p style="font-size:30px">minates</p></td>
+		<td><p style="font-size:30px">Days of Week</p></td>
+		<td><p style="font-size:30px">Start Time</p></td>
+	</tr>
+	<tr>
+		<td>50</td>
+		<td>MWF</td>
+		<td>
+			<label><input type="checkbox" name="t1" />08:00</label>
+			<label><input type="checkbox" name="t2" />09:00</label>
+			<label><input type="checkbox" name="t3" />10:00</label><br />
+			<label><input type="checkbox" name="t4" />11:00</label>
+			<label><input type="checkbox" name="t5" />12:00</label>
+			<label><input type="checkbox" name="t6" />13:00</label>
+		</td>
+	</tr>
+	<tr>
+		<td>50</td>
+		<td>MTWR</td>
+		<td>
+			<label><input type="checkbox" name="t7" />08:00</label>
+			<label><input type="checkbox" name="t8" />09:00</label>
+			<label><input type="checkbox" name="t9" />10:00</label><br />
+
+		</td>
+	</tr>
+	</table>
+	<p>
+		<input type="submit" name="submit" value="  submit  " />
+		<input type="reset" name="submit" value="  reset  "  />
+	</p>
+</form>
+</body>
+</html>
