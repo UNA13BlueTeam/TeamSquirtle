@@ -4,12 +4,26 @@
 
 <html xmlns = "http://www.w3.org/1999/xhtml">
 <head>
-  <title>Course Schedule</title>
+	<title>Course Schedule</title>
+	<link rel="stylesheet" href="css/main.css" type="text/css" />
 </head>
 <html>
+	<div class= "nav">
+		<nav>
+			<a href="index.php">UNA-Dept. Name</a>
+			<a href="dashboard.php">Dashboard</a>
+			<a href="manageclass.html">Manage Classes</a>
+			<a href="manageclassroom.html">Manage Building</a>
+			<a href="manageschedule.html">Manage Schedule</a>
+			<a href="manageconflicts.html">Conflicts</a>
+			<a href="help.php">Help</a>
+			<a style="border-width:0px" href="logout.php">Log Out</a>
+			<img src="img/unaLogo.png" alt="UNA Logo"/>
+		</nav>
+	</div>
 <body>
 	<legend style="font-size:30px">Course Schedule</legend>
-	<form name="scheduleForm" method="post" action="addclass.php" onSubmit="return InputCheck(this)">
+	<form name="scheduleForm" method="post" action="schedule.php" onSubmit="return InputCheck(this)">
 	<table height="300" border = "2">
 	<tr height="30%">
 		<td><p style="font-size:30px">Course</p></td>
@@ -20,6 +34,7 @@
 		<td><p style="font-size:30px">Room</p></td>
 		<td><p style="font-size:30px">Course Hours</p></td>
 		<td><p style="font-size:30px">Prerequisites</p></td>
+
 	</tr>
 	<tr>
 		<td><input id="course" name="course" type="text" size="15" maxlength="6" style="height:50px; font-size:20px"/></td>
@@ -30,6 +45,7 @@
 		<td><select name="type"/><option value="class">C</option><option value="lab">L</option></td>
 		<td><input id="hours" name="hours" type="text" size="15" maxlength="2" style="height:50px; font-size:20px"/></td>
 		<td><input id="prereq" name="prereq" type="text" size="15" maxlength="15" style="height:50px; font-size:20px"/></td>
+
 	</tr>
 	</table>
 	<p>
