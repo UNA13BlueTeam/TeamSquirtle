@@ -1,0 +1,58 @@
+<?xml version = "1.0"  encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+  <title>Manage Classroom</title>
+	<link rel="stylesheet" href="css/main.css" type="text/css" />
+</head>
+<html>
+	<div class= "nav">
+		<nav>
+			<a href="index.php">UNA-Dept. Name</a>
+			<a href="dashboard.php">Dashboard</a>
+			<a href="manageclass.html">Manage Classes</a>
+			<a href="manageclassroom.html">Manage Building</a>
+			<a href="manageschedule.html">Manage Schedule</a>
+			<a href="manageconflicts.html">Conflicts</a>
+			<a href="help.php">Help</a>
+			<a style="border-width:0px" href="logout.php">Log Out</a>
+			<img src="img/unaLogo.png" alt="UNA Logo"/>
+		</nav>
+	</div>
+<body>
+	<h1>Manage Classroom</h1><br />
+	<a href="addclassroom.html"><p style = "font-size:30px">Add Classroom</p></a><br />
+	<hr /><br />
+	<legend style="font-size:30px">Remove Class Room</legend>
+	<form name="RemoveclassroomForm" method="post" action="removeclass.php" onSubmit="return 
+
+InputCheck(this)">
+	<table height="200" border = "2">
+	<tr>
+		<td><p style="font-size:30px">Type</p></td>
+		<td><p style="font-size:30px">Size</p></td>
+		<td><p style="font-size:30px">Room</p></td>
+		<td><p style="font-size:30px">Remove</p></td>
+	</tr>
+	<tr>
+		<td>C</td>
+		<td>30</td>
+		<td>AB125</td>
+		<td><input type="checkbox" name="r1" /></td>
+	</tr>
+	<tr>
+		<td>L</td>
+		<td>40</td>
+		<td>CD125</td>
+		<td><input type="checkbox" name="r2" /></td>
+	</tr>
+	</table>
+	<p>
+		<input type="submit" name="submit" value="  remove  " />
+		<input type="reset" name="submit" value="  reset  "  />
+	</p>
+</form>
+</body>
+</html>
