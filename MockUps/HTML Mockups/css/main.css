@@ -29,31 +29,11 @@
 	padding-right: 3px;
 }
 
-.nav #logout{
-	border-width: 0px;
-	border-style: none;
-}
-
 .nav a:hover{
 	color: #ddd;
 }
 
 body{
-	padding: 20px;
 	font-family: Helvetica;
 	background: #eee;
-}
-
-body a{
-	font-weight: bold;
-	text-decoration: none;
-	color: #333;
-}
-
-body a:hover{
-	color: #aaa;
-}
-
-footer{
-	
 }
