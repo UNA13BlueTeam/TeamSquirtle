@@ -57,3 +57,35 @@ body a:hover{
 footer{
 	
 }
+
+div.homeSchedule{
+	border-style: solid;
+	border-radius: 7px;
+	border-width: 2px;
+	border-color: #472783;
+	background-color: #beb0d9;
+	color: #472783;
+
+	height: 400px;
+	width: 25%;
+	float:left;
+	margin-right:10%;
+	padding: 5px;
+	text-align:middle;
+}
+
+div.homeLinks{
+	border-style: solid;
+	border-radius: 7px;
+	border-width: 2px;
+	border-color: #fcc233;
+	background-color: #fce5ac;
+	color: #472783;
+
+	height: 400px;
+	width: 25%;
+	float:left;
+	margin-right:10%;
+	padding: 5px;	
+	text-align:middle;	
+}
