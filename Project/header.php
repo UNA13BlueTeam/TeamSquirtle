@@ -13,7 +13,7 @@
 	<div class="nav">
 		<nav>
 			<a href="index.php">UNA-Dept. Name</a>
-			<a href="home.php" id="home">Home</a>
+			<a href="index.php" id="home">Home</a>
 			<a href="timeSlots.php" id="timeSlots">Manage Class Times</a> 
 			<a href="manageRooms.php" id="building">Manage Rooms</a>
 			<a href="manageClass.php" id="classes">Manage Classes</a>
