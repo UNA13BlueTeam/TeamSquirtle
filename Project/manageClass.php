@@ -1,9 +1,9 @@
 <?php include("header.php"); ?>
 
 <h1>Manage Classes</h1><br />
-<a href="addClass.php"><p style = "font-size:30px">Add Class Schedule</p></a><br />
+<a href="addClass.php"><p style = "font-size:30px">Add Course</p></a><br />
 <hr /><br />
-<legend style="font-size:30px">Remove Course Schedule</legend>
+<legend style="font-size:30px">Remove Course</legend>
 <form name="removescheduleForm" method="post" action="removeschedule.php" onSubmit="return InputCheck(this)">
 	<table  border = "2">
 		<tr height="30%">
