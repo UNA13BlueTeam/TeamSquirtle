@@ -2,7 +2,7 @@
 
 <h1>Manage Classes</h1><br />
 <legend style="font-size:30px">Add Course</legend>
-<form name="scheduleForm" method="post" action="schedule.php" onSubmit="return InputCheck(this)">
+<form name="scheduleForm" method="post" action="addClassPHP.php" onSubmit="return InputCheck(this)">
 <table height="300" border = "2">
 <tr height="30%">
 	<td><p style="font-size:30px">Course</p></td>
@@ -13,6 +13,7 @@
 	<td><p style="font-size:30px">Room</p></td>
 	<td><p style="font-size:30px">Course Hours</p></td>
 	<td><p style="font-size:30px">Prerequisites</p></td>
+	<td><p style="font-size:30px">Conflicts</p></td>
 
 </tr>
 <tr>
@@ -24,7 +25,8 @@
 	<td><select name="type"/><option value="class">C</option><option value="lab">L</option></td>
 	<td><input id="hours" name="hours" type="text" size="15" maxlength="2" style="height:50px; font-size:20px"/></td>
 	<td><input id="prereq" name="prereq" type="text" size="15" maxlength="15" style="height:50px; font-size:20px"/></td>
-
+	<td><input id="conflict" name="conflict" type="text" size="15" maxlength="15" style="height:50px; font-size:20px"/></td>
+	
 </tr>
 </table>
 <p>
