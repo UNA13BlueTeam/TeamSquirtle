@@ -15,10 +15,10 @@
 			<input id="isection" name="isection" type="text" size="15" maxlength="6"/> <br>
 		<label for="classSize">Class Size</label>
 			<input id="classSize" name="classSize" type="text" size="15" maxlength="6"/> <br>
-		<label for="classType">Class Type</label>
-			<select name="type">
-				<option value="class">C</option>
-				<option value="lab">L</option>
+		<label for="roomType">Class Type</label>
+			<select name="roomType">
+				<option value="C">Class</option>
+				<option value="L">Lab</option>
 			</select> <br>
 		<label for="hours">Credit Hours</label>
 			<input id="hours" name="hours" type="text" size="15" maxlength="2"/> <br>
