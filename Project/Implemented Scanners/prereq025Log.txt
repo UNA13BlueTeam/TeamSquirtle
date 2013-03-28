@@ -1,0 +1,7 @@
+Error on line 1 at index 18.  Whitespace must separate elements on the line.
+Error on line 2 at index 19.  Whitespace must separate elements on the line.
+Error on line 3 at index 21.  Whitespace must separate elements on the line.
+Error on line 4 at index 15.  Whitespace must separate elements on the line.
+Error on line 5 at index 17.  Whitespace must separate elements on the line.
+Error on line 6 at index 11.  Whitespace must separate elements on the line.
+Error on line 8 at index 12. Course letters must be between 2 and 4 characters.
