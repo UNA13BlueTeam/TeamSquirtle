@@ -19,6 +19,7 @@
 	echo "Room Size: $size <br>";
 	echo "Room Name: $name <br>";
 
+	mysqli_close($link);
 include("includes/footer.php");
 
 ?>
