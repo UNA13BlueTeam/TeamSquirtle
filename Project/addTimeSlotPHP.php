@@ -1,4 +1,4 @@
-<?php include("header.php");
+<?php include("includes/header.php");
 
 	// Get variables from input form
 	$minutes = $_POST['minutes'];
@@ -22,5 +22,5 @@
 	
 	
 
-include("footer.php");
+include("includes/footer.php");
 ?>

@@ -1,5 +1,5 @@
 <?php header("Location: index.php"); ?>
-<?php include("header.php"); ?>
+<?php include("includes/header.php"); ?>
 <?php 
 	echo("<h1>Logging out...</h1>");
 	http_redirect("index.php");
@@ -7,4 +7,4 @@
 		
 
 ?>
-<?php include("footer.php"); ?>
+<?php include("includes/footer.php"); ?>

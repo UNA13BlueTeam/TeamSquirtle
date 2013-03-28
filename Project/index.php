@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("includes/header.php"); ?>
 
 <?php
 	echo("<h1>".$deptName."</h1>");
@@ -21,4 +21,4 @@
 	</ul>
 </div>
 <br style="clear:both;">
-<?php include("footer.php"); ?>
+<?php include("includes/footer.php"); ?>

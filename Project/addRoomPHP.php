@@ -1,4 +1,4 @@
-<?php include("header.php");
+<?php include("includes/header.php");
 
 	// Get variables from input form
 	$type = $_POST['roomType'];
@@ -16,5 +16,5 @@
 
 
 
-include("footer.php");
+include("includes/footer.php");
 ?>

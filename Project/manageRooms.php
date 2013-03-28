@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("includes/header.php"); ?>
 
 <h1>Manage Classroom</h1><br />
 <a href="addRoom.php"><p style = "font-size:30px">Add Classroom</p></a><br />
@@ -31,4 +31,4 @@
 	</p>
 </form>
 
-<?php include("footer.php"); ?>
+<?php include("includes/footer.php"); ?>

@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("includes/header.php"); ?>
 
 <h1>Manage Class Time</h1><br />
 
@@ -32,4 +32,4 @@
 	</p>
 </form>
 
-<?php include("footer.php"); ?>
+<?php include("includes/footer.php"); ?>

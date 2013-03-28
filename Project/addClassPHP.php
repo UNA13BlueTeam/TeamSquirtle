@@ -1,4 +1,4 @@
-<?php include("header.php");
+<?php include("includes/header.php");
 
 	// Get variables from input form
 	$courseName = $_POST['course'];
@@ -23,5 +23,5 @@
 	echo "Prerequisites: $prereq <br>";
 	echo "Conflicts: $conflict <br>";
 
-include("footer.php");
+include("includes/footer.php");
 ?>

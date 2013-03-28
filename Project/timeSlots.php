@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("includes/header.php"); ?>
 
 <h1>Manage Class Time</h1><br />
 <a href="addTimeSlot.php"><p style = "font-size:30px">Add Class time</p></a><br />
@@ -40,4 +40,4 @@
 	</p>
 </form>
 
-<?php include("footer.php"); ?>
+<?php include("includes/footer.php"); ?>

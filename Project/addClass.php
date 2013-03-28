@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("includes/header.php"); ?>
 
 <h1>Manage Classes</h1><br />
 <legend style="font-size:30px">Add Course</legend>
@@ -45,4 +45,4 @@
 	
 </form>
 
-<?php include("footer.php"); ?>
+<?php include("includes/footer.php"); ?>

@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("includes/header.php"); ?>
 
 <h1>Manage Classrooms</h1><br />
 
@@ -22,4 +22,4 @@
 </p>
 </form>
 
-<?php include("footer.php"); ?>
+<?php include("includes/footer.php"); ?>
