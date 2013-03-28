@@ -29,10 +29,20 @@
 	
 </tr>
 </table>
+
+
 <p>
 	<input type="submit" name="submit" value="  submit  " />
 	<input type="reset" name="submit" value="  reset  "  />
 </p>
+</form>
+
+
+<form name="scheduleForm" method="post" action="addClassFilePHP.php" onSubmit="return InputCheck(this)">
+	<br><br><br>File to upload: <input type=file name=upfile><br><br>
+	<input type="submit" name="submit" value="  submit file " />
+	<input type="reset" name="submit" value="  reset  "  />
+	
 </form>
 
 <?php include("footer.php"); ?>
