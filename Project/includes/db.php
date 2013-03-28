@@ -1,6 +1,6 @@
 <?php 
-	$host = "db457370852.db.1and1.com";
-	$user = "dbo457370852";
-	$pass = "watergun";
-	$db = "db457370852";
+	$host = "tunnel.pagodabox.com:3306";
+	$user = "leonie";
+	$pass = "4EzvHW5C";
+	$db = "teamsquirtle";
 ?>
