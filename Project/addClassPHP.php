@@ -5,8 +5,8 @@
 	$dsection = $_POST['dsection'];
 	$nsection = $_POST['nsection'];
 	$isection = $_POST['isection'];
-	$classSize = $_POST['size'];
-	$roomType = $_POST['type'];
+	$classSize = $_POST['classSize'];
+	$roomType = $_POST['classType'];
 	$hours = $_POST['hours'];
 	$prereq = $_POST['prereq'];
 	$conflict = $_POST['conflict'];

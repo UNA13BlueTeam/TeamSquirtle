@@ -89,3 +89,54 @@ div.homeLinks{
 	padding: 5px;	
 	text-align:middle;	
 }
+
+div.purpleBox{
+	display: block;
+
+	border-style: solid;
+	border-radius: 7px;
+	border-width: 2px;
+	border-color: #472783;
+	background-color: #beb0d9;
+	color: #472783;
+
+	height: 400px;
+	width: 25%;
+	float:left;
+	margin-right:10%;
+	padding: 5px;
+	text-align:middle;
+}
+
+div.goldBox{
+	display: block;
+
+	border-style: solid;
+	border-radius: 7px;
+	border-width: 2px;
+	border-color: #fcc233;
+	background-color: #fce5ac;
+	color: #472783;
+
+	height: 400px;
+	width: 25%;
+	float:left;
+	margin-right:10%;
+	padding: 5px;	
+	text-align:middle;		
+}
+
+form.inputForm label{
+	float: left;
+	height: 12px;
+}
+
+form.inputForm input, select{
+	float: right;
+	height: 12px;
+}
+
+div.footer{
+	padding-top: 20px;
+	clear: both;
+}
