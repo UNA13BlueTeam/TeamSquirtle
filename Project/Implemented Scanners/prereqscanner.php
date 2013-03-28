@@ -38,10 +38,13 @@
 		if(!feof($readFile))
 		{	
 			$readLine = preg_split('/\s+/', $printLine);
-			while(($itemCount < count($readLine)) and ($errorOnLine == false))
+			//while(($itemCount < (count($readLine)-1)) and ($errorOnLine == false))
+			while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
 			{
 				echo "length of line is " . strlen($printLine) . "<br>";
+				echo "length of trimmed line is " . strlen(trim($printLine)) . "<br>";
 				echo "line number $lineNumber and line index $printLineIndex" . "<br>";
+				
 				
 				if((count($readLine)) >= 3 and (count($readLine) <= 5))
 				{	
@@ -50,6 +53,7 @@
 					{
 						echo "getCourse returned false" . "<br>";
 						$errorOnLine = true;
+						$itemCount++;
 					}
 					else
 					{
@@ -75,19 +79,18 @@
 							//append to current query
 							// $sqlQuery . $currentCourse
 						}*/
-						if($printLine[$printLineIndex] != " ")
+						if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r"))
 						{
 							$errorOnLine = true;
-							fputs($logFile, "Error on line $lineNumber.  Whitespace must separate elements on the line." . PHP_EOL);						
+							fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Whitespace must separate elements on the line." . PHP_EOL);						
 						}
 					}
 				}	
 				else
 				{
-					fputs($logFile, "Error on line $lineNumber.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
+					fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
 					$errorOnLine = true;
 				}
-				echo "\$printLine[\$printLineIndex] is $printLine[$printLineIndex]" . "<br>";
 			}
 			
 			if($errorOnLine == false)
@@ -126,22 +129,22 @@
 		//ERROR HANDLING 
 			if((count($courseLetters) < 2) or (count($courseLetters) > 4))
 			{
-				fputs($logFile, "Error on line $lineNumber. Course letters must be between 2 and 4 characters." . PHP_EOL);
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex. Course letters must be between 2 and 4 characters." . PHP_EOL);
 				return false;
 			}
 			elseif(ctype_lower($line[$lineIndex]) == true)
 			{
-				fputs($logFile, "Error on line $lineNumber.  Files must contain ONLY uppercase letters." . PHP_EOL);
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Files must contain ONLY uppercase letters." . PHP_EOL);
 				return false;
 			}
 			elseif(ctype_alnum($line[$lineIndex] == false))
 			{
-				fputs($logFile, "Error on line $lineNumber.  Invalid character encountered." . PHP_EOL);
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character encountered." . PHP_EOL);
 				return false;
 			}
 			elseif($line[$lineIndex] == " ")
 			{
-				fputs($logFile, "Error on line $lineNumber.  Course number must immediately follow course letters." . PHP_EOL);
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must immediately follow course letters." . PHP_EOL);
 				return false;
 			}
 		//COURSE LETTERS ARE VALID AND IMMEDIATELY FOLLOWED BY NUMBERS
@@ -156,7 +159,7 @@
 				
 				if(count($courseNumbers) != 3)
 				{
-					fputs($logFile, "Error on line $lineNumber.  Course number must be exactly 3 digits." . PHP_EOL);
+					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
 					return false;
 				}
 				for($i=0; $i<count($courseNumbers); $i++)
@@ -173,7 +176,7 @@
 				}
 				if(($courseNumberInt < 1) or ($courseNumberInt > 499))
 				{
-					fputs($logFile, "Error on line $lineNumber.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
+					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
 					return false;
 				}
 				else
@@ -188,12 +191,13 @@
 					}
 					if(count($endCourseName) > 2)
 					{
-						fputs($logFile, "Error on line $lineNumber.  String of characters following course number is too long." . PHP_EOL);
+						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
 						return false;
 					}
 					else
 					{
-						$tempCourse = array_merge($tempCourse, $endCourseName);
+						//if $tempCourse is not an empty array then
+						//$tempCourse = array_merge($tempCourse, $endCourseName);
 					}
 				}
 			}
