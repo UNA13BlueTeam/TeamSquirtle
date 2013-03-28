@@ -1,5 +1,8 @@
 <?php include("includes/header.php");
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
+        if(!$link){
+            die('cannot connect database'. mysqli_error($link));
+        }
 	// Get variables from input form
 	$courseName = $_POST['course'];
 	$dsection = $_POST['dsection'];
