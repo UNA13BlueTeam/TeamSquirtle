@@ -3,6 +3,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 
 <?php include_once("global.php"); ?>
+<?php include_once("db.php"); ?>
 <?php error_reporting(E_ALL); ?>
 
 <html>
