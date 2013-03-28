@@ -5,12 +5,11 @@
 	$size = $_POST['size'];
 	$name = $_POST['roomName'];
         
-        $link = mysql_connect (localhost,username, password);
+        $link = mysqli_connect ($host, $user, $pass, $db);
         if(!link){
-            die('cannot connect database'. mysql_error());
+            die('cannot connect database'. mysqli_error($link));
         }
-        mysql_select_db (dbname);
-        mysql_query ("INSERT INTO tablename (roomType, size, roomName )
+        mysqli_query ("INSERT INTO tablename (roomType, size, roomName )
         VALUES (\'$type\',\'$size\', \'$name\')
         ");
 
