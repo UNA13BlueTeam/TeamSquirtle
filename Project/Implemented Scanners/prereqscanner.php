@@ -20,11 +20,15 @@
 	$errorOnLine = false;
 	$listOfCourses = array();
 	$listOfCoursesIndex = 0;
+	$itemCount = 0;
 	
 	
 	
 	while(!feof($readFile))
 	{
+		$itemCount = 0;
+		$errorOnLine = false;
+		$printLineIndex = 0;
 		$firstCourseOnLineFlag = true;
 		do
 		{$printLine = fgets($readFile);
@@ -34,19 +38,23 @@
 		if(!feof($readFile))
 		{	
 			$readLine = preg_split('/\s+/', $printLine);
-			while($printLineIndex < strlen($printLine))
+			while(($itemCount < count($readLine)) and ($errorOnLine == false))
 			{
+				echo "length of line is " . strlen($printLine) . "<br>";
 				echo "line number $lineNumber and line index $printLineIndex" . "<br>";
+				
 				if((count($readLine)) >= 3 and (count($readLine) <= 5))
 				{	
 					skipWhitespace($printLine, $printLineIndex); 
 					if(getCourse($printLine, $printLineIndex, $lineNumber, $firstCourseOnLineFlag, $currentCourse, $logFile) == false)
 					{
-						echo "called getCourse" . "<br>";
+						echo "getCourse returned false" . "<br>";
 						$errorOnLine = true;
 					}
 					else
 					{
+						echo "getCourse returned true" . "<br>";
+						$itemCount++;
 						/*if($firstCourseOnLineFlag == true)
 						{
 							if $currentCourse is in $listOfCourses
@@ -79,15 +87,17 @@
 					fputs($logFile, "Error on line $lineNumber.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
 					$errorOnLine = true;
 				}
+				echo "\$printLine[\$printLineIndex] is $printLine[$printLineIndex]" . "<br>";
 			}
 			
 			if($errorOnLine == false)
 			{
 				//submit query
-				echo  "$lineNumber: $printLine  <br>";
+				echo  "$lineNumber: $printLine" . "<br>";
 			}
 			else
-				echo $lineNumber . ": $printLine" . "* <br>";
+				echo $lineNumber . ": $printLine*" . "<br>";
+			
 		}
 	}
 	fclose($readFile);	
@@ -116,22 +126,22 @@
 		//ERROR HANDLING 
 			if((count($courseLetters) < 2) or (count($courseLetters) > 4))
 			{
-				fputs($logFile, "Error on line $lineNumber. Course letters must be between 2 and 4 characters. <br>");
+				fputs($logFile, "Error on line $lineNumber. Course letters must be between 2 and 4 characters." . PHP_EOL);
 				return false;
 			}
 			elseif(ctype_lower($line[$lineIndex]) == true)
 			{
-				fputs($logFile, "Error on line $lineNumber.  Files must contain ONLY uppercase letters. <br>");
+				fputs($logFile, "Error on line $lineNumber.  Files must contain ONLY uppercase letters." . PHP_EOL);
 				return false;
 			}
 			elseif(ctype_alnum($line[$lineIndex] == false))
 			{
-				fputs($logFile, "Error on line $lineNumber.  Invalid character encountered. <br>");
+				fputs($logFile, "Error on line $lineNumber.  Invalid character encountered." . PHP_EOL);
 				return false;
 			}
 			elseif($line[$lineIndex] == " ")
 			{
-				fputs($logFile, "Error on line $lineNumber.  Course number must immediately follow course letters. <br>");
+				fputs($logFile, "Error on line $lineNumber.  Course number must immediately follow course letters." . PHP_EOL);
 				return false;
 			}
 		//COURSE LETTERS ARE VALID AND IMMEDIATELY FOLLOWED BY NUMBERS
@@ -146,7 +156,7 @@
 				
 				if(count($courseNumbers) != 3)
 				{
-					fputs($logFile, "Error on line $lineNumber.  Course number must be exactly 3 digits. <br>");
+					fputs($logFile, "Error on line $lineNumber.  Course number must be exactly 3 digits." . PHP_EOL);
 					return false;
 				}
 				for($i=0; $i<count($courseNumbers); $i++)
@@ -163,7 +173,7 @@
 				}
 				if(($courseNumberInt < 1) or ($courseNumberInt > 499))
 				{
-					fputs($logFile, "Error on line $lineNumber.  Course number exceeds boundaries. Must be between 001 and 499. <br>");
+					fputs($logFile, "Error on line $lineNumber.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
 					return false;
 				}
 				else
@@ -178,7 +188,7 @@
 					}
 					if(count($endCourseName) > 2)
 					{
-						fputs($logFile, "Error on line $lineNumber.  String of characters following course number is too long. <br>");
+						fputs($logFile, "Error on line $lineNumber.  String of characters following course number is too long." . PHP_EOL);
 						return false;
 					}
 					else
@@ -191,7 +201,7 @@
 		return true;
 	}
 	
-	function skipWhitespace($line, $lineIndex)
+	function skipWhitespace($line, &$lineIndex)
 	{
 		while($line[$lineIndex] == " ")
 			$lineIndex++;
