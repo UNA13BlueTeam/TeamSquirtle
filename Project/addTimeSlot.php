@@ -1,6 +1,6 @@
 <?php include("includes/header.php"); ?>
 
-<h1>Manage Class Time</h1><br />
+<h1>Add Class Time</h1><br />
 
 <legend style="font-size:30px">Add Class Time</legend>
 <form name="AddClassTimeForm" method="post" action="addTimeSlotPHP.php" onSubmit="return InputCheck(this)">
