@@ -22,10 +22,11 @@
 </p>
 </form>
 
+<br /><hr /><br />
 <div class="goldBox">
 	<form name="scheduleForm" method="post" action="addroomFilePHP.php" onSubmit="return InputCheck(this)">
 		<label for="upfile">File to upload:</label>
-			<input type=file name=upfile> <br>
+			<input type=file name=upfile> <br /><br />
 		<input type="submit" name="submit" value="  submit file " />
 		<input type="reset" name="submit" value="  reset  "  />
 	</form>
