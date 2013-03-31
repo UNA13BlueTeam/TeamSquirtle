@@ -128,6 +128,7 @@ div.goldBox{
 
 form.inputForm label{
 	float: left;
+	height: 12px;
 }
 
 form.inputForm input, select{
