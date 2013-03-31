@@ -16,15 +16,25 @@
          {
              echo("Error: Cannot open file.");     
          }
-        //while(!feof($InputFile))
-        //{
+        while(!feof($InputFile))
+        {
            
             $Line = fgets($InputFile);
             printf("Contents of line %d: %s <br>",$LineNumber,$Line);
             //printf("BEFORE I= %d <br>",$I);
             SkipWhitespace($Line, $I);
             //printf("AFTER I= %d <br>",$I);
-            GetName($Line,$I,$LineNumber);
+             $Value1=GetName($Line,$I,$LineNumber);
+             SkipWhitespace($Line, $I);
+             
+             $Value2=GetYears($Line,$I,$LineNumber);
+             SkipWhitespace($Line, $I);
+             
+             $Value3=GetEmail($Line,$I,$LineNumber);
+             SkipWhitespace($Line, $I);
+             $Value4=GetMinHours($Line,$I ,$LineNumber);
+             
+             
             
             
             //GetInfo($Line,$LineNumber,$FacultyArray,$I);
@@ -32,7 +42,7 @@
             $I= $I + 1;
           
            
-        //}
+        }
         
         //*************************************
         //Functions
@@ -48,6 +58,7 @@
 	     while(ord($Line[$LineIndex]) == 32 ||ord($Line[$LineIndex])== 9)
 		$LineIndex++;
 	}//end function
+        
         function IsWhiteSpace ($Line,&$LineIndex,$LineNumber)
         {
             if (ord($Line[$LineIndex])== 32 || ord($Line[$LineIndex]))
@@ -62,7 +73,7 @@
             }
         }//end function
         
-        function GetName($Line, $Index,$LineNumber)
+        function GetName($Line, &$Index,$LineNumber)
         {
             $I=0;
             $LastName='';
@@ -84,13 +95,13 @@
             }
             
             //To truncate remaining characters
-            while(ord($Line[$I] !=  32))
-                $I++;
-            return true;
+           // while(ord($Line[$I] !=  32))
+             //   $I++;
+            //return true;
             
         }//end function
         
-        function GetYears($Line,$LineNumber)
+        function GetYears($Line,&$I,$LineNumber)
         {
             $NumString = '';
             $I=0;
@@ -111,8 +122,9 @@
             return true;
         }//end function
         
-        function GetEmail($Line, $LineNumber)
+        function GetEmail($Line,&$I, $LineNumber)
         {
+            $Email= '';
             while($Line[$I] != '@' && strlen($Email)<=10)
             {
                 $Email= $Email .$Line[$I];
@@ -131,8 +143,9 @@
             }
         }//end function
         
-        function GetMinHours ($Line, $LineNumber)
+        function GetMinHours ($Line,&$I, $LineNumber)
         {
+            $NumString='';
             while (ord($Line[$I]) >=48 && ord($Line[$I]) <=57)
             {
                     $NumString= $NumString .$Line[$I];
@@ -147,7 +160,7 @@
             //I did not think that there was a maximum number of hours that faculty can teach.
             else if ($Value > 12)
             {
-                printf("Error on line %d, maximum number of hours is 12. ");
+                printf("Error on line %d, maximum number of hours is 12.",$LineNumber);
                 return false;
             }
             return true;
