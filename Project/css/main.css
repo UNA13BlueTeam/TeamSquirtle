@@ -132,7 +132,7 @@ form.inputForm label{
 
 form.inputForm input, select{
 	float: right;
-	height: 12px;
+	height: 12pt;
 }
 
 div.footer{
