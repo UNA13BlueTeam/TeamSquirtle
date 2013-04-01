@@ -5,7 +5,7 @@
 <legend style="font-size:30px">Add Class Time</legend>
 
 <div class="purpleBox">
-	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="addTimeSlotPHP.php" onSubmit="return InputCheck(this)">
+	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddTimeSlot.php" onSubmit="return InputCheck(this)">
 		<label for="hours">Minutes</label>
 			<input id="hours" name="hours" type="text" size="15" maxlength="2"/> <br>
 		<label for="prereq">Days of Week</label>
