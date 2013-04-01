@@ -5,6 +5,7 @@
 
 <div class="purpleBox">
 	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddClass.php" onSubmit="return InputCheck(this)">
+		<input type="hidden" name="flag" value="form">
 		<label for="course">Course</label>
 			<input id="course" name="course" type="text" size="15" maxlength="6"/> <br>
 		<label for="dsection">No. of Day Sections</label>
@@ -34,9 +35,12 @@
 </div>
 
 <div class="goldBox">
-	<form name="scheduleForm" method="post" action="addClassFilePHP.php" onSubmit="return InputCheck(this)">
-		<label for="upfile">File to upload:</label>
-			<input type="file" name="upfile"> <br /><br />
+	<form name="scheduleForm" method="post" action="doAddClass.php" onSubmit="return InputCheck(this)">
+		<input type="hidden" name="flag" value="file">
+		<label for="classFile">Class File:</label>
+			<input type="file" name="classFile"> <br /><br />
+		<label for="prereqFile">Prequisite File:</label>
+			<input type="file" name="prereqFile"><br><br>
 		<input type="submit" name="submit" value="  submit file " />
 		<input type="reset" name="submit" value="  reset  "  />
 	</form>
