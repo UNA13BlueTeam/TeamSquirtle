@@ -4,7 +4,7 @@
 <legend style="font-size:30px">Add Course</legend>
 
 <div class="purpleBox">
-	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="addClassPHP.php" onSubmit="return InputCheck(this)">
+	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddClass.php" onSubmit="return InputCheck(this)">
 		<label for="course">Course</label>
 			<input id="course" name="course" type="text" size="15" maxlength="6"/> <br>
 		<label for="dsection">No. of Day Sections</label>

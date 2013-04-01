@@ -5,7 +5,7 @@
 <legend style="font-size:30px">Add Class Room</legend>
 
 <div class="purpleBox">
-	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="addRoomPHP.php" onSubmit="return InputCheck(this)">
+	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddRoom.php" onSubmit="return InputCheck(this)">
 		<label for="roomType">Room Type</label>
 			<select name="roomType">
 				<option value="C">Class</option>
