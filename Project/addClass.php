@@ -35,7 +35,7 @@
 </div>
 
 <div class="goldBox">
-	<form name="scheduleForm" method="post" action="doAddClass.php" onSubmit="return InputCheck(this)">
+	<form name="scheduleForm" method="post" action="doAddClass.php" enctype="multipart/form-data" onSubmit="return InputCheck(this)">
 		<input type="hidden" name="flag" value="file">
 		<label for="classFile">Class File:</label>
 			<input type="file" name="classFile"> <br /><br />

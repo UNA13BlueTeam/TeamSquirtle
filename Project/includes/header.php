@@ -5,6 +5,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="css/main.css" type="text/css" />
+		<link rel="icon" type="image/png" href="img/squirtle.png">
 	</head>
 	<body>
 	<div class="nav">
