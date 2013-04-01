@@ -32,157 +32,157 @@
 	}elseif($_POST['flag']=="file"){
 		echo ("I got files!<br>");
 		// $classFile = $_POST['classFile'];
-		$prereqFile = $_POST['prereqFile'];
-		echo($prereqFile);
-		scanPrereqs($prereqFile);
+		// $prereqFile = $_POST['prereqFile'];
+		$prereqFile = $_FILES["prereqFile"]["tmp_name"];
+		$prereqFileName = $_FILES["prereqFile"]["name"];
+		// $success = move_uploaded_file($prereqFile, "uploads/prereqs.txt");
+		// if(!$success)
+		// 	echo("Move failed.<br>");
+		// echo($prereqFile);
+		scanPrereqs($prereqFile, $prereqFileName);
 	}
 
 	// mysqli_close($link);
 include("includes/footer.php");
 
 
-function scanPrereqs($fileName){
+function scanPrereqs($fileName, $prettyName){
 	//FLAGS
 	$firstCourseOnLineFlag = true;
 	$stillTesting = true;
 	
-	while($stillTesting == true)
-	{//loops through and tests each prereq test file in the current directory
 
-			$log = $fileName . "Log";
-			
+	$log ="prereqs.log";
+	
 
-			$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
-			$logFile = fopen($log . ".log", "w") or die("Unable to open $log");
-			
-			echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
+	$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
+	$logFile = fopen($log, "w");
+
+	fputs($logFile, "Scanning $prettyName - ".strftime('%c'));
+	
+	echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
 			
 		
 		
-		//VARIABLES	
-		$lineNumber = 0;	//used in listing errors
-		$printLine = " ";	//line read in from file
-		$printLineIndex = 0;	
-		$currentCourse = "";		//string		
+	//VARIABLES	
+	$lineNumber = 0;	//used in listing errors
+	$printLine = " ";	//line read in from file
+	$printLineIndex = 0;	
+	$currentCourse = "";		//string		
+	$errorOnLine = false;
+	$listOfCourses = array();	//used in detecting duplicate courses on a line
+	$listOfCoursesIndex = 0;
+	$itemCount = 0;		//if there are more than 4  or less than 2 separate items on a line, there is an incorrect number of prerequisites
+	$errorInFile = false;
+	$firstCourseNumber = 0;	//used in checking if a prerequisiste course is higher than the course requiring prerequisites
+	
+	
+	while(!feof($readFile))
+	{
+		$itemCount = 0;
 		$errorOnLine = false;
-		$listOfCourses = array();	//used in detecting duplicate courses on a line
+		$printLineIndex = 0;
+		$firstCourseOnLineFlag = true;
+		do
+		{//this block will skip over any empty lines in a file
+		 $printLine = fgets($readFile);
+		 $lineNumber++;
+		}while((strlen(trim($printLine)) == 0) and (!feof($readFile)));
+		
+		$printLine = $printLine . "\r";	//append a carriage return to the end of each line
+										//otherwise, a line without a hard return at the end
+										//will produce a whitespace error in this scanner
+		
+		$listOfCourses = array();		
 		$listOfCoursesIndex = 0;
-		$itemCount = 0;		//if there are more than 4  or less than 2 separate items on a line, there is an incorrect number of prerequisites
-		$errorInFile = false;
-		$firstCourseNumber = 0;	//used in checking if a prerequisiste course is higher than the course requiring prerequisites
+			
+		$readLine = preg_split('/\s+/', $printLine);	//splits the line into an array of elements
+														//each element will be a contiguous string of characters
+														//all whitespace is ignored on line for this function due to " '/\s+/' "
 		
+		while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
+		{	//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line
 		
-		while(!feof($readFile))
-		{
-			$itemCount = 0;
-			$errorOnLine = false;
-			$printLineIndex = 0;
-			$firstCourseOnLineFlag = true;
-			do
-			{//this block will skip over any empty lines in a file
-			 $printLine = fgets($readFile);
-			 $lineNumber++;
-			}while((strlen(trim($printLine)) == 0) and (!feof($readFile)));
+			echo "length of line is " . strlen($printLine) . "<br>";
+			echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
+			echo "line number $lineNumber and line index $printLineIndex" . "<br>";
 			
-			$printLine = $printLine . "\r";	//append a carriage return to the end of each line
-											//otherwise, a line without a hard return at the end
-											//will produce a whitespace error in this scanner
 			
-			$listOfCourses = array();		
-			$listOfCoursesIndex = 0;
+			if((count($readLine)) >= 3 and (count($readLine) <= 5))
+			{	//preg_split counts end of line as a nonwhitespace line element, so we check on boundaries
+				//of 3 and 5 instead of 2 and 4
 				
-			$readLine = preg_split('/\s+/', $printLine);	//splits the line into an array of elements
-															//each element will be a contiguous string of characters
-															//all whitespace is ignored on line for this function due to " '/\s+/' "
-			
-			while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
-			{	//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line
-			
-				echo "length of line is " . strlen($printLine) . "<br>";
-				echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
-				echo "line number $lineNumber and line index $printLineIndex" . "<br>";
-				
-				
-				if((count($readLine)) >= 3 and (count($readLine) <= 5))
-				{	//preg_split counts end of line as a nonwhitespace line element, so we check on boundaries
-					//of 3 and 5 instead of 2 and 4
-					
-					skipWhitespace($printLine, $printLineIndex); 
-					if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $firstCourseOnLineFlag, $firstCourseNumber, $currentCourseNumber, $logFile) == false)
-					{//an invalid course format was encountered on the line
-						echo "getCourse returned false" . "<br>";
+				skipWhitespace($printLine, $printLineIndex); 
+				if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $firstCourseOnLineFlag, $firstCourseNumber, $currentCourseNumber, $logFile) == false)
+				{//an invalid course format was encountered on the line
+					echo "getCourse returned false" . "<br>";
+					$errorOnLine = true;  $errorInFile = true;
+					$itemCount++;
+				}
+				else
+				{//a valid course format was encountered on the line
+					if(in_array($currentCourse, $listOfCourses) == true)
+					{
+						fputs($logFile, "Error on line $lineNumber.  Duplicate course found on line." . PHP_EOL);
 						$errorOnLine = true;  $errorInFile = true;
-						$itemCount++;
 					}
 					else
-					{//a valid course format was encountered on the line
-						if(in_array($currentCourse, $listOfCourses) == true)
-						{
-							fputs($logFile, "Error on line $lineNumber.  Duplicate course found on line." . PHP_EOL);
-							$errorOnLine = true;  $errorInFile = true;
-						}
-						else
-						{
-							$listOfCourses[$listOfCoursesIndex] = $currentCourse;
-							$listOfCoursesIndex++;
-						}
-						if($firstCourseOnLineFlag == true)
-							$firstCourseOnLineFlag = false;
-						echo "getCourse returned true" . "<br>";
-						$itemCount++;
-						/*if($firstCourseOnLineFlag == true)
-						{
-							if $currentCourse in COURSES database already has defined prerequisites
-							  {
-								fputs($logFile, "Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
-								errorOnLine = true;
-							  }
-							  else
-							  {
-								//add course to $listOfCourses
-								//start query "INSERT INTO ... "
-								$firstCourseOnLineFlag = false;
-							  }
-							
-						}
-						else
-						{
-							//append to current query
-							// $sqlQuery . $currentCourse
-						}*/
-						if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r"))
-						{//only whitespace and end of line can immediately follow a course on the line
-								$errorOnLine = true;  $errorInFile = true;
-								fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Whitespace must separate elements on the line." . PHP_EOL);	
-						}
+					{
+						$listOfCourses[$listOfCoursesIndex] = $currentCourse;
+						$listOfCoursesIndex++;
 					}
-				}	
-				else
-				{
-					fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
-					$errorOnLine = true;  $errorInFile = true;
+					if($firstCourseOnLineFlag == true)
+						$firstCourseOnLineFlag = false;
+					echo "getCourse returned true" . "<br>";
+					$itemCount++;
+					/*if($firstCourseOnLineFlag == true)
+					{
+						if $currentCourse in COURSES database already has defined prerequisites
+						  {
+							fputs($logFile, "Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
+							errorOnLine = true;
+						  }
+						  else
+						  {
+							//add course to $listOfCourses
+							//start query "INSERT INTO ... "
+							$firstCourseOnLineFlag = false;
+						  }
+						
+					}
+					else
+					{
+						//append to current query
+						// $sqlQuery . $currentCourse
+					}*/
+					if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r"))
+					{//only whitespace and end of line can immediately follow a course on the line
+							$errorOnLine = true;  $errorInFile = true;
+							fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Whitespace must separate elements on the line." . PHP_EOL);	
+					}
 				}
-			}
-				
-			if($errorOnLine == false)
-			{
-				//submit query
-				echo  "$lineNumber: $printLine" . "<br>";
-			}
+			}	
 			else
-				echo $lineNumber . ": $printLine*" . "<br>";
-			
+			{
+				fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
+				$errorOnLine = true;  $errorInFile = true;
+			}
 		}
-		if($errorInFile == false)
-			fputs($logFile, "No errors detected." . PHP_EOL);
 			
-		fclose($readFile);	
-		fclose($logFile);
+		if($errorOnLine == false)
+		{
+			//submit query
+			echo  "$lineNumber: $printLine" . "<br>";
+		}
+		else
+			echo $lineNumber . ": $printLine*" . "<br>";
 		
-		$testNum += 1;
-		if($testNum > "45")
-			$stillTesting = false;
 	}
+	if($errorInFile == false)
+		fputs($logFile, "No errors detected." . PHP_EOL);
+		
+	fclose($readFile);	
+	fclose($logFile);
 }
 
 function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCourseOnLineFlag, &$firstCourseNumber, &$currentCourseNumber, $logFile){
