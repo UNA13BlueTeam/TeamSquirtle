@@ -1,9 +1,10 @@
 <?php include("includes/header.php");
-	// $link = mysqli_connect($host, $user, $pass, $db, $port);
- //        if(!$link){
- //            die('cannot connect database'. mysqli_error($link));
- //        }
+	$link = mysqli_connect($host, $user, $pass, $db, $port);
+        if(!$link){
+            die('cannot connect database'. mysqli_error($link));
+        }
     if($_POST['flag']=="form"){
+    	echo("<p>inserting</p>");
 		// Get variables from input form
 		$courseName = $_POST['course'];
 		$dsection = $_POST['dsection'];
@@ -15,11 +16,17 @@
 		$prereq = $_POST['prereq'];
 		$conflict = $_POST['conflict'];
 		
-		$query = "INSERT INTO courses $courseName, $dsection, $nsection, $isection, $classSize, $roomType, $hours";
+		$query = "INSERT INTO courses(courseName, dsection, nsection, isection, classSize, roomType, hours) values ('$courseName', $dsection, $nsection, $isection, $classSize, '$roomType', $hours);";
 
-		mysqli_query($link, $query);
+		$insertion = mysqli_query($link, $query);
+		if($insertion)
+			echo("insertion succeeded<br>");
+		else{
+			echo("insertion failed<br>");
+			echo($query."<br>");
+		}
 		// Print out contents accepted
-		echo "You have successfully added this course information to the database! <br>";
+		// echo "You have successfully added this course information to the database! <br>";
 		echo "Course Name: $courseName <br>";
 		echo "Day Sections: $dsection <br>";
 		echo "Night Sections: $nsection <br>";
@@ -37,12 +44,12 @@
 		$prereqFileName = $_FILES["prereqFile"]["name"];
 		// $success = move_uploaded_file($prereqFile, "uploads/prereqs.txt");
 		// if(!$success)
-		// 	echo("Move failed.<br>");
+		// echo("Move failed.<br>");
 		// echo($prereqFile);
 		scanPrereqs($prereqFile, $prereqFileName);
 	}
 
-	// mysqli_close($link);
+	mysqli_close($link);
 include("includes/footer.php");
 
 
