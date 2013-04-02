@@ -6,15 +6,29 @@
     </head>
     <body>
         <?php
-        // put your code here
+        //Things to fix: Multiple errors, run FACULTY3.txt
+        //                FACULTY4.txt 
         
         $lineNumber=1; 
         $facultyArray = array();
-        $inputFile = fopen ("FACULTY18.txt","r") or die ("Unable to open file");
 		 
-        while(!feof($inputFile))
-        {
-	    $i=0;
+         $fileName = 'FACULTY4.txt';
+         $inputFile = fopen ($fileName,"r");
+         if($inputFile == NULL)
+         {
+             echo("Error: Cannot open file.");     
+         }
+         
+         //checks for empty file
+         if(filesize($fileName)==0)
+         {
+             echo("Recognized an empty file.");
+         }
+         else
+         {
+          while(!feof($inputFile))
+          {
+            $i=0;
             $line = fgets($inputFile);
             $line = trim($line);		
 	    printf("Line = $line <br>");		
@@ -22,48 +36,54 @@
 	    
             $value1=getName($line,$i,$lineNumber);
 	    skipWhiteSpace($line, $i);	 
-	    
+            //Need to check if $value1 is true before proceeding because if false we need to skip the rest.
+            
             $value2=getYears($line,$i,$lineNumber);
 	    skipWhiteSpace($line, $i);	 
-	    
-            $value3=getEmail($line,$i,$lineNumber);
+	    //Need to check if $value2 is true before proceeding because if false we need to skip the rest.
+            $value3=getEmail($line,$i,$lineNumber,$facultyArray);
 	    skipWhiteSpace($line, $i);			 
-	    
+	    //Need to check for duplicate emails either within the getEmail function call or after it.
+            
             $value4=getMinHours($line,$i ,$lineNumber);
             $lineNumber= $lineNumber + 1;
             printf("<br><br>");
-           
-        }
+              
+          }//end while loop  
+        }//end else
         
         //*************************************
         //Functions
         //*************************************
-        
-        
+   
          /*
          **-----------------------------------------------------------------------------------  
-         * Purpose:
-         * 
-         * Input:
-         * 
-         * Output:
+         * Purpose: Skips any white spaces. Updates the index so that it contains the first 
+         *          non-blank index in the input line string.
+         * Input:   The input line string that was read from the input file
+         *          The current index position called $lineIndex.
+         * Output: Nothing
+         * Returns: Nothing
          **-----------------------------------------------------------------------------------  
          */
         function skipWhiteSpace($line, &$lineIndex)
-		{
-			 while(ord($line[$lineIndex]) == 32 || ord($line[$lineIndex])== 9)
-			 {
-				$lineIndex++;
-			 }
-		}//end function
+        {
+	      while(ord($line[$lineIndex]) == 32 || ord($line[$lineIndex])== 9)
+	      {
+		  $lineIndex++;
+	      }
+	}//end function
         
          /*
          **-----------------------------------------------------------------------------------  
-         * Purpose:
+         * Purpose: checks if there is a blank at the specified index that is passed in.
          * 
-         * Input:
+         * Input: The input line read from file called $line
+         *        The index in the array to start reading from called $i
+         *        The line number in the input file for error messages called $line number
          * 
          * Output:
+         * Return: True if the index specified contains a blank space. Otherwise returns false. 
          **-----------------------------------------------------------------------------------  
          */        
         function isWhiteSpace ($line, &$lineIndex, $lineNumber)
@@ -75,42 +95,61 @@
             }
             else
             {
-                printf("Error on line %d : Exprected White Space.<br>",$lineNumber);
+                printf("Error on line %d : Expected White Space.<br>",$lineNumber);
                 return false;
             }
         }//end function
         
          /*
          **-----------------------------------------------------------------------------------  
-         * Purpose:
+         * Purpose: Parses the input line to get the faculty first and last name. 
          * 
-         * Input:
+         * Input:The input line read from file called $line
+         *        The index in the array to start reading from called $i
+         *        The line number in the input file for error messages called $line number
          * 
-         * Output:
+         * Output: Error message is first or last name are invalid.
+         * Return: True if both the first and last name conform to faculty name requirements. 
+          *         False is returned if either one is invalid.
          **-----------------------------------------------------------------------------------  
          */
         function getName($line, &$i, $lineNumber)
         {
             $lastName = "";
-			$firstName = "";
-  
+	    $firstName = "";
+            
+            //Gets last name information
             while($line[$i] != ',' && strlen($lastName) <= 25)
             {
                 $lastName= $lastName .$line[$i];
                 $i++;
             }
-            $i++;
-            if (isWhiteSpace($line,$i,$lineNumber) == true && strlen($lastName) <= 25)
-			{		
-				//Do i have to reset index I before the following loop?
-				while(ord($line[$i]) != 32 && strlen($firstName) <= (25 - strlen($lastName)) )
-				{
-					$firstName = $firstName .$line[$i];
-					$i++;
-				}
-			}
             
-			printf("Name = $lastName, $firstName <br>");
+            if(strlen($lastName)==0)
+            {
+                //Invalid data
+                printf("Error on line %d, missing last name <br>",$lineNumber);
+                return false;
+            }
+            $i++;
+            
+            //Gets first name information
+            if (isWhiteSpace($line,$i,$lineNumber) == true && strlen($lastName) <= 25)
+	    {		
+		
+		while(ord($line[$i]) != 32 && ord($line[$i])!= 9 && strlen($firstName) <= (25 - strlen($lastName)) )
+		{
+		      $firstName = $firstName .$line[$i];
+		      $i++;
+		}
+	   }
+           if(strlen($lastName)==0)
+           {
+               //Invalid data
+               printf("Error on line %d, missing last name <br>", $lineNumber);
+               return false;
+           }
+	   printf("Name = $lastName, $firstName <br>");
             //To truncate remaining characters
            // while(ord($line[$i] !=  32))
              //   $i++;
@@ -140,17 +179,13 @@
 				$i++;
 			}
             
-            if(strlen($numString) < 0)
+            if(intval($numString) < 0 || intval($numString) > 60)
             {
-                printf("Error on line %d, Years Of Service is less than zero.",$lineNumber);
+                printf("Error on line %d, Years Of Service must be in the range of [0 to 60].",$lineNumber);
                 return false;
             }
-            if($numString > 60)
-            {
-                printf("Error on line %d, 60 is the maximum number of years of service",$lineNumber);
-                return false;
-            }
-			printf("Years = $numString <br>");
+           
+	    printf("Years = $numString <br>");
             return true;
         }//end function
         
@@ -162,12 +197,14 @@
          * Input: The input line read from file called $line
          *        The index in the array to start reading from called $i
          *        The line number in the input file for error messages called $line number
+         *        The array called $facultyArray that holds all valid email addresses already 
+         *          identified.  
          * Output: An error message if the email information is not valid according to the 
          *         specified requirements/guidelines.
          * Return: True if the email address is valid. Otherwise returns false.
          *----------------------------------------------------------------------------------- 
          */
-        function getEmail($line,&$i, $lineNumber)
+        function getEmail($line,&$i, $lineNumber,&$facultyArray)
         {
             //for($k=0; $k < strlen($line);$k++)
                // printf("k= %d %s--%d <br>",$k,$line[$k],ord($line[$k]));
@@ -193,7 +230,8 @@
                 $i++;
             }
 			
-			printf("Email = $email <br>");
+	    printf("Email = $email <br>");
+            return true;
         }//end function
         
          /*
@@ -212,20 +250,33 @@
         function getMinHours ($line, &$i, $lineNumber)
         {
             $numString= "";
+            $invalidMinHours=false;
+            $endOfBuffer=false;
             //for($k=0; $k < strlen($line);$k++)
-               // printf("k= %d %s--%d <br>",$k,$line[$k],ord($line[$k]));
+                //printf("k= %d %s--%d <br>",$k,$line[$k],ord($line[$k]));
             //printf("size of line= %d <br>",strlen($line) );
             while (ord($line[$i]) >=48 && ord($line[$i]) <=57)
             {
-					$numString= $numString .$line[$i];
-					$i++;
-                                        //Exit condition
-                                        if($i == strlen($line))
-                                        {
-                                            break;
-                                        }
+		$numString= $numString .$line[$i];
+		$i++;
+                //Exit condition
+                if($i == strlen($line))
+                {
+                      $endOfBuffer=true;
+                      break;
+                }
             }
-            if($numString < 3)
+            if($endOfBuffer==false)
+            {
+                //To detect any invalid data in file
+                if(ord($line[$i] <48 || ord($line[$i]>57)))
+                {
+                    //Then found invalid symbol
+                    printf("Error on line %d, invalid minimum faulty hours.  <br>",$lineNumber);
+                    return false;
+                }
+            }
+            if(intval($numString) < 3)
             {
                 printf("Error on line %d, Minimum number of hours to teach is 3.",$lineNumber);
                 return false;
@@ -237,32 +288,11 @@
                 return false;
             }*/
 			
-			printf("Hours = $numString <br>");
+	    printf("Hours = $numString <br>");
             return true;
-			
-			
-			
+	
         }//end function
-        
-         /*
-         **----------------------------------------------------------------------------------- 
-         * Purpose:
-         * 
-         * Input:
-         * 
-         * Output:
-         **----------------------------------------------------------------------------------- 
-         */
-        function getOrdinalValue ($word)
-          {
-             //Varaiable declarations
-              $ordinalSum=0;
-              for($i=0; $i < strlen($word);$i++)
-                    $ordinalSum= $ordinalSum + ord($word[$i]);
-              
-              return $ordinalSum;
-          }//end function
-         
+      
 
         ?>
     </body>
