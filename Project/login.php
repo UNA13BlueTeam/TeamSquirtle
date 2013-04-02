@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="main.css" type="text/css" />
+        <link rel="stylesheet" href="css/main.css" type="text/css" />
         <title>Administrator Login</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
