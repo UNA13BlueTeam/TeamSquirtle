@@ -6,13 +6,12 @@
     </head>
     <body>
         <?php
-        //Things to fix: Multiple errors, run FACULTY3.txt
-        //                FACULTY4.txt 
+                
         
         $lineNumber=1; 
         $facultyArray = array();
 		 
-         $fileName = 'FACULTY4.txt';
+         $fileName = 'FACULTY24.txt';
          $inputFile = fopen ($fileName,"r");
          if($inputFile == NULL)
          {
@@ -30,24 +29,34 @@
           {
             $i=0;
             $line = fgets($inputFile);
-            $line = trim($line);		
-	    printf("Line = $line <br>");		
-            skipWhiteSpace($line, $i);		
-	    
-            $value1=getName($line,$i,$lineNumber);
-	    skipWhiteSpace($line, $i);	 
-            //Need to check if $value1 is true before proceeding because if false we need to skip the rest.
-            
-            $value2=getYears($line,$i,$lineNumber);
-	    skipWhiteSpace($line, $i);	 
-	    //Need to check if $value2 is true before proceeding because if false we need to skip the rest.
-            $value3=getEmail($line,$i,$lineNumber,$facultyArray);
-	    skipWhiteSpace($line, $i);			 
-	    //Need to check for duplicate emails either within the getEmail function call or after it.
-            
-            $value4=getMinHours($line,$i ,$lineNumber);
-            $lineNumber= $lineNumber + 1;
-            printf("<br><br>");
+            $line = trim($line);	
+            if(strlen($line)!= 0)
+            {
+                    printf("Line = $line <br>");		
+                    skipWhiteSpace($line, $i);		
+
+                    $value1=getName($line,$i,$lineNumber);
+
+                    if ($value1 == true)
+                    {
+                       skipWhiteSpace($line,$i,$lineNumber);
+                       $value2=getYears($line,$i,$lineNumber);
+
+                       if($value2 == true)
+                       {
+                           skipWhiteSpace($line, $i);
+                           $value3=getEmail($line,$i,$lineNumber,$facultyArray);
+
+                           if($value3 == true)
+                           {
+                                skipWhiteSpace($line, $i);
+                                $value4=getMinHours($line,$i ,$lineNumber);
+                                $lineNumber= $lineNumber + 1;
+                                printf("<br><br>");
+                           }                           
+                       }          
+                    }
+            }
               
           }//end while loop  
         }//end else
@@ -68,10 +77,16 @@
          */
         function skipWhiteSpace($line, &$lineIndex)
         {
-	      while(ord($line[$lineIndex]) == 32 || ord($line[$lineIndex])== 9)
-	      {
+             //printf("lineIndex= $lineIndex <br>");
+                //for($k=0; $k < strlen($line);$k++)
+                  // printf("k= %d %s--%d <br>",$k,$line[$k],ord($line[$k]));	 
+             if($lineIndex != strlen($line))
+             {
+                while( ord($line[$lineIndex]) == 32 || ord($line[$lineIndex])== 9 )
+	        {
 		  $lineIndex++;
-	      }
+	       }
+             }
 	}//end function
         
          /*
@@ -95,7 +110,7 @@
             }
             else
             {
-                printf("Error on line %d : Expected White Space.<br>",$lineNumber);
+                //printf("Error on line %d : Expected White Space.<br>",$lineNumber);
                 return false;
             }
         }//end function
@@ -121,6 +136,16 @@
             //Gets last name information
             while($line[$i] != ',' && strlen($lastName) <= 25)
             {
+                if ($line[$i] == " ")
+                {
+                    printf("Error on line $lineNumber, Last name should have a comma following it <br>");
+                    return false;
+                }
+                else if ( ord($line[$i])>= 97 && ord($line[$i] <= 122))
+                {
+                    printf("Error on line $lineNumber, only upper-case characters allowed <br>");
+                    return false;
+                }
                 $lastName= $lastName .$line[$i];
                 $i++;
             }
@@ -134,15 +159,25 @@
             $i++;
             
             //Gets first name information
-            if (isWhiteSpace($line,$i,$lineNumber) == true && strlen($lastName) <= 25)
+            if (isWhiteSpace($line,$i,$lineNumber) == true )
 	    {		
 		
 		while(ord($line[$i]) != 32 && ord($line[$i])!= 9 && strlen($firstName) <= (25 - strlen($lastName)) )
 		{
-		      $firstName = $firstName .$line[$i];
-		      $i++;
+                    if( ( ord($line[$i])>= 97 && ord($line[$i] <= 122)))
+                    {
+                        printf("Error on line %d, only upper-case characters allowed <br>",$lineNumber);
+                        return false;
+                    }
+		    $firstName = $firstName .$line[$i];
+		    $i++;
 		}
 	   }
+           else
+           {
+               printf("Error on line %d, a blank must follow a comma <br>",$lineNumber);
+               return false;
+           }
            if(strlen($lastName)==0)
            {
                //Invalid data
@@ -151,8 +186,8 @@
            }
 	   printf("Name = $lastName, $firstName <br>");
             //To truncate remaining characters
-           // while(ord($line[$i] !=  32))
-             //   $i++;
+            while(ord($line[$i]) !=  32 && ord($line[$i]) && strlen($firstName.$lastName) >= 25) 
+                $i++;
             return true;
             
         }//end function
@@ -173,15 +208,26 @@
         function getYears($line,&$i,$lineNumber)
         {
             $numString = "";
+            //for($k=0; $k < strlen($line);$k++)
+               //printf("k= %d %s--%d <br>",$k,$line[$k],ord($line[$k]));
+            //printf("size of line= %d <br>",strlen($line) );
+           // printf("i= %d <br>",$i);
             while(ord($line[$i]) >= 48 && ord($line[$i]) <= 57) //is numeric
-			{
-                                $numString= $numString .$line[$i];
-				$i++;
-			}
+	    {
+                $numString= $numString .$line[$i];
+		$i++;
+                
+                
+	    }
             
-            if(intval($numString) < 0 || intval($numString) > 60)
+            if(intval($numString) < 0 || intval($numString) > 60 || strlen($numString)==0)
             {
                 printf("Error on line %d, Years Of Service must be in the range of [0 to 60].",$lineNumber);
+                return false;
+            }
+            else if ($line[$i] != " ")
+            {
+                printf("Error on line %d, invalid years of service", $lineNumber);
                 return false;
             }
            
@@ -216,18 +262,29 @@
             {
                 $email= $email .$line[$i];
                 $i++;
-            }
-            if(strlen($email)> 10)
+                if($i == strlen($line) )
+                {
+                    printf("Error on line %d, missing email extension. <br>",$lineNumber);
+                    return false;
+                }
+                
+            }//end while
+            
+            if(strlen($email)> 10 || strlen($email) == 0 || strlen($email) < 3)
             {
-                printf("Error on line %d, Email Address must be less than 10 characters.",$lineNumber);
+                printf("Error on line %d, Email Address must between 3 and 10 characters in length.",$lineNumber);
                 return false;
             }
 			
             //Gets the email extension; for example, @UNA.EDU
-            while(ord($line[$i]) != 32 && ord($line[$i]) != 9)
+            while(ord($line[$i]) != 32 && ord($line[$i]) != 9 )
             {
                 $email= $email .$line[$i];
                 $i++;
+                if($i == strlen($line) )
+                {
+                    break;
+                }
             }
 			
 	    printf("Email = $email <br>");
@@ -255,16 +312,24 @@
             //for($k=0; $k < strlen($line);$k++)
                 //printf("k= %d %s--%d <br>",$k,$line[$k],ord($line[$k]));
             //printf("size of line= %d <br>",strlen($line) );
-            while (ord($line[$i]) >=48 && ord($line[$i]) <=57)
+            if($i != strlen($line))
             {
-		$numString= $numString .$line[$i];
-		$i++;
-                //Exit condition
-                if($i == strlen($line))
-                {
-                      $endOfBuffer=true;
-                      break;
-                }
+                 while (ord($line[$i]) >=48 && ord($line[$i]) <=57)
+                 {
+                     $numString= $numString .$line[$i];
+                     $i++;
+                     //Exit condition
+                     if($i == strlen($line))
+                     {
+                           $endOfBuffer=true;
+                           break;
+                     }
+                 }
+            }
+            else
+            {
+                printf("Error on line %d, invalid minimum faulty hours.  <br>",$lineNumber);
+                return false;
             }
             if($endOfBuffer==false)
             {
