@@ -34,9 +34,11 @@
                 $line= $line . chr(13);
                 $line= $line . chr(10);
             }           
-            printf("Contents of line %d: %s <br>",$lineNumber,$line);          
-            getInfo($line,$lineNumber,$roomInfo,$i);
-            $lineNumber= $lineNumber + 1;  
+            if(strlen($line)!= 2)
+            {
+                getInfo($line,$lineNumber,$roomInfo,$i);
+               $lineNumber= $lineNumber + 1;
+            }
           }//end while loop  
         }//end else
         //************************************************************************************************
