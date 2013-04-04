@@ -1,24 +1,23 @@
 /*-----------------------------------------------------------------------------------------------
  ********************** Function Prologue Comment Template ********************
- * Preconditions:
+ * Preconditions: 
  *
- * Postconditions:
+ * Postconditions: 
+ *                  
+ * Function Purpose: 
  *
- * Function Purpose:
+ * Input Expected: 
  *
- * Input Expected:
+ * Exceptions/Errors Thrown: 
+ * Files Accessed: None
  *
- * Exceptions/Errors Thrown:
+ * Function Pseudocode Author: 
  *
- * Files Acessed:
- *
- * Function Pseudocode Author:
- *
- * Function Author:
+ * Function Author: 
  *
  * Date of Original Implementation:
  *
- * Tested by SQA Member (NAME and DATE):
+ * Tested by SQA Member (NAME and DATE): 
  * 
  ** Modifications by:
  * Modified By (Name and Date):
@@ -26,4 +25,4 @@
  *
  * Modified By (Name and Date):
  * Modifications Description:
- -------------------------------------------------------------------------------------------------*/  
+ -------------------------------------------------------------------------------------------------*/
