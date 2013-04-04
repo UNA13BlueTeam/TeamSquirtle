@@ -6,7 +6,7 @@
 </head>
 <body>
 <?php
-$fileName = 'P2.txt';
+$fileName = 'P1.txt';
 $lineNumber=1;
 $inputFile = fopen ($fileName,"r");
 if($inputFile == NULL)
@@ -63,8 +63,8 @@ else
  * Modifications Description:	Fixed logical errors.  Didn't catch invalid characters.
  *								Implemented constants ($MINPASSWORDLENGTH and $MAXPASSWORDLENGTH).
  * 							
- * Modified By (Name and Date):
- * Modifications Description:
+ * Modified By (Name and Date): Alla Salah and Jared Cox, and Michael Debs.
+ * Modifications Description: Fixed the ending condition for the while loop. 
  -------------------------------------------------------------------------------------------------*/
  
         
@@ -99,7 +99,7 @@ function verifyPassword($line,$lineNumber )
 		return false;
 	}
     
-    while($index < strlen($line))
+    while($index < $sizeOfLine)
     {
         if(ctype_digit($line[$index]) == true)
         {
@@ -111,7 +111,8 @@ function verifyPassword($line,$lineNumber )
         }
 		else if((ctype_alnum($line[$index]) == false) and (in_array($line[$index], $validSpecialSymbols) == false))
 		{
-			printf("Error on line %d.  Invalid character found.<br>",$lineNumber);
+                    printf("index= $index %s<br>", $line[$index]);
+                    printf("Error on line %d.  Invalid character found.<br>",$lineNumber);
 			printMessage();
 			return false;
 		}
@@ -166,7 +167,7 @@ function verifyPassword($line,$lineNumber )
  * Modifications Description: Fixed spelling error and added #5 to the message
  *
  * Modified By (Name and Date):
- * Modifications Description:
+ * Modifications Description: 
  -------------------------------------------------------------------------------------------------*/  
 function printMessage()
 {
