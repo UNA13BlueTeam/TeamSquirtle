@@ -6,7 +6,11 @@
     </head>
     <body>
         <?php
-    for ($fileNumber = 1; $fileNumber < 26; $fileNumber++)
+		// Global Constants
+		$NUMBEROFFILES = 25;
+		$MAXNAMELENGTH = 25;
+		
+    for ($fileNumber = 1; $fileNumber <= $numberOfFiles; $fileNumber++)
 	{
         $fileName = 'FACULTY'.$fileNumber;
 		$fileName = $fileName.'.txt';
@@ -72,21 +76,21 @@
 
 	/*-----------------------------------------------------------------------------------------------
 	********************** skipWhiteSpace ********************
-	* Preconditions:
+	* Preconditions: $index is currently at a white space
 	*
-	* Postconditions:
+	* Postconditions: $index will be on the next non-white space character
 	*
 	* Function Purpose: To skip all white space until something else is found
 	*
-	* Input Expected:
+	* Input Expected: None
 	*
-	* Exceptions/Errors Thrown:
+	* Exceptions/Errors Thrown: None
 	*
-	* Files Acessed:
+	* Files Acessed: None
 	*
-	* Function Pseudocode Author:
+	* Function Pseudocode Author: Michael Debs
 	*
-	* Function Author:
+	* Function Author: Alla Salah
 	*
 	* Date of Original Implementation:
 	*
@@ -112,21 +116,25 @@
         
 	/*-----------------------------------------------------------------------------------------------
 	********************** getName ********************
-	* Preconditions:
+	* Preconditions: Line index $i is currently on the first character of the line
 	*
-	* Postconditions:
+	* Postconditions: The first and last name are retrieved and sent to the database (once connected to it)
 	*
 	* Function Purpose: To retrieve and validate the name of a faculty member
 	*
-	* Input Expected:
+	* Input Expected: 
 	*
 	* Exceptions/Errors Thrown:
+	*	Missing commma between first and last name
+	*	Only uppercase characters allowed'
+	*	Missing last name
+	* 	Blank must follow a comma
 	*
-	* Files Acessed:
+	* Files Acessed: None
 	*
-	* Function Pseudocode Author:
+	* Function Pseudocode Author: Michael Debs
 	*
-	* Function Author:
+	* Function Author: Michael Debs, Alla Salah
 	*
 	* Date of Original Implementation:
 	*
@@ -145,7 +153,7 @@
 		$firstName = "";
 		
 		//Gets last name information
-		while($line[$i] != ',' && strlen($lastName) <= 25)
+		while($line[$i] != ',' && strlen($lastName) <= $MAXNAMELENGTH)
 		{
 			if ($line[$i] == " ")
 			{
@@ -173,7 +181,7 @@
 		if (ord($line[$i]) == 32 || ord($line[$i]) == 9)
 		{		
 			$i++;
-			while(ord($line[$i]) != 32 && ord($line[$i])!= 9 && strlen($firstName) <= (25 - strlen($lastName)) )
+			while(ord($line[$i]) != 32 && ord($line[$i])!= 9 && strlen($firstName) <= ($MAXNAMELENGTH - strlen($lastName)) )
 			{
 				if( ( ord($line[$i])>= 97 && ord($line[$i] <= 122)))
 				{
@@ -199,7 +207,7 @@
 		printf("Name = $lastName, $firstName <br>");
 		
 		//To truncate remaining characters
-		while(ord($line[$i]) !=  32 && ord($line[$i]) && strlen($firstName.$lastName) >= 25) 
+		while(ord($line[$i]) !=  32 && ord($line[$i]) && strlen($firstName.$lastName) >= $MAXNAMELENGTH) 
 		{
 			$i++;
 		}
@@ -263,9 +271,9 @@
         
 	/*-----------------------------------------------------------------------------------------------
 	********************** getEmail ********************
-	* Preconditions:
+	* Preconditions: $index is on the first element of the email
 	*
-	* Postconditions:
+	* Postconditions: Email is retrieved and sent to the database (once connected to it)
 	*
 	* Function Purpose: To retrieve and validate the email address of a faculty member
 	*

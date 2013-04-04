@@ -46,9 +46,9 @@
         //************************************************************************************************
    
  /*-----------------------------------------------------------------------------------------------
- ********************** Function Prologue Comment Template ********************
+ ********************** Function Prologue Comment: getInfo ********************
  * Preconditions: Read data from file is in string variable called $line. 
- *                The next available index to inset into the array $roomArray is in the variable $i.
+ *                The next available index to insert into the array $roomArray is in the variable $i.
  * Postconditions: If the room name was previously identified on a prior input line in the file, then
  *                 the array $roomArray will contain the name of the room and it will not be inserted
  *                 in the array again. If it is not in the array it will be inserted into the array.
@@ -276,7 +276,7 @@
           
          
 /*-----------------------------------------------------------------------------------------------
- ********************** Function Prologue Comment Template ********************
+ ********************** Function Prologue Comment: insert ********************
  * Preconditions: The variable $completeRoomName contains the room name concatenated with the room
  *                room number with no space. The variable $i is the next available index to insert 
  *                into the array.
@@ -361,7 +361,7 @@
                  false.
          --------------------------------------------------------------*/
  /*---------------------------------------------------------------------------------------------------
- ********************** Function Prologue Comment Template ********************
+ ********************** Function Prologue Comment: isWhiteSpace ********************
  * Preconditions: The variable $index contains an index value that is within the bounds of the string.
  *
  * Postconditions: Returns true if the specified index in the string is either a blank or tab. Returns
