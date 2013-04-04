@@ -11,7 +11,7 @@
          $lineNumber=1;
           $i=0;
           
-         $fileName = 'ROOMS16.txt';
+         $fileName = 'ROOMS30.txt';
          $inputFile = fopen ($fileName,"r");
          if($inputFile == NULL)
          {
@@ -44,21 +44,49 @@
         //************************************************************************************************
         // FUNCTIONS DEFINITIONS
         //************************************************************************************************
-        
-        /*------------------------------------------------------------
-         Purpose: Parses the input line read and if the input data 
-                  conforms to standards it stores the identified room
-                  name and number into an array if it does not already
-                  exist. If at any time the input does not conform to the 
-                  expected standards, then the appropriate error is printed.
-         Input: A buffer with input data called $line.
-                The line number used for logging errors.
-                An array with the already identified room names called
-                $roomArray.
-                The next available index in the roomArray to insert into 
-                called $i.
-         Return: Nothing.
-         --------------------------------------------------------------*/
+   
+ /*-----------------------------------------------------------------------------------------------
+ ********************** Function Prologue Comment Template ********************
+ * Preconditions: Read data from file is in string variable called $line. 
+ *                The next available index to inset into the array $roomArray is in the variable $i.
+ * Postconditions: If the room name was previously identified on a prior input line in the file, then
+ *                 the array $roomArray will contain the name of the room and it will not be inserted
+ *                 in the array again. If it is not in the array it will be inserted into the array.
+ * Function Purpose: Parses the input line read and if the input data 
+ *                   conforms to standards it stores the identified room
+ *                   name and number into an array if it does not already
+ *                   exist. If at any time the input does not conform to the 
+ *                   expected standards, then the appropriate error is printed.
+ * Input Expected: A buffer with input data called $line.
+ *                 The line number used for logging errors.
+ *                 An array with the already identified room names called
+ *                 $roomArray.
+ *                 The next available index in the roomArray to insert into 
+ *                 called $i.
+ * Exceptions/Errors Thrown: Missing room type, or room type must be an upper-case character.
+ *                           Missing room size, or room size must be greater than 1 and less than or
+ *                           equal to 200. 
+ *                           Missing room name or, the room name must be six upper-case characters
+ *                           A-Z in length.
+ *                           Room number must all be digits and followed by nothing. 
+ * Files Accessed: None
+ *
+ * Function Pseudocode Author: Alla Salah
+ *
+ * Function Author: Alla Salah  
+ *
+ * Date of Original Implementation: 3-30-2013
+ *
+ * Tested by SQA Member (NAME and DATE): 3-30-2013 and 4-4-2013
+ * 
+ ** Modifications by:
+ * Modified By (Name and Date):
+ * Modifications Description:
+ *
+ * Modified By (Name and Date):
+ * Modifications Description:
+ -------------------------------------------------------------------------------------------------*/
+
         function  getInfo ($line,$lineNumber,&$roomArray,&$i)
         {
             //varaiable declarations and initialization
@@ -76,7 +104,7 @@
             $gotRoomSize=false;
             $gotRoomName=false;
             $gotRoomNumber=false;
-            printf("Size of line= %d <br>",strlen($line));
+            //printf("Size of line= %d <br>",strlen($line));
            //for($k=0; $k < strlen($line);$k++)
              // printf("k= %d --%s = %d <br>",$k, $line[$k],ord($line[$k]));
             
@@ -236,7 +264,7 @@
             }
             else if ($invalidRoomNumber==true)
             {
-                  printf ("Error on line %d: ROOM NUMBER MUST BE ALL DIGITS WITH NOTHING FOLLOWING IT.<br>",$lineNumber);
+                  printf ("Error on line %d: Room number must all be digits and followed by nothing.<br>",$lineNumber);
             }
             echo("__________________________________________________________<br>");
             // Now the valid data is taken and put into an array.
@@ -246,16 +274,38 @@
             //IF result == false, then don't change value of i.
           }//end function    
           
-         /*------------------------------------------------------------
-         Purpose: Checks to see if the currently identified room name is
-                  is already in the roomArray. If it is not then it will
-                  insert it into the array. If it is it will not insert.
-                  The goal is to identify duplicate rooms in the file
-         Input: the room name and number called completeRoomName
-                an array with the already identified called roomArray
-         Return: true if insertion into the roomArray is performed. Otherwise,
-                 returns false.
-         --------------------------------------------------------------*/
+         
+/*-----------------------------------------------------------------------------------------------
+ ********************** Function Prologue Comment Template ********************
+ * Preconditions: The variable $completeRoomName contains the room name concatenated with the room
+ *                room number with no space. The variable $i is the next available index to insert 
+ *                into the array.
+ * Postconditions: Returns true if insertion into the roomArray is performed. Otherwise, it returns false.                 
+ * Function Purpose: Checks to see if the currently identified room name is
+ *                   is already in the roomArray. If it is not then it will
+ *                   insert it into the array. If it is it will not insert.
+ *                   The goal is to identify duplicate rooms in the file.
+ * Input Expected: the room name and number called completeRoomName an array with the already identified 
+ *                 called roomArray
+ * Exceptions/Errors Thrown: None
+ * Files Accessed: None
+ *
+ * Function Pseudocode Author: Alla Salah
+ *
+ * Function Author: Alla Salah
+ *
+ * Date of Original Implementation: 3-30-2013
+ *
+ * Tested by SQA Member (NAME and DATE): 3-30-2013 and 4-4-2013
+ * 
+ ** Modifications by:
+ * Modified By (Name and Date):
+ * Modifications Description:
+ *
+ * Modified By (Name and Date):
+ * Modifications Description:
+ -------------------------------------------------------------------------------------------------*/
+
         /* function insert ($completeRoomName,&$roomArray,&$i)
           {
               //Varaible Declarations
@@ -309,7 +359,38 @@
                 
          Return: true if line[index] is a blank or tab. Otherwise returns
                  false.
-         --------------------------------------------------------------*/               
+         --------------------------------------------------------------*/
+ /*---------------------------------------------------------------------------------------------------
+ ********************** Function Prologue Comment Template ********************
+ * Preconditions: The variable $index contains an index value that is within the bounds of the string.
+ *
+ * Postconditions: Returns true if the specified index in the string is either a blank or tab. Returns
+ *                 false if not.
+ * Function Purpose: To check if the string variable $line at $index is either a space or tab.
+ *
+ * Input Expected: A variable called $index that hold an integer value.
+ *                 A variable called $line is checked to see if it contains a space or tab
+ *                 at the specified index value.
+ *                 The line number from the where the data was read from the input file.
+ * Exceptions/Errors Thrown: Expecting a white space or tab after %s on line.
+ * Files Accessed: None
+ *
+ * Function Pseudocode Author: Alla Salah
+ *
+ * Function Author: Alla Salah
+ *
+ * Date of Original Implementation: 3-30-2013
+ *
+ * Tested by SQA Member (NAME and DATE): Alla Salah 3-30-2013 and 4-4-2013
+ * 
+ ** Modifications by:
+ * Modified By (Name and Date):
+ * Modifications Description:
+ *
+ * Modified By (Name and Date):
+ * Modifications Description:
+ -------------------------------------------------------------------------------------------------*/
+
          function isWhiteSpace($index,$line,$lineNumber)
          {
              if (ord($line[$index]) == 32 || ord($line[$index]) == 9)//white space= 32, and tab=9
