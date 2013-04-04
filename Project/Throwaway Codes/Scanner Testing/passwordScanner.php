@@ -6,7 +6,7 @@
 </head>
 <body>
 <?php
-$fileName = 'P1.txt';
+$fileName = 'P2.txt';
 $lineNumber=1;
 $inputFile = fopen ($fileName,"r");
 if($inputFile == NULL)
@@ -36,7 +36,7 @@ else
     }//end while loop  
 }//end else   
 /*-----------------------------------------------------------------------------------------------
- ********************** Function Prologue Comment Template ********************
+ ********************** Function Prologue Comment: verifyPassword ********************
  * Preconditions: $line is a string that contains the password to be checked.
  *
  * Postconditions: Function will return true if password is meets the specified
@@ -54,14 +54,15 @@ else
  *
  * Function Author: Alla Salah
  *
- * Date of Original Implementation: 4-3-013 and 4-4-2013
+ * Date of Original Implementation: 4-3-2013 and 4-4-2013
  *
- * Tested by SQA Member (NAME and DATE): Alla 4-3-13 and 4-4-2013
+ * Tested by SQA Member (NAME and DATE): Alla 4-3-2013 and 4-4-2013
  * 
  ** Modifications by:
- * Modified By (Name and Date):
- * Modifications Description:
- *
+ * Modified By (Name and Date): Michael Debs and Jared Cox, 4-4-2013
+ * Modifications Description:	Fixed logical errors.  Didn't catch invalid characters.
+ *								Implemented constants ($MINPASSWORDLENGTH and $MAXPASSWORDLENGTH).
+ * 							
  * Modified By (Name and Date):
  * Modifications Description:
  -------------------------------------------------------------------------------------------------*/
@@ -71,69 +72,63 @@ function verifyPassword($line,$lineNumber )
 {
     printf("line %d: %s <br>",$lineNumber,$line);
     //Varaible declarations and initalization
-    $sizeOfLine= strlen($line)-2;
+    $sizeOfLine = strlen(trim($line));
     $index=0;
     $foundDigit= false;
     $foundSpecialSymbol=false;
     $foundWhiteSpace=false;
     $invalidPassword=false;
+	$MINPASSWORDLENGTH = 6;		//constant
+	$MAXPASSWORDLENGTH = 10;	//constant
+	$validSpecialSymbols = array('?', '.', ',', '!');
+	
+	
     
     //Checks the length of the password 
-    if($sizeOfLine < 6 || $sizeOfLine >10 || $sizeOfLine == 0)
+    if($sizeOfLine < $MINPASSWORDLENGTH || $sizeOfLine > $MAXPASSWORDLENGTH)
     {
         printf("Error on line %d. Invalid password length.<br>",$lineNumber);
-        $invalidPassword=true;
-    }
-    
-    //Checks if password begins with a lower-case or upper-case alphabetic character
-    if (!(ord($line[0]) >= 65 || ord($line[0]) <= 90 ) || !(ord($line[0]) >= 97 || ord($line[0]) <= 122 ) )
-    {        
-         printf("Error on line %d. Password must begin with a character.<br>",$lineNumber);
-         $invalidPassword=true;       
-    }
-    
-    
-    if($invalidPassword== true)
-    {
-        printMessage();
+		printMessage();
         return false;
     }
+    
+	if(ctype_alpha($line[$index]) == false)
+	{//$index is always 0 here
+		printf("Error on line %d. Password must begin with a character.<br>",$lineNumber);
+        printMessage();
+		return false;
+	}
+    
     while($index < strlen($line))
     {
-        if(ord($line[$index]) >= 48 && ord($line[$index]) <= 57)
+        if(ctype_digit($line[$index]) == true)
         {
             $foundDigit=true;
         }
-        else if ($line[$index]== '?' || $line[$index]== '.' || $line[$index]== '!' || $line[$index]== ',' )
+        else if(in_array($line[$index], $validSpecialSymbols) == true)
         {
             $foundSpecialSymbol=true;
         }
-        else if ($line[$index]== 32 || $line[$index] == 9)
-        {
-            $foundWhiteSpace=true;
-        }
-        $index= $index + 1;
+		else if((ctype_alnum($line[$index]) == false) and (in_array($line[$index], $validSpecialSymbols) == false))
+		{
+			printf("Error on line %d.  Invalid character found.<br>",$lineNumber);
+			printMessage();
+			return false;
+		}
+        $index = $index + 1;
     }//end while loop
     
     if($foundDigit==false) 
     {
         printf("Error on line %d, password must contain a digit. <br>",$lineNumber);
-        $invalidPassword=true;
+        printMessage();
+		return false;		
     }
     if($foundSpecialSymbol==false )
     {
         printf("Error on line %d, password must contain a special symbol. <br>",$lineNumber);
-        $invalidPassword=true;
-    }
-    if ($foundWhiteSpace==true)
-    {
-        printf("Error on line %d, password cannot contain a space or tab. <br>",$lineNumber);
-        $invalidPassword=true;
-    }
-    if($invalidPassword==true)
-    {
         printMessage();
-        return false;
+		return false;
     }
     else
     {
@@ -145,7 +140,7 @@ function verifyPassword($line,$lineNumber )
 }//end function
 
 /*-----------------------------------------------------------------------------------------------
- ********************** Function Prologue Comment Template ********************
+ ********************** Function Prologue Comment: printMessage ********************
  * Preconditions: Function is only intended as a helpful guide to the various password reqirements
  *                used only when an invalid password is recognized.
  * Postconditions:None  
@@ -167,8 +162,8 @@ function verifyPassword($line,$lineNumber )
  * Tested by SQA Member (NAME and DATE): Alla Salah 4-3-2013
  * 
  ** Modifications by:
- * Modified By (Name and Date):
- * Modifications Description:
+ * Modified By (Name and Date): Michael Debs and Jared Cox, 4-4-2013
+ * Modifications Description: Fixed spelling error and added #5 to the message
  *
  * Modified By (Name and Date):
  * Modifications Description:
@@ -180,49 +175,10 @@ function printMessage()
     echo("1. Must begin with an upper-case or lower-case alphabetic character.<br>");
     echo("2. Must contain at least one of the following: , . ! ? <br>");
     echo("3. Must contain at least one digit 0-9. <br>");
-    echo("4. Must have a totoal length of 6 to 10 chacraters. <br>");
+    echo("4. Must have a total length of 6 to 10 chacraters. <br>");
+	echo("5. Must NOT contain spaces or tabs. <br>");
     echo("_____________________________________________________________________<br>");
 }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
  ?>
