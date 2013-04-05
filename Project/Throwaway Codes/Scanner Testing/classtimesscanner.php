@@ -25,8 +25,7 @@ while($stillTesting == true)
 	//VARIABLES
 	$lineNumber = 0;	//used in listing errors
 	$printLine = " ";	//line read in from file
-	$printLineIndex = 0;	
-	$currentCourse = "";		//string variable		
+	$printLineIndex = 0;			
 	$errorOnLine = false;
 	$errorInFile = false;
 	$REQUIREDITEMSONLINE = 2;	//there must be at least 2 items on a line, otherwise there is an error
