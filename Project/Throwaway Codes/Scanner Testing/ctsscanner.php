@@ -6,9 +6,9 @@
 	//FLAGS
 		$stillTesting = true;
 		$startQuery = true;
-		$sectionsFlag = 1;		//these three flags have integer values to distinguish between the
-		$classSizeFlag = 2;		//types of flags passed to the "getNumber" function
-		$hoursFlag = 3;
+		$SECTIONSFLAG = 1;		//these three flags have integer values to distinguish between the
+		$CLASSSIZEFLAG = 2;		//types of flags passed to the "getNumber" function
+		$HOURSFLAG = 3;
 	//FILE SETUP
 		$testName = "Tests/cts/cts";		//used to create filenames to open
 		$testNum = "1";		
@@ -31,16 +31,18 @@ while($stillTesting == true)
 	$lineNumber = 0;	//used in listing errors
 	$printLine = " ";	//line read in from file
 	$printLineIndex = 0;	
-	$currentCourse = "";		//string variable		
+	$currentCourse = "";		//string variable	
+	$listOfCourses = array();	//used in detecting duplicate first courses in a file
+	$listOfCoursesIndex = 0;
 	$errorOnLine = false;
 	$errorInFile = false;
-	$requiredItemsOnLine = 7;	//there must be exactly 7 items on a line, otherwise there is an error
+	$REQUIREDITEMSONLINE = 7;	//there must be exactly 7 items on a line, otherwise there is an error
+	$retrievedNumber = 0;
 	
 	while(!feof($readFile))
 	{
 		$errorOnLine = false;
 		$printLineIndex = 0;
-		$firstCourseOnLineFlag = true;
 		do
 		{//this block will skip over any empty lines in a file
 		 $printLine = fgets($readFile);
@@ -65,8 +67,8 @@ while($stillTesting == true)
 			echo "line number $lineNumber and line index $printLineIndex" . "<br>";
 			
 			
-			if((count($readLine)) == $requiredItemsOnLine)
-			{	//if there is not $requiredItemsOnLine (7) items on the line, something is missing
+			if((count($readLine)) == $REQUIREDITEMSONLINE)
+			{	//if there is not $REQUIREDITEMSONLINE (7) items on the line, something is missing
 				
 				skipWhitespace($printLine, $printLineIndex); 
 				if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $logFile) == false)
@@ -74,129 +76,144 @@ while($stillTesting == true)
 					echo "getCourse returned false" . "<br>";
 					$errorOnLine = true;  $errorInFile = true;
 				}
-				else
-				{//valid course was encountered
 				
-					/*if $currentCourse already established in COURSES database
-					  {
-						fputs($logFile, "Error on line $lineNumber.  Course already exists in database." . PHP_EOL);
-						$errorOnLine = true; $errorInFile = true;
-					  }
-					  else
-					  {
-						//add course to $listOfCourses
-						//start query "INSERT INTO ... "
-						*/
-						if(verifyWhiteSpace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
-						{   echo "whitespace error 1" . "<br>";
-							echo $printLine[$printLineIndex] . "<br>";
+				if($errorOnLine == false)
+				{
+					if(in_array($currentCourse, $listOfCourses) == true)
+						  {
+							fputs($logFile, "Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
 							$errorOnLine = true; $errorInFile = true;
-						}
-						else
-						{
-							skipWhitespace($printLine, $printLineIndex);
-							if(getNumber($printLine, $printLineIndex, $lineNumber, $sectionsFlag, $retrievedNumber, $logFile) == false)
-							{//invalid day sections count was encountered
-								echo "day sections false" . "<br>";
-								$errorOnLine = true; $errorInFile = true;
-							}
-							else
-							{//valid day sections count was encountered
-								echo "day sections true" . "<br>";
-								if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $lineNumber, $logFile) == false)
-								{	echo "whitespace error 2" . "<br>";
-									$errorOnLine = true; $errorInFile = true;
-								}
-								else
-								{
-									//add $retrievedNumber to query
-									skipWhitespace($printLine, $printLineIndex);
-									if(getNumber($printLine, $printLineIndex, $lineNumber, $sectionsFlag, $retrievedNumber, $logFile) == false)
-									{//invalid night sections count was encountered
-										echo "night sections false"."<br>";
-										$errorOnLine = true; $errorInFile = true;
-									}
-									else
-									{//valid night sections count was encounterd
-										echo "night sections true"."<br>";
-										if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
-										{	echo "whitspace error 3" . "<br>";
-											$errorOnLine = true; $errorInFile = true;
-										}
-										else
-										{
-											//add $retrievedNumber to query
-											skipWhitespace($printLine, $printLineIndex);
-											if(getNumber($printLine, $printLineIndex, $lineNumber, $sectionsFlag, $retrievedNumber, $logFile) == false)
-											{//invalid internet sections count was encountered
-												echo "internet sections false" . "<br>";
-												$errorOnLine = true; $errorInFile = true;
-											}
-											else
-											{//valid internet sections count was encountered
-												echo "internet sections true" . "<br>";
-												if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
-												{	echo "whitespace error 4" . "<br>";
-													$errorOnLine = true; $errorInFile = true;
-												}
-												else
-												{	
-													//add $retrievedNumber to query
-													skipWhitespace($printLine, $printLineIndex);
-													if(getNumber($printLine, $printLineIndex, $lineNumber, $classSizeFlag, $retrievedNumber, $logFile) == false)
-													{//invalid class size count encountered
-														echo "class size false" . "<br>";
-														$errorOnLine = true; $errorInFile = true;
-													}
-													else
-													{//valid class size count encountered
-														echo "class size true" . "<br>";
-														if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
-														{	echo "whitespace error 5" . "<br>";
-															$errorOnLine = true; $errorInFile = true;
-														}	
-														else
-														{	//add $retrievedNumber to query
-															skipWhitespace($printLine, $printLineIndex);
-															if(getChar($printLine, $printLineIndex, $retrievedChar, $logFile) == false)
-															{//character was not C or L
-																echo "getChar false" . "<br>";
-																$errorOnLine = true; $errorInFile = true;
-															}
-															else
-															{//character was C or L
-																echo "getChar true" . "<br>";
-																if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
-																{	echo "whitespace error 6" . "<br>";
-																	$errorOnLine = true; $errorInFile = true;
-																}
-																else
-																{	//add $retrievedChar to query
-																	
-																	skipWhitespace($printLine, $printLineIndex);
-																	if(getNumber($printLine, $printLineIndex, $lineNumber, $hoursFlag, $retrievedNumber, $logFile) == false)
-																	{//invalid hours count encountered
-																		echo "hours false" . "<br>";
-																		$errorOnLine = true; $errorInFile = true;
-																	}
-																	else
-																	{//valid hours count encountered
-																		echo "hours true" . "<br>";
-																		//add $retrievedNumber to query
-																		//submit query
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-			    	#}
+						  }
+						  else
+						  {
+							$listOfCourses[$listOfCoursesIndex] = $currentCourse;
+							$listOfCoursesIndex++;
+							$firstCourseOnLineFlag = false;
+							//start new query
+						  }	
+				}
+				
+				if($errorOnLine == false)
+				{
+					if(verifyWhiteSpace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					{   echo "whitespace error 1" . "<br>";
+						echo $printLine[$printLineIndex] . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{
+					skipWhitespace($printLine, $printLineIndex);
+					if(getNumber($printLine, $printLineIndex, $lineNumber, $SECTIONSFLAG, $retrievedNumber, $logFile) == false)
+					{//invalid day sections count was encountered
+						echo "day sections false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//valid day sections count was encountered
+					echo "day sections true" . "<br>";
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $lineNumber, $logFile) == false)
+					{	
+						echo "whitespace error 2" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//add $retrievedNumber to query
+					skipWhitespace($printLine, $printLineIndex);
+					if(getNumber($printLine, $printLineIndex, $lineNumber, $SECTIONSFLAG, $retrievedNumber, $logFile) == false)
+					{//invalid night sections count was encountered
+						echo "night sections false"."<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//valid night sections count was encounterd
+					echo "night sections true"."<br>";
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					{	echo "whitspace error 3" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{
+					//add $retrievedNumber to query
+					skipWhitespace($printLine, $printLineIndex);
+					if(getNumber($printLine, $printLineIndex, $lineNumber, $SECTIONSFLAG, $retrievedNumber, $logFile) == false)
+					{//invalid internet sections count was encountered
+						echo "internet sections false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//valid internet sections count was encountered
+					echo "internet sections true" . "<br>";
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					{	echo "whitespace error 4" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//add $retrievedNumber to query
+					skipWhitespace($printLine, $printLineIndex);
+					if(getNumber($printLine, $printLineIndex, $lineNumber, $CLASSSIZEFLAG, $retrievedNumber, $logFile) == false)
+					{//invalid class size count encountered
+						echo "class size false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//valid class size count encountered
+					echo "class size true" . "<br>";
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					{	
+						echo "whitespace error 5" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//add $retrievedNumber to query
+					skipWhitespace($printLine, $printLineIndex);
+					if(getChar($printLine, $printLineIndex, $lineNumber, $retrievedChar, $logFile) == false)
+					{//character was not C or L
+						echo "getChar false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+
+				if($errorOnLine == false)
+				{//character was C or L
+					echo "getChar true" . "<br>";
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					{	echo "whitespace error 6" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+
+				if($errorOnLine == false)
+				{//add $retrievedChar to query
+					skipWhitespace($printLine, $printLineIndex);
+					if(getNumber($printLine, $printLineIndex, $lineNumber, $HOURSFLAG, $retrievedNumber, $logFile) == false)
+					{//invalid hours count encountered
+						echo "hours false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				if($errorOnLine == false)
+				{//valid hours count encountered
+					echo "hours true" . "<br>";
+					//add $retrievedNumber to query
+					//submit query
 				}		  
 			}
 			else
@@ -230,29 +247,58 @@ while($stillTesting == true)
 /*******************FUNCTIONS******************/
 
 	function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $logFile)
-	{/*************************************************************************************
-	 |	Function Name:  getCourse
-	 |	Input Parameters:
-	 |  	$line = line of text read in from the test file
-	 |		$lineIndex = current index for $line
-	 |		$lineNumber = current line number for test file
-	 |		$currentCourse = will hold a string containing the course built
-	 |						  from the test file (if course is valid)
-	 |		$firstCourseOnLineFlag = flag denoting whether or not the course being
-	 |								 inspected is the first course on $line
-	 |		$firstCourseNumber = will hold an integer containing the course number of
-	 |							 the first course on the line.  It is used to determine
-	 |							 if a prerequisite on the line is higher than the first
-	 |							 course on the line
-	 |		$currentCourseNumber = will hold an integer to be compared against $firstCourseNumber
-	 |		$logFile = text file that errors are logged to
-	 |
-	 |	Output:
-	 |		Returns true of the course encountered is valid and acceptable.
-	 |		Returns false otherwise.
-	 |					
-	 |
-	  ************************************************************************************/
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: getCourse ********************
+	 * Preconditions:  Data exists on the line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Validates that the string of characters on a line represent
+	 *					  a valid course.  A valid course is 2 to 4 uppercase characters
+	 *					  concatenated with exactly 3 digits and can be further concatenated
+	 *					  with up to 2 more uppercase characters.
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$currentCourse = string that will store the course gathered from
+	 *									 the line that will be added to the sql query
+	 *					$firstCourseOnLineFlag = a flag designating whether or not the course
+	 *											 pulled from the line is the first course on the line
+	 *					$firstCourseNumber = will store the number of the first course on the line
+	 *										 and will be used to validate prerequisites
+	 *					$currentCourseNumber = will store the number of the currently read course on
+	 *										   the line and will be compared to $firstCourseNumber
+	 *					$logFile = text file that errors are logged to
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *
+	 * Files Accessed:  None
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
 	
 	 //function variables
 	 $courseLetters = array();
@@ -311,19 +357,10 @@ while($stillTesting == true)
 					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
 					return false;
 				}
-				for($i=0; $i<count($courseNumbers); $i++)
-				{	
-					switch($i)
-					{
-						case 0: $courseNumberInt += ($courseNumbers[$i] * 100);
-								break;
-						case 1: $courseNumberInt += ($courseNumbers[$i] * 10);
-								break;
-						case 2: $courseNumberInt += ($courseNumbers[$i]);
-								break;
-					}
-				}				
 				
+				$courseNumberInt = intval(implode($courseNumbers));	//converts the integer array to a solid string
+																	//and converts the string value to an integer
+																	
 				if(($courseNumberInt < 1) or ($courseNumberInt > 499))
 				{
 					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
@@ -366,32 +403,59 @@ while($stillTesting == true)
 ##################################################################################################
 	
 	function getNumber($line, &$lineIndex, $lineNumber, $flag, &$retrievedNumber, $logFile)
-	{/*************************************************************************************
-	 |	Function Name:  getNumber
-	 |	Input Parameters:
-	 |  	$line = line of text read in from the test file
-	 |		$lineIndex = current index for $line
-	 |		$flag = an integer representing one of three possible values:
-	 |			1 - day/night/internet sections count
-	 |			2 - class size count
-	 |			3 - hours count
-	 |		$retrievedNumber = number gathered from the line to add to SQL query
-	 |		$logFile = text file that errors are logged to
-	 |
-	 |	Output:
-	 |		Modified $lineIndex, and a number ($retrievedNumber) to add to SQL query
-	 |					
-	 |
-	  ************************************************************************************/
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: getNumber ********************
+	 * Preconditions:  Data exists on the line provided by file or user.
+	 *
+	 * Postconditions:  Valid number was provided based on the flag provided
+	 *
+	 * Function Purpose:  Validates that number of sections is 0 or greater;
+	 *					  Class size is at least 1; or
+	 *					  Credit hours is between 1 and 12						
+	 *
+	 * Input Expected:	$line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$flag = used to distinguish between the number to look for
+	 *							1 = number of sections
+	 *							2 = class size
+	 *							3 = credit hours
+	 *					$retrievedNumber = stores number gathered from the line to add to SQL query
+	 *					$logFile = text file that errors are logged to
+	 *
+	 *
+	 * Exceptions/Errors Thrown:  Number expected at index $lineIndex
+	 *							  Section count cannot be less than 0
+	 *							  Class size must be between $CLASSSIZEMIN and $CLASSSIZEMAX
+	 *							  Number of hours must be between $HOURSMIN and $HOURSMAX
+	 *							  Unexpected error occurred on line $lineNumber at index $lineIndex
+	 *
+	 * Files Accessed:	$logFile - for reporting errors
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:	Jared Cox
+	 *
+	 * Date of Original Implementation:	March 28, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 31, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
 		
 	//VARIABLES
 		$numString = array();
 		$numStringIndex = 0;
 		$numOnLine = 0;
-		$classSizeMin = 1;
-		$classSizeMax = 200;
-		$hoursMin = 1;
-		$hoursMax = 12;
+		$CLASSSIZEMIN = 1;
+		$CLASSSIZEMAX = 200;
+		$HOURSMIN = 1;
+		$HOURSMAX = 12;
 	/////////////////////////////////////
 	
 		while(ctype_digit($line[$lineIndex]) == true)
@@ -425,9 +489,9 @@ while($stillTesting == true)
 						}
 				
 				case 2: //class size
-						if(($numOnLine < $classSizeMin) or ($numOnLine > $classSizeMax))
+						if(($numOnLine < $CLASSSIZEMIN) or ($numOnLine > $CLASSSIZEMAX))
 						{
-							fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Class size must be between $classSizeMin and $classSizeMax." . PHP_EOL);
+							fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Class size must be between $CLASSSIZEMIN and $CLASSSIZEMAX." . PHP_EOL);
 							return false;
 						}
 						else
@@ -435,10 +499,10 @@ while($stillTesting == true)
 							$retrievedNumber = $numOnLine;
 							return true;
 						}
-				case 3: //hours
-						if(($numOnLine < $hoursMin) or ($numOnLine > $hoursMax))
+				case 3: //teacher credit hours
+						if(($numOnLine < $HOURSMIN) or ($numOnLine > $HOURSMAX))
 						{
-							fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Number of hours must be between $hoursMin and $hoursMax." . PHP_EOL);
+							fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Number of hours must be between $HOURSMIN and $HOURSMAX." . PHP_EOL);
 							return false;
 						}
 						else
@@ -453,20 +517,40 @@ while($stillTesting == true)
 	
 ##################################################################################################	
 	
-	function getChar($line, &$lineIndex, &$retrievedChar, $logFile)
-	{/*************************************************************************************
-	 |	Function Name:  getNumber
-	 |	Input Parameters:
-	 |  	$line = line of text read in from the test file
-	 |		$lineIndex = current index for $line
-	 |		$retrievedChar = character gathered from the line to add to SQL query
-	 |		$logFile = text file that errors are logged to
-	 |
-	 |	Output:
-	 |		Modified $lineIndex, and a characdter ($retrievedChar) to add to SQL query
-	 |					
-	 |
-	  ************************************************************************************/
+	function getChar($line, &$lineIndex, $lineNumber, &$retrievedChar, $logFile)
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: getSlash ********************
+	 * Preconditions:	Valid data has been provided up to this point
+	 *
+	 * Postconditions:  Times of day should follow this function
+	 *
+	 * Function Purpose:  Validates a class type - C or L
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$retrievedChar = stores character gathered from the line to add to SQL query
+	 *					$logFile = text file that errors are logged to
+	 *
+	 * Exceptions/Errors Thrown:  Illegal character encountered.  Room type must be 'C' or 'L'
+	 *
+	 * Files Accessed:  $logFile - for reporting errors
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation:  March 28, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE): Jared Cox, March 31, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 	//VARIABLES
 	//VARIABLES
 		$charOnLine = $line[$lineIndex];
 	
@@ -480,7 +564,7 @@ while($stillTesting == true)
 			case 'L': $retrievedChar = $charOnLine;
 					  $lineIndex++;
 					  return true;
-			default :  fputs($logFile, "Illegal character encountered.  Room type must be 'C' or 'L'." . PHP_EOL);
+			default :  fputs($logFile, "Error on line $lineNumber at index $lineIndex. Illegal character encountered.  Room type must be 'C' or 'L'." . PHP_EOL);
 					   $lineIndex++;
 					  return false;
 		}
@@ -488,17 +572,36 @@ while($stillTesting == true)
 ##################################################################################################
 
 	function skipWhitespace($line, &$lineIndex)
-	{/*************************************************************************************
-	 |	Function Name:  skipWhitespace
-	 |	Input Parameters:
-	 |  	$line = line of text read in from the test file
-	 |		$lineIndex = current index for $line
-	 |
-	 |	Output:
-	 |		Modified $lineIndex
-	 |					
-	 |
-	  ************************************************************************************/
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment Template ********************
+	 * Preconditions:  Data exists on a line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Advances the index past continous strings of whitespace
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *
+	 * Exceptions/Errors Thrown:  None
+	 *
+	 * Files Accessed:  None
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
 		while($line[$lineIndex] == " ")
 		{
 			$lineIndex++;
@@ -508,20 +611,39 @@ while($stillTesting == true)
 ##################################################################################################
 
 	function verifyWhitespace($line, $lineIndex, $lineNumber, $logFile)
-	{/*************************************************************************************
-	 |	Function Name:  verifyWhitespace
-	 |	Input Parameters:
-	 |  	$line = line of text read in from the test file
-	 |		$lineIndex = current index for $line
-	 |		$logFile = text file that errors are logged to
-	 |
-	 |	Output:
-	 |		Returns true if the current position of $line is whitespace
-	 |		Returns false otherwise
-	 |					
-	 |
-	  ************************************************************************************/
-		if($line[$lineIndex] != " ")
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment Template ********************
+	 * Preconditions:  Valid data exists on the line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Advances the index past a single character of whitespacee
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$logFile = text file that errors are logged to
+	 *
+	 * Exceptions/Errors Thrown:  Whitespace missing where expected
+	 *
+	 * Files Accessed:  $logFile - for reporting errors
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
+		if($line[$lineIndex] != " " and ($line[$lineIndex] != "\r"))
 		{
 			fputs($logFile, "Error on line $lineNumber.  Whitespace must separate elements on line." . PHP_EOL);
 		}
