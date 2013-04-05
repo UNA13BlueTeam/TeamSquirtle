@@ -1,5 +1,6 @@
 <?php include("includes/header.php");
-
+	  include_once("includes/db.php");
+	  
 	// Get variables from input form
 	$type = $_POST['roomType'];
 	$size = $_POST['size'];

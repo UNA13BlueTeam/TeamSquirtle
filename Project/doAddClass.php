@@ -1,4 +1,6 @@
 <?php include("includes/header.php");
+	  include_once("includes/db.php");
+	  
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
         if(!$link){
             die('cannot connect database'. mysqli_error($link));
