@@ -2,26 +2,38 @@
 <body>
 
 <?php
-	function getTime($line, &$lineIndex, $lineNumber, &$retrievedTime, &$times, &$timesIndex, $logFile)
-	{/*-----------------------------------------------------------------------------------------------
-	 ********************** Function Prologue Comment: classtimesscanner ********************
+	/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: conflicttimesscanner ********************
 	 * Preconditions:  None
 	 *
-	 * Postconditions:  None
+	 * Postconditions: None
 	 *
-	 * Function Purpose:  Validates authenticity of a file containing class times that 
-	 *					  a course may be scheduled at.
+	 * Function Purpose:  Validates the authenticity of a file containing conflict times
+	 *					  for scheduled courses by analyzing the contents of each line
+	 *					  in a file. 
 	 *
-	 * Input Expected:	Text input of the following format:
-	 *						#M DoW/00:00 00:00
-	 *						Where #M is a positive integer > 0
+	 * Input Expected:  Text input of the following format:
+	 *						XYZ DoW/00:00 DoW/00:00
+	 *						Where X must be 2 to 4 uppercase letters
+	 *						Where Y must be a 3 digit number between 001-499
+	 *						Where Z can be up to 2 uppercase letters
 	 *						Where DoW can be any in-order substring of MTWRFS
 	 *						Where 00:00 can be any valid military time specification
-	 *						There can be any number of instances of 00:00 provided
+	 *						There can be any number of instances of DoW/00:00 provided
 	 *							there are no duplicates
-	 *						
-	 *					  
-	 * Exceptions/Errors Thrown:  Invalid time format error thrown if the time of day
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *							  Conflict time already defined in file
+	 *							  Invalid time format error thrown if the time of day
 	 *							  is not valid.
 	 *							  Expected digit error thrown if a digit is not found
 	 *							  where expected.
@@ -32,20 +44,18 @@
 	 *							  Character found does not represent day of week
 	 *							  Lowercase character encountered
 	 *							  No days of week specified
-	 *							  No number at start of line
-	 *							  Number is less than 1
 	 *							  Expected '/' not found
-	 *							  Whitespace  missing where expected
 	 *
-	 * Files Accessed:			  $logFile - to report errors to
+	 * Files Accessed:  Any file given to the program
+	 *					$logFile for reporting errors
 	 *
 	 * Function Pseudocode Author:  Jared Cox
 	 *
-	 * Function Author:			    Jared Cox
+	 * Function Author:  Jared Cox
 	 *
-	 * Date of Original Implementation:  April 3, 2013
+	 * Date of Original Implementation: April 4, 2013
 	 *
-	 * Tested by SQA Member (NAME and DATE): Jared Cox, April 3, 2013
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, April 6, 2013
 	 * 
 	 ** Modifications by:
 	 * Modified By (Name and Date):
@@ -53,14 +63,14 @@
 	 *
 	 * Modified By (Name and Date):
 	 * Modifications Description:
-	 -------------------------------------------------------------------------------------------------*/ 
-
+	 -------------------------------------------------------------------------------------------------*/ 		
+	
 	//FLAGS
 		$stillTesting = true;
 		$startQuery = true;
 		
 	//FILE SETUP
-		$testName = "Tests/classt/classt";
+		$testName = "Tests/conflictt/CONFLICTT";
 		$testNum = "1";
 		
 while($stillTesting == true)
@@ -77,23 +87,22 @@ while($stillTesting == true)
 	//VARIABLES
 	$lineNumber = 0;	//used in listing errors
 	$printLine = " ";	//line read in from file
-	$printLineIndex = 0;		
+	$printLineIndex = 0;	
+	$currentCourse = "";		//string variable
+	$listOfCourses = array();
+	$listOfCoursesIndex = 0;
 	$errorOnLine = false;
 	$errorInFile = false;
 	$REQUIREDITEMSONLINE = 2;	//there must be at least 2 items on a line, otherwise there is an error
-	$listOfTimes = array();
-	$listOfTimesIndex = 0;
+	$listOfConflictTimes = array();
+	$listOfConflictTimesIndex = 0;
+	$conflictTime = " ";
 	$readLine = " ";
-	$retrievedNumber = 0;
-	$retrievedDOW = " ";
-	$retrievedSlash = " ";
-	$retrievedTime = " ";
 	
 	while(!feof($readFile))
 	{
-	
-		$listOfTimes = array();
-		$listOfTimesIndex = 0;
+		$listOfConflictTimes = array();
+		$listOfConflictTimesIndex = 0;
 		
 		$errorOnLine = false;
 		$printLineIndex = 0;
@@ -117,89 +126,103 @@ while($stillTesting == true)
 		echo "line number $lineNumber and line index $printLineIndex" . "<br>";
 		
 		if((count($readLine)) >= $REQUIREDITEMSONLINE)
-		{ //if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
+		{//if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
 			
 			skipWhitespace($printLine, $printLineIndex);
-			if(getNumber($printLine, $printLineIndex, $lineNumber, $retrievedNumber, $logFile) == false)
-			{//invalid amount of minutes was encountered on the line
-				echo "getNumber returned false" . "<br>";
+			if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $logFile) == false)
+			{
+				echo "getCourse returned false" . "<br>";
 				$errorOnLine = true; $errorInFile = true;
 			}
 			
 			if($errorOnLine == false)
-			{//valid amount of minutes was encountered on the line
-				echo "getNumber returned true" . "<br>";
-				if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
-				{
-					echo "whitespace error 1" . "<br>";
-					$errorOnLine = true; $errorInFile = true;
-				}
-			}
-				
-			if($errorOnLine == false)
-			{//start new query and add $retrievedNumber to it
-				skipWhitespace($printLine, $printLineIndex);
-				if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW, $logFile) == false)
-				{
-					echo "getDaysOfWeek returned false" . "<br>";
-					$errorOnLine = true; $errorInFile = true;
-				}
-			}
-			
-			if($errorOnLine == false)
-			{//add $retrievedDOW to query
-				if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash, $logFile) == false)
-				{
-					echo "getSlash returned false" . "<br>";
-					$errorOnLine = true; $errorInFile = true;
-				}
-			}
-			
-			if($errorOnLine == false)
-			{//add $retrievedSlash to query
-				if(ctype_digit($printLine[$printLineIndex]) == false)
-				{
-					fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Time of day should immediately follow '/'" . PHP_EOL);
-					$errorOnLine = true; $errorInFile = true;
-				}
-			}
-			
-			if($errorOnLine == false)
 			{
-				while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
-				{//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line				
-					if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime, $listOfTimes, $listOfTimesIndex, $logFile) == false)
+				if(in_array($currentCourse, $listOfCourses) == true)
+				{
+					fputs($logFile, "Error on line $lineNumber.  Conflict time already defined in file." . PHP_EOL);
+					$errorOnLine = true; $errorInFile = true;
+				}
+				else
+				{
+					$listOfCourses[$listOfCoursesIndex] = $currentCourse;
+					$listOfCoursesIndex++;
+					//start new query
+				}
+			}
+			
+			
+			while(($printLineIndex < strlen(trim($printLine))) and ($errorOnLine == false))
+			{//buildling the conflict time
+				if($errorOnLine == false)
+				{//add $currentCourse to sql query
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					{
+						echo "printline[printlineindex] at index $printLineIndex is $printLine[$printLineIndex]" . "<br>";
+						echo "whitespace error 1" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+			
+				if($errorOnLine == false)
+				{
+					skipWhitespace($printLine, $printLineIndex);
+				}
+				if($errorOnLine == false)
+				{
+					if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW, $logFile) == false)
+					{
+						echo "getDaysOfWeek returned false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//add $retrievedDOW to sql query
+					echo "getDaysOfWeek returned true" . "<br>";
+					if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash, $logFile) == false)
+					{
+						echo "getSlash returned false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{
+					echo "getSlash returned true" . "<br>";
+					if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime, $logFile) == false)
 					{
 						echo "getTime returned false" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
 					}
+				}
+				
+				if($errorOnLine == false)
+				{
+					$conflictTime = $retrievedDOW . $retrievedSlash . $retrievedTime;
+					if(in_array($conflictTime, $listOfConflictTimes) == false)
+					{
+						$listOfConflictTimes[$listOfConflictTimesIndex] = $conflictTime;
+						$listOfConflictTimesIndex++;
+					}
 					else
 					{
-						//add $retrievedTime to query
-						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
-						{
-							echo "whitespace error between times of day" . "<br>";
-							$errorOnLine = true; $errorInFile = true;
-						}
-						else
-						{
-							skipWhitespace($printLine, $printLineIndex);
-						}
+						fputs($logFile, "Error on line $lineNumber at index $printLineIndex. Conflict time already exists on line." . PHP_EOL);
+						$errorOnLine = true; $errorInFile = true;
 					}
 				}
-			}	
+			}
 		}
 		else 
 		{
 			if(strlen(trim($printLine)) != 0)
 			{
 				fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Each line in the file must have at least 2 items:
-			         			Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay1 MilitaryTimeOfDay2 ... MilitaryTimeOfDayN" . PHP_EOL);
+			         			Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay 
+								... DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay" . PHP_EOL);
 				$errorOnLine = true;  $errorInFile = true;
-			}
-			
+			}	
 		}
-			
+		
 		if($errorOnLine == false)
 		{
 			//submit query
@@ -211,22 +234,179 @@ while($stillTesting == true)
 		}
 	}
 	if($errorInFile == false)
+	{
 		fputs($logFile, "No errors detected." . PHP_EOL);
+	}
 	
-	
-	fclose($readFile);	
+	fclose($readFile);
 	fclose($logFile);
 	
 	$testNum += 1;
-	if($testNum > "30")
+	if($testNum > "22")
 		$stillTesting = false;
+	
 }
 ##################################################################################################
 
 /*******************FUNCTIONS******************/
 
 ##################################################################################################
-	function getTime($line, &$lineIndex, $lineNumber, &$retrievedTime, &$times, &$timesIndex, $logFile)
+
+	function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $logFile)
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: getCourse ********************
+	 * Preconditions:  Data exists on the line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Validates that the string of characters on a line represent
+	 *					  a valid course.  A valid course is 2 to 4 uppercase characters
+	 *					  concatenated with exactly 3 digits and can be further concatenated
+	 *					  with up to 2 more uppercase characters.
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$currentCourse = string that will store the course gathered from
+	 *									 the line that will be added to the sql query
+	 *					$currentCourseNumber = will store the number of the currently read course on
+	 *										   the line and will be compared to $firstCourseNumber
+	 *					$logFile = text file that errors are logged to
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *
+	 * Files Accessed:  None
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
+	
+	 //function variables
+	 $courseLetters = array();
+	 $courseLettersIndex = 0;
+	 $courseNumbers = array();
+	 $courseNumbersIndex = 0;
+	 $courseNumberInt = 0;
+	 $tempCourse = array();
+	 $endCourseName = array();
+	 $endCourseNameIndex = 0;
+		
+		while(ctype_upper($line[$lineIndex]) == true)
+		{	//while line[lineindex] is an uppercase character
+			$courseLetters[$courseLettersIndex] = $line[$lineIndex];
+			$lineIndex++;
+			$courseLettersIndex++;
+		}
+		//ERROR HANDLING 
+			if((count($courseLetters) < 2) or (count($courseLetters) > 4))
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex. Course letters must be between 2 and 4 characters." . PHP_EOL);
+				return false;
+			}/*
+			elseif($courseLetters not in Department Courses)
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course letters is not a part of the department." . PHP_EOL);
+				return false;
+			*/
+			elseif(ctype_lower($line[$lineIndex]) == true)
+			{	//line[lineindex] is lowercase
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Files must contain ONLY uppercase letters." . PHP_EOL);
+				return false;
+			}
+			elseif(ctype_alnum($line[$lineIndex] == false))
+			{	//line[lineindex] is not alphabetic or numeric
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character encountered." . PHP_EOL);
+				return false;
+			}
+			elseif($line[$lineIndex] == " ")
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must immediately follow course letters." . PHP_EOL);
+				return false;
+			}
+		//COURSE LETTERS ARE VALID AND IMMEDIATELY FOLLOWED BY NUMBERS
+			else
+			{
+				while(ctype_digit($line[$lineIndex]) == true)
+				{	//while line[lineindex] is a digit
+					echo "line[lineindex] in ctype_digit is $line[$lineIndex] <br>";
+					$courseNumbers[$courseNumbersIndex] = $line[$lineIndex];
+					$lineIndex++;
+					$courseNumbersIndex++;
+				}
+				
+				if(count($courseNumbers) != 3)
+				{
+					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
+					return false;
+				}
+				
+				$courseNumberInt = intval(implode($courseNumbers));	//converts the integer array to a solid string
+																	//and converts the string value to an integer
+																	
+				if(($courseNumberInt < 1) or ($courseNumberInt > 499))
+				{
+					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
+					return false;
+				}
+				else
+				{//COURSE NUMBER IS VALID
+				 //CHECK FOR LETTERS FOLLOWING COURSE NAME
+					$tempCourse = array_merge($courseLetters, $courseNumbers);
+					
+					while(ctype_upper($line[$lineIndex]))
+					{
+						echo "went here <br>";
+						$endCourseName[$endCourseNameIndex] = $line[$lineIndex];
+						$lineIndex++;
+						$endCourseNameIndex++;
+					}
+					if(count($endCourseName) > 2)
+					{
+						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
+						return false;
+					}
+					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\t"))
+					{//only whitespace or carriage return can immediately follow a course on line
+						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
+						return false;
+					}
+					else
+					{
+						if(!empty($endCourseName))
+						{
+							$tempCourse = array_merge($tempCourse, $endCourseName);
+						}
+					}
+				}
+			}
+		$currentCourse = implode($tempCourse);
+		return true;
+	}
+	
+##################################################################################################
+
+	function getTime($line, &$lineIndex, $lineNumber, &$retrievedTime, $logFile)
 	{/*-----------------------------------------------------------------------------------------------
 	 ********************** Function Prologue Comment: getTime ********************
 	 * Preconditions:  This function is not called unless contents of input have been
@@ -384,21 +564,11 @@ while($stillTesting == true)
 		}
 		
 		$retrievedTime = implode($timeString);
-		if(in_array($retrievedTime, $times) == false)
-		{
-			$times[$timesIndex] = $retrievedTime;
-			$timesIndex++;
-			return true;
-		}
-		else
-		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Duplicate time encountered on line." . PHP_EOL);
-			return false;
-		}
+		return true;
 	}
 	
 ##################################################################################################
-	
+
 	function getDaysOfWeek($line, &$lineIndex, $lineNumber, &$retrievedDOW, $logFile)
 	{/*-----------------------------------------------------------------------------------------------
 	********************** Function Prologue Comment: getDaysOfWeek ********************
@@ -546,77 +716,6 @@ while($stillTesting == true)
 	
 ##################################################################################################
 
-	function getNumber($line, &$lineIndex, $lineNumber, &$retrievedNumber, $logFile)
-	{/*-----------------------------------------------------------------------------------------------
-	 ********************** Function Prologue Comment: getNumber ********************
-	 * Preconditions:  Data exists on the line provided by file or user.
-	 *
-	 * Postconditions:  Valid time was provided
-	 *
-	 * Function Purpose:  Validates that the first item on a line of data is an
-	 *					  integer that specifies the length of class time
-	 *
-	 * Input Expected:	$line = line of text read in from the test file
-	 *					$lineIndex = current index for $line
-	 *					$lineNumber = current line of file
-	 *					$retrievedNumber = stores number gathered from the line to add to SQL query
-	 *					$logFile = text file that errors are logged to
-	 *
-	 *
-	 * Exceptions/Errors Thrown:  No number at start of line
-	 *							  Number is less than 1
-	 *
-	 * Files Accessed:	$logFile - for reporting errors
-	 *
-	 * Function Pseudocode Author:  Jared Cox
-	 *
-	 * Function Author:	Jared Cox
-	 *
-	 * Date of Original Implementation:	April 3, 2013
-	 *
-	 * Tested by SQA Member (NAME and DATE):  Jared Cox, April 3, 2013
-	 * 
-	 ** Modifications by:
-	 * Modified By (Name and Date):
-	 * Modifications Description:
-	 *
-	 * Modified By (Name and Date):
-	 * Modifications Description:
-	 -------------------------------------------------------------------------------------------------*/ 		
-	//VARIABLES
-		$numString = array();
-		$numStringIndex = 0;
-		$numOnLine = 0;
-	/////////////////////////////////////
-	
-		while(ctype_digit($line[$lineIndex]) == true)
-		{
-			$numString[$numStringIndex] = $line[$lineIndex];
-			$lineIndex++;
-			$numStringIndex++;
-		}
-		
-		$numOnLine = intval(implode($numString));
-		
-		if(count($numString) == 0)
-		{
-			fputs($logFile, "Error on line $lineNumber. Number expected at start of line." . PHP_EOL);
-			return false;
-		}
-		elseif($numOnLine <= 0)
-			{
-				fputs($logFile, "Error on line $lineNumber.  class cannot be taught for 0 or less minutes." . PHP_EOL);
-				return false;
-			}
-		else
-		{
-			$retrievedNumber = $numOnLine;
-			return true;
-		}
-	}
-	
-##################################################################################################	
-
 	function getSlash($line, &$lineIndex, $lineNumber, &$retrievedChar, $logFile)
 	{/*-----------------------------------------------------------------------------------------------
 	 ********************** Function Prologue Comment: getSlash ********************
@@ -701,7 +800,7 @@ while($stillTesting == true)
 	 * Modified By (Name and Date):
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/ 		
-	 while($line[$lineIndex] == " ")
+	 while(($line[$lineIndex] == " ") or ($line[$lineIndex] == "\t"))
 	 {
 			$lineIndex++;
 	 }
@@ -744,7 +843,7 @@ while($stillTesting == true)
 	 -------------------------------------------------------------------------------------------------*/ 		
 		if(($line[$lineIndex] != " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\t"))
 		{
-			fputs($logFile, "Error on line $lineNumber.  Whitespace must separate elements on line." . PHP_EOL);
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Whitespace must separate elements on line." . PHP_EOL);
 		}
 		else
 		{
@@ -753,4 +852,3 @@ while($stillTesting == true)
 	}
 
 ##################################################################################################
-?>

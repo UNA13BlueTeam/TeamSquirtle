@@ -2,7 +2,63 @@
 <body>
 
 <?php
-
+	/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: ctsscanner ********************
+	 * Preconditions:  None
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Validates the authenticity of a file containing information relating to
+	 *					  courses that will be scheduled by analyzing the contents of each line in a file.
+	 *
+	 * Input Expected:  Text input of the following format:
+	 *					XYZ #S #S #S #C & #H
+	 *					Where X must be 2 to 4 uppercase letters
+	 *					Where Y must be a 3 digit number between 001-499
+	 *					Where Z can be up to 2 uppercase letters
+	 *					Where #S is a positive integer >= 0
+	 *					Where #C is a positive integer > 0
+	 *					Where & is either C or L
+	 *					Where #H is an integer between 1 and 12
+	 *					
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *							  Number expected at index $lineIndex
+	 *							  Section count cannot be less than 0
+	 *							  Class size must be between $CLASSSIZEMIN and $CLASSSIZEMAX
+	 *							  Number of hours must be between $HOURSMIN and $HOURSMAX
+	 *							  Unexpected error occurred on line $lineNumber at index $lineIndex
+	 *							  Illegal character encountered.  Room type must be 'C' or 'L'
+	 *							  Whitespace missing where expected
+	 *
+	 * Files Accessed:  Any file given to the program
+	 *					$logFile for reporting errors
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 28, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 31, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
+	
 	//FLAGS
 		$stillTesting = true;
 		$startQuery = true;
@@ -80,17 +136,17 @@ while($stillTesting == true)
 				if($errorOnLine == false)
 				{
 					if(in_array($currentCourse, $listOfCourses) == true)
-						  {
-							fputs($logFile, "Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
-							$errorOnLine = true; $errorInFile = true;
-						  }
-						  else
-						  {
-							$listOfCourses[$listOfCoursesIndex] = $currentCourse;
-							$listOfCoursesIndex++;
-							$firstCourseOnLineFlag = false;
-							//start new query
-						  }	
+					{
+						fputs($logFile, "Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
+						$errorOnLine = true; $errorInFile = true;
+					}
+					else
+					{
+						$listOfCourses[$listOfCoursesIndex] = $currentCourse;
+						$listOfCoursesIndex++;
+						$firstCourseOnLineFlag = false;
+						//start new query
+					}	
 				}
 				
 				if($errorOnLine == false)
@@ -643,7 +699,7 @@ while($stillTesting == true)
 	 * Modified By (Name and Date):
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/ 		
-		if($line[$lineIndex] != " " and ($line[$lineIndex] != "\r"))
+		if($line[$lineIndex] != " " and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\t"))
 		{
 			fputs($logFile, "Error on line $lineNumber.  Whitespace must separate elements on line." . PHP_EOL);
 		}

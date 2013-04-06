@@ -2,7 +2,55 @@
 <body>
 
 <?php
-	
+	/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: prereqscanner ********************
+	 * Preconditions:  Data exists on the line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Validates the authenticity of a file containing information about
+	 *					  prerequisites for specified courses in the file.
+	 *
+	 * Input Expected:  Text input of the following format:
+	 *					XYZ ^ (2 - 4)
+	 *					Where X must be 2 to 4 uppercase letters
+	 *					Where Y must be a 3 digit number between 001-499
+	 *					Where Z can be up to 2 uppercase letters
+	 *					There must be at least 2 instances of XYZ per line, but no more than 4.
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *							  Courses in file must contain between 1 and 3 prerequisites
+	 *							  Whitespace must separate elements on the line
+	 *							  
+	 *
+	 * Files Accessed:  Any file given to the program
+	 *					$logFile for reporting errors
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
+
 	
 	//FLAGS
 		$firstCourseOnLineFlag = true;
@@ -114,7 +162,7 @@ while($stillTesting == true)
 						//append to current query
 						// $sqlQuery . $currentCourse
 					}
-					if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r"))
+					if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r") and ($printLine[$printLineIndex] != "\t"))
 					{//only whitespace and end of line can immediately follow a course on the line
 							$errorOnLine = true;  $errorInFile = true;
 							fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Whitespace must separate elements on the line." . PHP_EOL);	
