@@ -5,19 +5,12 @@
 	echo("<h1>".$deptName."</h1>");
 	echo("<h2>".$userName."</h2>");
 	echo("<h3>".$userTitle."</h3>");
-	$test = mysqli_connect($host, $user, $pass, $db, $port);
-	if($test){
-		echo ("DB Connected!");
-	}else{
-		echo ("DB Failed.");
-	}
-	mysqli_close($test);
 ?>
 
-<div class="homeSchedule">
+<div id="homeSchedule" class="purpleBox">
 	Schedule!
 </div>
-<div class="homeLinks">
+<div id="homeLinks" class="goldBox">
 	Links!
 	<ul>
 		<li> <a href="timeSlots.php" id="timeSlots">Manage Class Times</a> </li>
