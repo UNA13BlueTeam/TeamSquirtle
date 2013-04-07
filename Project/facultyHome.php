@@ -1,4 +1,4 @@
-<?php include("includes/facultyheader.php"); ?>
+<?php include("includes/facultyHeader.php"); ?>
   <h1>faculty homepage</h1>
   <p>Schedule</p>
 	<?php
