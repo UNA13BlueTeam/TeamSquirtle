@@ -65,12 +65,10 @@ function scanPrereqs($fileName, $prettyName){
 	$predefResult = mysqli_query($link, $predefQuery);
 	$predef = mysqli_fetch_array($predefResult, MYSQLI_BOTH);
 	$log ="prereqs.log";
-	
 
 	$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
-	$logFile = fopen($log, "w");
 
-	fputs($logFile, "Scanning $prettyName - ".strftime('%c'));
+	echo("Scanning $prettyName - ".strftime('%c'));
 	
 	echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
 			
@@ -125,7 +123,7 @@ function scanPrereqs($fileName, $prettyName){
 				//of 3 and 5 instead of 2 and 4
 				
 				skipWhitespace($printLine, $printLineIndex); 
-				if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $firstCourseOnLineFlag, $firstCourseNumber, $currentCourseNumber, $logFile) == false)
+				if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $firstCourseOnLineFlag, $firstCourseNumber, $currentCourseNumber) == false)
 				{//an invalid course format was encountered on the line
 					echo "getCourse returned false" . "<br>";
 					$errorOnLine = true;  $errorInFile = true;
@@ -135,7 +133,7 @@ function scanPrereqs($fileName, $prettyName){
 				{//a valid course format was encountered on the line
 					if(in_array($currentCourse, $listOfCourses) == true)
 					{
-						fputs($logFile, "Error on line $lineNumber.  Duplicate course found on line." . PHP_EOL);
+						echo("Error on line $lineNumber.  Duplicate course found on line." . PHP_EOL);
 						$errorOnLine = true;  $errorInFile = true;
 					}
 					else
@@ -149,19 +147,25 @@ function scanPrereqs($fileName, $prettyName){
 					$itemCount++;
 					if($firstCourseOnLineFlag == true)
 					{
-						if (in_array($currentCourse, $predef))
-						  {
+						if (in_array($currentCourse, $listOfCourses))
+						{
 							echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
 							$errorOnLine = true;
-						  }
-						  else
-						  {
+						}
+						else
+						{
 							//add course to $listOfCourses
 							array_push($listOfCourses, $currentCourse);
-							$insertQuery1= "INSERT INTO prereqs (course";
-							$insertQuery2= "VALUES ('$currentCourse'";
 							$firstCourseOnLineFlag = false;
-						  }
+						}
+						if(in_array($currentCourse, $predef))
+						{
+							echo("deleting <br>");
+							$delete = "DELETE * FROM prereqs WHERE course='$currentCourse'";
+							mysqli_query($link, $delete);
+						}
+						$insertQuery1= "INSERT INTO prereqs (course";
+						$insertQuery2= "VALUES ('$currentCourse'";
 						
 					}
 					else
@@ -172,13 +176,13 @@ function scanPrereqs($fileName, $prettyName){
 					if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r"))
 					{//only whitespace and end of line can immediately follow a course on the line
 							$errorOnLine = true;  $errorInFile = true;
-							fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Whitespace must separate elements on the line." . PHP_EOL);	
+							echo("Error on line $lineNumber at index $printLineIndex.  Whitespace must separate elements on the line." . PHP_EOL);	
 					}
 				}
 			}	
 			else
 			{
-				fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
+				echo("Error on line $lineNumber at index $printLineIndex.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
 				$errorOnLine = true;  $errorInFile = true;
 			}
 			$fieldNum++;
@@ -206,13 +210,12 @@ function scanPrereqs($fileName, $prettyName){
 		
 	}
 	if($errorInFile == false)
-		fputs($logFile, "No errors detected." . PHP_EOL);
+		echo("No errors detected." . PHP_EOL);
 		
 	fclose($readFile);	
-	fclose($logFile);
 }
 
-function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCourseOnLineFlag, &$firstCourseNumber, &$currentCourseNumber, $logFile){
+function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCourseOnLineFlag, &$firstCourseNumber, &$currentCourseNumber){
 	/*************************************************************************************
 	|	Function Name:  getCourse
 	|	Input Parameters:
@@ -252,27 +255,27 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 	//ERROR HANDLING 
 	if((count($courseLetters) < 2) or (count($courseLetters) > 4))
 	{
-		fputs($logFile, "Error on line $lineNumber at index $lineIndex. Course letters must be between 2 and 4 characters." . PHP_EOL);
+		echo("Error on line $lineNumber at index $lineIndex. Course letters must be between 2 and 4 characters." . PHP_EOL);
 		return false;
 	}/*
 	elseif($courseLetters not in Department Courses)
 	{
-		fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course letters is not a part of the department." . PHP_EOL);
+		echo("Error on line $lineNumber at index $lineIndex.  Course letters is not a part of the department." . PHP_EOL);
 		return false;
 	*/
 	elseif(ctype_lower($line[$lineIndex]) == true)
 	{	//line[lineindex] is lowercase
-		fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Files must contain ONLY uppercase letters." . PHP_EOL);
+		echo("Error on line $lineNumber at index $lineIndex.  Files must contain ONLY uppercase letters." . PHP_EOL);
 		return false;
 	}
 	elseif(ctype_alnum($line[$lineIndex] == false))
 	{	//line[lineindex] is not alphabetic or numeric
-		fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character encountered." . PHP_EOL);
+		echo("Error on line $lineNumber at index $lineIndex.  Invalid character encountered." . PHP_EOL);
 		return false;
 	}
 	elseif($line[$lineIndex] == " ")
 	{
-		fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must immediately follow course letters." . PHP_EOL);
+		echo("Error on line $lineNumber at index $lineIndex.  Course number must immediately follow course letters." . PHP_EOL);
 		return false;
 	}
 //COURSE LETTERS ARE VALID AND IMMEDIATELY FOLLOWED BY NUMBERS
@@ -287,7 +290,7 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 		
 		if(count($courseNumbers) != 3)
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
 			return false;
 		}
 		for($i=0; $i<count($courseNumbers); $i++)
@@ -309,7 +312,7 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 			}
 			elseif($courseNumberInt > $firstCourseNumber)
 			{
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Prerequisite is a higher level course than course requiring prerequisites." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  Prerequisite is a higher level course than course requiring prerequisites." . PHP_EOL);
 				return false;
 			} 
 		///////////////////////////////////////////////////////
@@ -317,7 +320,7 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 		
 		if(($courseNumberInt < 1) or ($courseNumberInt > 499))
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
 			return false;
 		}
 		else
@@ -333,12 +336,12 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 			}
 			if(count($endCourseName) > 2)
 			{
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
 				return false;
 			}
 			elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r"))
 			{//only whitespace or carriage return can immediately follow a course on line
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
 				return false;
 			}
 			else
