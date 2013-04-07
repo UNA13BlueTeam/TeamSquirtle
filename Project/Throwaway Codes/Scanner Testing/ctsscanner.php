@@ -365,6 +365,12 @@ while($stillTesting == true)
 	 $tempCourse = array();
 	 $endCourseName = array();
 	 $endCourseNameIndex = 0;
+	 $COURSELETTERSMIN = 2;
+	 $COURSELETTERSMAX = 4;
+	 $LENGTHOFCOURSENUM = 3;
+	 $COURSENUMBERMIN = 1;
+	 $COURSENUMBERMAX = 499;
+	 $FOLLOWCOURSENUMBERMAX = 2;
 		
 		while(ctype_upper($line[$lineIndex]) == true)
 		{	//while line[lineindex] is an uppercase character
@@ -373,7 +379,7 @@ while($stillTesting == true)
 			$courseLettersIndex++;
 		}
 		//ERROR HANDLING 
-			if((count($courseLetters) < 2) or (count($courseLetters) > 4))
+			if((count($courseLetters) < $COURSELETTERSMIN) or (count($courseLetters) > $COURSELETTERSMAX))
 			{
 				fputs($logFile, "Error on line $lineNumber at index $lineIndex. Course letters must be between 2 and 4 characters." . PHP_EOL);
 				return false;
@@ -408,7 +414,7 @@ while($stillTesting == true)
 					$courseNumbersIndex++;
 				}
 				
-				if(count($courseNumbers) != 3)
+				if(count($courseNumbers) != $LENGTHOFCOURSENUM)
 				{
 					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
 					return false;
@@ -417,7 +423,7 @@ while($stillTesting == true)
 				$courseNumberInt = intval(implode($courseNumbers));	//converts the integer array to a solid string
 																	//and converts the string value to an integer
 																	
-				if(($courseNumberInt < 1) or ($courseNumberInt > 499))
+				if(($courseNumberInt < $COURSENUMBERMIN) or ($courseNumberInt > $COURSENUMBERMAX))
 				{
 					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
 					return false;
@@ -433,12 +439,12 @@ while($stillTesting == true)
 						$lineIndex++;
 						$endCourseNameIndex++;
 					}
-					if(count($endCourseName) > 2)
+					if(count($endCourseName) > $FOLLOWCOURSENUMBERMAX)
 					{
 						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
 						return false;
 					}
-					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r"))
+					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\r"))
 					{//only whitespace or carriage return can immediately follow a course on line
 						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
 						return false;
@@ -658,7 +664,7 @@ while($stillTesting == true)
 	 * Modified By (Name and Date):
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/ 		
-		while(($line[$lineIndex] == " ") or ($line[$lineIndex] == "\t"))
+		while($line[$lineIndex] == " ")
 		{
 			$lineIndex++;
 		}

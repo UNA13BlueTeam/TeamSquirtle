@@ -87,7 +87,8 @@ div.homeLinks{
 	float:left;
 	margin-right:10%;
 	padding: 5px;	
-	text-align:middle;	
+	text-align:middle;
+	float: right;
 }
 
 div.purpleBox{
@@ -150,4 +151,57 @@ form.inputForm input#button{
 div.footer{
 	padding-top: 20px;
 	clear: both;
+}
+
+.schedule {
+    
+    border: solid #472783 2px;
+    border-radius: 6px;
+    box-shadow: 0 2px 2px #472783; 
+    background-color: #beb0d9;
+    border-spacing: 0;
+    width: 70%;
+}
+.schedule tr:hover {
+    background: #dce9f9;
+    transition: all 0.1s ease-in-out;     
+}    
+    
+.schedule td, .schedule th {
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    height: 30px;
+    padding: 10px;
+    text-align: left;    
+}
+
+.schedule th {
+    background-color: aliceblue; 
+    background-image: linear-gradient(top, #ebf3fc, #dce9f9);
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;        
+    border-top: none;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+}
+
+.schedule td:first-child, .schedule th:first-child {
+    border-left: none;
+}
+
+.schedule th:first-child {
+    border-radius: 6px 0 0 0;
+}
+
+.schedule th:last-child {
+    width:70%;
+    border-radius: 0 6px 0 0;
+}
+.schedule td:last-child {
+    width:70%;
+}
+.schedule tr:last-child td:first-child {
+    border-radius: 0 0 0 6px;
+}
+
+.schedule tr:last-child td:last-child {
+    border-radius: 0 0 6px 0;
 }

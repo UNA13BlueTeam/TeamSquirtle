@@ -1,0 +1,2 @@
+This scenario is completely correct and should generate a full schedule with proper
+faculty preference input.

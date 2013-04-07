@@ -56,6 +56,7 @@ include("includes/footer.php");
 
 <?php
 function scanPrereqs($fileName, $prettyName){
+
 	global $link;
 	//FLAGS
 	$firstCourseOnLineFlag = true;
@@ -86,16 +87,17 @@ function scanPrereqs($fileName, $prettyName){
 	$printLineIndex = 0;	
 	$currentCourse = "";		//string		
 	$errorOnLine = false;
-	$listOfCourses = array();	//used in detecting duplicate courses on a line
-	$listOfCoursesIndex = 0;
+	$listOfPrereqs = array();	//used in detecting duplicate courses on a line
+	$listOfPrereqsIndex = 0;
 	$itemCount = 0;		//if there are more than 4  or less than 2 separate items on a line, there is an incorrect number of prerequisites
 	$errorInFile = false;
 	$firstCourseNumber = 0;	//used in checking if a prerequisiste course is higher than the course requiring prerequisites
+	$REQUIREDITEMSMIN = 2;	//must be at least 2 courses on the line (a course and it's one prerequisite)
+	$REQUIREDITEMSMAX = 4;	//no more than 4 courses on the line (a course and up to three prerequisites)
 	
 	
 	while(!feof($readFile))
 	{
-		$itemCount = 0;
 		$errorOnLine = false;
 		$printLineIndex = 0;
 		$firstCourseOnLineFlag = true;
@@ -109,14 +111,15 @@ function scanPrereqs($fileName, $prettyName){
 										//otherwise, a line without a hard return at the end
 										//will produce a whitespace error in this scanner
 		
-		$listOfCourses = array();		
-		$listOfCoursesIndex = 0;
+		$listOfPrereqs = array();		
+		$listOfPrereqsIndex = 0;
 			
 		$readLine = preg_split('/\s+/', $printLine);	//splits the line into an array of elements
 														//each element will be a contiguous string of characters
 														//all whitespace is ignored on line for this function due to " '/\s+/' "
 		
-		$fieldNum=0;
+		$fieldNum=0;	//used in SQL queries to determine which prereq to insert to
+		
 		while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
 		{	//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line
 		
@@ -124,7 +127,7 @@ function scanPrereqs($fileName, $prettyName){
 			echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
 			echo "line number $lineNumber and line index $printLineIndex" . "<br>";
 			
-			if((count($readLine)) >= 3 and (count($readLine) <= 5))
+			if((count($readLine)) >= $REQUIREDITEMSMIN and (count($readLine) <= $REQUIREDITEMSMAX))
 			{	//preg_split counts end of line as a nonwhitespace line element, so we check on boundaries
 				//of 3 and 5 instead of 2 and 4
 				
@@ -133,35 +136,34 @@ function scanPrereqs($fileName, $prettyName){
 				{//an invalid course format was encountered on the line
 					echo "getCourse returned false" . "<br>";
 					$errorOnLine = true;  $errorInFile = true;
-					$itemCount++;
 				}
 				else
 				{//a valid course format was encountered on the line
-					if(in_array($currentCourse, $listOfCourses) == true)
+					if(in_array($currentCourse, $listOfPrereqs) == true)
 					{
 						echo("Error on line $lineNumber.  Duplicate course found on line." . PHP_EOL);
 						$errorOnLine = true;  $errorInFile = true;
 					}
 					else
 					{
-						$listOfCourses[$listOfCoursesIndex] = $currentCourse;
-						$listOfCoursesIndex++;
+						$listOfPrereqs[$listOfPrereqsIndex] = $currentCourse;
+						$listOfPrereqsIndex++;
 					}
-					// if($firstCourseOnLineFlag == true)
-					// 	$firstCourseOnLineFlag = false;
 					echo "getCourse returned true" . "<br>";
-					$itemCount++;
 					if($firstCourseOnLineFlag == true)
 					{
 						print_r($predef);
 						echo("$currentCourse <br>");
 						if (in_array(trim($currentCourse), $predef))
-						{
+						{//if the course already has prereqs defined, we delete the course from
+						 //the database and create a new record for the course
 							$delete = "DELETE FROM prereqs WHERE course = '$currentCourse'";
+							echo("<h1>DELETING</h1><h2>$delete</h2>");
+							echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
 							mysqli_query($link, $delete);
 						}
-						//add course to $listOfCourses
-						array_push($listOfCourses, $currentCourse);
+						//add course to $listOfPrereqs
+						array_push($listOfPrereqs, $currentCourse);
 						$insertQuery1= "INSERT INTO prereqs (course";
 						$insertQuery2= "VALUES ('$currentCourse'";
 						$firstCourseOnLineFlag = false;
@@ -172,7 +174,7 @@ function scanPrereqs($fileName, $prettyName){
 						$insertQuery1 = $insertQuery1.", prereq".$fieldNum;
 						$insertQuery2 = $insertQuery2.", '$currentCourse'";
 					}
-					if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r"))
+					if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r") and ($printLine[$printLineIndex] != "\t"))
 					{//only whitespace and end of line can immediately follow a course on the line
 							$errorOnLine = true;  $errorInFile = true;
 							echo("Error on line $lineNumber at index $printLineIndex.  Whitespace must separate elements on the line." . PHP_EOL);	
@@ -205,7 +207,9 @@ function scanPrereqs($fileName, $prettyName){
 			echo  "$lineNumber: $printLine" . "<br>";
 		}
 		else
+		{
 			echo $lineNumber . ": $printLine*" . "<br>";
+		}
 		
 	}
 	if($errorInFile == false)
@@ -213,153 +217,216 @@ function scanPrereqs($fileName, $prettyName){
 		
 	fclose($readFile);	
 }
-
+##################################################################################################
+	
+	/**********FUNCTIONS*********/
 function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCourseOnLineFlag, &$firstCourseNumber, &$currentCourseNumber){
-	/*************************************************************************************
-	|	Function Name:  getCourse
-	|	Input Parameters:
-	|  	$line = line of text read in from the test file
-	|		$lineIndex = current index for $line
-	|		$lineNumber = current line number for test file
-	|		$currentCourse = will hold a string containing the course built
-	|						  from the test file (if course is valid)
-	|		$firstCourseOnLineFlag = flag denoting whether or not the course being
-	|								 inspected is the first course on $line
-	|		$firstCourseNumber = will hold an integer containing the course number of
-	|							 the first course on the line.  It is used to determine
-	|							 if a prerequisite on the line is higher than the first
-	|							 course on the line
-	|		$currentCourseNumber = will hold an integer to be compared against $firstCourseNumber
-	|		$logFile = text file that errors are logged to
-	|					
-	|
-	 ************************************************************************************/
+	/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: getCourse ********************
+	 * Preconditions:  Data exists on the line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Validates that the string of characters on a line represent
+	 *					  a valid course.  A valid course is 2 to 4 uppercase characters
+	 *					  concatenated with exactly 3 digits and can be further concatenated
+	 *					  with up to 2 more uppercase characters.
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$currentCourse = string that will store the course gathered from
+	 *									 the line that will be added to the sql query
+	 *					$firstCourseOnLineFlag = a flag designating whether or not the course
+	 *											 pulled from the line is the first course on the line
+	 *					$firstCourseNumber = will store the number of the first course on the line
+	 *										 and will be used to validate prerequisites
+	 *					$currentCourseNumber = will store the number of the currently read course on
+	 *										   the line and will be compared to $firstCourseNumber
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *
+	 * Files Accessed:  None
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
 	
 	//function variables
-	$courseLetters = array();
-	$courseLettersIndex = 0;
-	$courseNumbers = array();
-	$courseNumbersIndex = 0;
-	$courseNumberInt = 0;
-	$tempCourse = array();
-	$endCourseName = array();
-	$endCourseNameIndex = 0;
+	 $courseLetters = array();
+	 $courseLettersIndex = 0;
+	 $courseNumbers = array();
+	 $courseNumbersIndex = 0;
+	 $courseNumberInt = 0;
+	 $tempCourse = array();
+	 $endCourseName = array();
+	 $endCourseNameIndex = 0;
+	 $COURSELETTERSMIN = 2;
+	 $COURSELETTERSMAX = 4;
+	 $LENGTHOFCOURSENUM = 3;
+	 $COURSENUMBERMIN = 1;
+	 $COURSENUMBERMAX = 499;
+	 $FOLLOWCOURSENUMBERMAX = 2;
 		
-	while(ctype_upper($line[$lineIndex]) == true)
-	{	//while line[lineindex] is an uppercase character
-		$courseLetters[$courseLettersIndex] = $line[$lineIndex];
-		$lineIndex++;
-		$courseLettersIndex++;
-	}
-	//ERROR HANDLING 
-	if((count($courseLetters) < 2) or (count($courseLetters) > 4))
-	{
-		echo("Error on line $lineNumber at index $lineIndex. Course letters must be between 2 and 4 characters." . PHP_EOL);
-		return false;
-	}/*
-	elseif($courseLetters not in Department Courses)
-	{
-		echo("Error on line $lineNumber at index $lineIndex.  Course letters is not a part of the department." . PHP_EOL);
-		return false;
-	*/
-	elseif(ctype_lower($line[$lineIndex]) == true)
-	{	//line[lineindex] is lowercase
-		echo("Error on line $lineNumber at index $lineIndex.  Files must contain ONLY uppercase letters." . PHP_EOL);
-		return false;
-	}
-	elseif(ctype_alnum($line[$lineIndex] == false))
-	{	//line[lineindex] is not alphabetic or numeric
-		echo("Error on line $lineNumber at index $lineIndex.  Invalid character encountered." . PHP_EOL);
-		return false;
-	}
-	elseif($line[$lineIndex] == " ")
-	{
-		echo("Error on line $lineNumber at index $lineIndex.  Course number must immediately follow course letters." . PHP_EOL);
-		return false;
-	}
-//COURSE LETTERS ARE VALID AND IMMEDIATELY FOLLOWED BY NUMBERS
-	else
-	{
-		while(ctype_digit($line[$lineIndex]) == true)
-		{	//while line[lineindex] is a digit
-			$courseNumbers[$courseNumbersIndex] = $line[$lineIndex];
+		while(ctype_upper($line[$lineIndex]) == true)
+		{	//while line[lineindex] is an uppercase character
+			$courseLetters[$courseLettersIndex] = $line[$lineIndex];
 			$lineIndex++;
-			$courseNumbersIndex++;
+			$courseLettersIndex++;
 		}
-		
-		if(count($courseNumbers) != 3)
-		{
-			echo("Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
-			return false;
-		}
-		for($i=0; $i<count($courseNumbers); $i++)
-		{	
-			switch($i)
+		//ERROR HANDLING 
+			if((count($courseLetters) < $COURSELETTERSMIN) or (count($courseLetters) > $COURSELETTERSMAX))
 			{
-				case 0: $courseNumberInt += ($courseNumbers[$i] * 100);
-						break;
-				case 1: $courseNumberInt += ($courseNumbers[$i] * 10);
-						break;
-				case 2: $courseNumberInt += ($courseNumbers[$i]);
-						break;
-			}
-		}
-		//SPECIFIC TO PREREQSCANNER. REMOVE IF REUSED ELSEWHERE
-			if($firstCourseOnLineFlag == true)
-			{
-				$firstCourseNumber = $courseNumberInt;
-			}
-			elseif($courseNumberInt > $firstCourseNumber)
-			{
-				echo("Error on line $lineNumber at index $lineIndex.  Prerequisite is a higher level course than course requiring prerequisites." . PHP_EOL);
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex. Course letters must be between 2 and 4 characters." . PHP_EOL);
 				return false;
-			} 
-		///////////////////////////////////////////////////////
-		
-		
-		if(($courseNumberInt < 1) or ($courseNumberInt > 499))
-		{
-			echo("Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
-			return false;
-		}
-		else
-		{//COURSE NUMBER IS VALID
-		 //CHECK FOR LETTERS FOLLOWING COURSE NAME
-			$tempCourse = array_merge($courseLetters, $courseNumbers);
-			
-			while(ctype_upper($line[$lineIndex]))
+			}/*
+			elseif($courseLetters not in Department Courses)
 			{
-				$endCourseName[$endCourseNameIndex] = $line[$lineIndex];
-				$lineIndex++;
-				$endCourseNameIndex++;
-			}
-			if(count($endCourseName) > 2)
-			{
-				echo("Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course letters is not a part of the department." . PHP_EOL);
+				return false;
+			*/
+			elseif(ctype_lower($line[$lineIndex]) == true)
+			{	//line[lineindex] is lowercase
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Files must contain ONLY uppercase letters." . PHP_EOL);
 				return false;
 			}
-			elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r"))
-			{//only whitespace or carriage return can immediately follow a course on line
-				echo("Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
+			elseif(ctype_alnum($line[$lineIndex] == false))
+			{	//line[lineindex] is not alphabetic or numeric
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character encountered." . PHP_EOL);
 				return false;
 			}
+			elseif($line[$lineIndex] == " ")
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must immediately follow course letters." . PHP_EOL);
+				return false;
+			}
+		//COURSE LETTERS ARE VALID AND IMMEDIATELY FOLLOWED BY NUMBERS
 			else
 			{
-				if(!empty($endCourseName))
+				while(ctype_digit($line[$lineIndex]) == true)
+				{	//while line[lineindex] is a digit
+					$courseNumbers[$courseNumbersIndex] = $line[$lineIndex];
+					$lineIndex++;
+					$courseNumbersIndex++;
+				}
+				
+				if(count($courseNumbers) != $LENGTHOFCOURSENUM)
 				{
-					$tempCourse = array_merge($tempCourse, $endCourseName);
+					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number must be exactly 3 digits." . PHP_EOL);
+					return false;
+				}
+				
+				$courseNumberInt = intval(implode($courseNumbers));	//converts the integer array to a solid string
+																	//and converts the string value to an integer
+				
+				//SPECIFIC TO PREREQSCANNER. REMOVE IF REUSED ELSEWHERE
+					if($firstCourseOnLineFlag == true)
+					{
+						$firstCourseNumber = $courseNumberInt;
+					}
+					elseif($courseNumberInt > $firstCourseNumber)
+					{
+						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Prerequisite is a higher level course than course requiring prerequisites." . PHP_EOL);
+						return false;
+					} 
+				///////////////////////////////////////////////////////
+				
+																	
+				if(($courseNumberInt < $COURSENUMBERMIN) or ($courseNumberInt > $COURSENUMBERMAX))
+				{
+					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Course number exceeds boundaries. Must be between 001 and 499." . PHP_EOL);
+					return false;
+				}
+				else
+				{//COURSE NUMBER IS VALID
+				 //CHECK FOR LETTERS FOLLOWING COURSE NAME
+					$tempCourse = array_merge($courseLetters, $courseNumbers);
+					
+					while(ctype_upper($line[$lineIndex]))
+					{
+						$endCourseName[$endCourseNameIndex] = $line[$lineIndex];
+						$lineIndex++;
+						$endCourseNameIndex++;
+					}
+					if(count($endCourseName) > $FOLLOWCOURSENUMBERMAX)
+					{
+						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
+						return false;
+					}
+					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\r"))
+					{//only whitespace or carriage return can immediately follow a course on line
+						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
+						return false;
+					}
+					else
+					{
+						if(!empty($endCourseName))
+						{
+							$tempCourse = array_merge($tempCourse, $endCourseName);
+						}
+					}
 				}
 			}
-		}
+		$currentCourse = implode($tempCourse);
+		return true;
 	}
-	$currentCourse = implode($tempCourse);
-	return true;
-}
 	
 function skipWhitespace($line, &$lineIndex)
-{
-	while($line[$lineIndex] == " ")
-		$lineIndex++;
+{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: skipWhitespace ********************
+	 * Preconditions:  Data exists on a line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Advances the index past continous strings of whitespace
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *
+	 * Exceptions/Errors Thrown:  None
+	 *
+	 * Files Accessed:  None
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
+		while(($line[$lineIndex] == " ") or ($line[$lineIndex] == "\t"))
+		{
+			$lineIndex++;
+		}
 }
 
 ?>
