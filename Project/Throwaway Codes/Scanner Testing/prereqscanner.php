@@ -346,7 +346,7 @@ while($stillTesting == true)
 						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
 						return false;
 					}
-					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r"))
+					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\t"))
 					{//only whitespace or carriage return can immediately follow a course on line
 						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
 						return false;
@@ -397,7 +397,7 @@ while($stillTesting == true)
 	 * Modified By (Name and Date):
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/ 		
-		while($line[$lineIndex] == " ")
+		while(($line[$lineIndex] == " ") or ($line[$lineIndex] == "\t"))
 		{
 			$lineIndex++;
 		}
