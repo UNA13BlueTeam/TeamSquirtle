@@ -165,14 +165,14 @@ function scanPrereqs($fileName, $prettyName){
 						if (in_array(trim($currentCourse), $predef))
 						{//if the course already has prereqs defined, we delete the course from
 						 //the database and create a new record for the course
-							$delete = "DELETE FROM prereqs WHERE course = '$currentCourse'";
+							$delete = "DELETE FROM $db.prereqs WHERE course = '$currentCourse'";
 							echo("<h1>DELETING</h1><h2>$delete</h2>");
 							echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
 							mysqli_query($link, $delete);
 						}
 						//add course to $listOfPrereqs
 						array_push($listOfPrereqs, $currentCourse);
-						$insertQuery1= "INSERT INTO prereqs (course";
+						$insertQuery1= "INSERT INTO $db.prereqs (course";
 						$insertQuery2= "VALUES ('$currentCourse'";
 						$firstCourseOnLineFlag = false;
 						
