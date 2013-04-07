@@ -2,8 +2,7 @@
 <body>
 
 <?php
-	function getTime($line, &$lineIndex, $lineNumber, &$retrievedTime, &$times, &$timesIndex, $logFile)
-	{/*-----------------------------------------------------------------------------------------------
+	/*-----------------------------------------------------------------------------------------------
 	 ********************** Function Prologue Comment: classtimesscanner ********************
 	 * Preconditions:  None
 	 *
