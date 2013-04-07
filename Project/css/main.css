@@ -135,13 +135,18 @@ div.goldBox{
 	text-align:middle;		
 }
 
+form.inputForm div.row{
+	margin-bottom: 3px;
+	height: auto;
+}
+
 form.inputForm label{
 	float: left;
 }
 
-form.inputForm input, select{
+form.inputForm div.row input, select{
 	float: right;
-	height: 12pt;
+	height: inherit;
 }
 
 form.inputForm input#button{
