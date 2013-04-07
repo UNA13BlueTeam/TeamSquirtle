@@ -143,6 +143,10 @@ form.inputForm input, select{
 	height: 12pt;
 }
 
+form.inputForm input#button{
+	height: auto;
+}
+
 div.footer{
 	padding-top: 20px;
 	clear: both;
