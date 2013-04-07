@@ -3,6 +3,7 @@
 
 <?php
 	/*-----------------------------------------------------------------------------------------------
+<<<<<<< HEAD
 	 ********************** Function Prologue Comment: classtimesscanner ********************
 	 * Preconditions:  None
 	 *
@@ -53,6 +54,58 @@
 	 * Modified By (Name and Date):
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/ 
+=======
+	********************** Function Prologue Comment: classtimesscanner ********************
+	* Preconditions:  None
+	*
+	* Postconditions:  None
+	*
+	* Function Purpose:  Validates authenticity of a file containing class times that 
+	*					  a course may be scheduled at.
+	*
+	* Input Expected:	Text input of the following format:
+	*						#M DoW/00:00 00:00
+	*						Where #M is a positive integer > 0
+	*						Where DoW can be any in-order substring of MTWRFS
+	*						Where 00:00 can be any valid military time specification
+	*						There can be any number of instances of 00:00 provided
+	*							there are no duplicates
+	*						
+	*					  
+	* Exceptions/Errors Thrown:  Invalid time format error thrown if the time of day
+	*							  is not valid.
+	*							  Expected digit error thrown if a digit is not found
+	*							  where expected.
+	*							  Expected colon error thrown if a colon is not found
+	*							  where expected.
+	*							  Days of week out of order
+	*							  Duplicate found in days of week
+	*							  Character found does not represent day of week
+	*							  Lowercase character encountered
+	*							  No days of week specified
+	*							  No number at start of line
+	*							  Number is less than 1
+	*							  Expected '/' not found
+	*							  Whitespace  missing where expected
+	*
+	* Files Accessed:			  $logFile - to report errors to
+	*
+	* Function Pseudocode Author:  Jared Cox
+	*
+	* Function Author:			    Jared Cox
+	*
+	* Date of Original Implementation:  April 3, 2013
+	*
+	* Tested by SQA Member (NAME and DATE): Jared Cox, April 3, 2013
+	* 
+	** Modifications by:
+	* Modified By (Name and Date):
+	* Modifications Description:
+	*
+	* Modified By (Name and Date):
+	* Modifications Description:
+	-------------------------------------------------------------------------------------------------*/ 
+>>>>>>> header for scanner section
 
 	//FLAGS
 		$stillTesting = true;

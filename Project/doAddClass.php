@@ -41,7 +41,9 @@
 		echo ("I got files!<br>");
 		// $classFile = $_POST['classFile'];
 		// $prereqFile = $_POST['prereqFile'];
-		$prereqFile = $_FILES["prereqFile"]["tmp_name"];
+		$classFile 		= $_FILES["classFile"]["tmp_name"];
+		$classFileName 	= $_FILES["classFile"]["name"];
+		$prereqFile 	= $_FILES["prereqFile"]["tmp_name"];
 		$prereqFileName = $_FILES["prereqFile"]["name"];
 		// $success = move_uploaded_file($prereqFile, "uploads/prereqs.txt");
 		// if(!$success)
@@ -54,6 +56,12 @@
 include("includes/footer.php");
 ?>
 
+
+<!-- ----------------------**************************------------------------- -->
+<!-- ------------**************************************************----------- -->
+<!-- -----------------------PREREQUISITE FILE SCANNER------------------------- -->
+<!-- ------------**************************************************----------- -->
+<!-- ----------------------**************************------------------------- -->
 <?php
 function scanPrereqs($fileName, $prettyName){
 
@@ -428,5 +436,7 @@ function skipWhitespace($line, &$lineIndex)
 			$lineIndex++;
 		}
 }
-
 ?>
+<!-- ----------------------**************************------------------------- -->
+
+
