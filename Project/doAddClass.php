@@ -158,9 +158,6 @@ function scanPrereqs($fileName, $prettyName){
 						if (in_array(trim($currentCourse), $predef))
 						{
 							$delete = "DELETE FROM prereqs WHERE course = '$currentCourse'";
-							echo("<h1>DELETING</h1><h2>$delete</h2>");
-							echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
-							// $errorOnLine = true;
 							mysqli_query($link, $delete);
 						}
 						//add course to $listOfCourses
