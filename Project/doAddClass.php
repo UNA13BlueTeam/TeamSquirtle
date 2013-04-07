@@ -1,10 +1,9 @@
 <?php include("includes/header.php");
-	  include_once("includes/db.php");
 	  
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
-        if(!$link){
-            die('cannot connect database'. mysqli_error($link));
-        }
+    if(!$link){
+        die('cannot connect database'. mysqli_error($link));
+    }
     if($_POST['flag']=="form"){
     	echo("<p>inserting</p>");
 		// Get variables from input form
@@ -18,7 +17,7 @@
 		$prereq = $_POST['prereq'];
 		$conflict = $_POST['conflict'];
 		
-		$query = "INSERT INTO courses(courseName, dsection, nsection, isection, classSize, roomType, hours) values ('$courseName', $dsection, $nsection, $isection, $classSize, '$roomType', $hours);";
+		$query = "INSERT INTO courses values (NULL, '$courseName', $dsection, $nsection, $isection, $classSize, '$roomType', $hours);";
 
 		$insertion = mysqli_query($link, $query);
 		if($insertion)
@@ -53,14 +52,18 @@
 
 	mysqli_close($link);
 include("includes/footer.php");
+?>
 
-
+<?php
 function scanPrereqs($fileName, $prettyName){
+	global $link;
 	//FLAGS
 	$firstCourseOnLineFlag = true;
 	$stillTesting = true;
 	
-
+	$predefQuery = "SELECT course from prereqs";
+	$predefResult = mysqli_query($link, $predefQuery);
+	$predef = mysqli_fetch_array($predefResult, MYSQLI_BOTH);
 	$log ="prereqs.log";
 	
 
@@ -109,13 +112,13 @@ function scanPrereqs($fileName, $prettyName){
 														//each element will be a contiguous string of characters
 														//all whitespace is ignored on line for this function due to " '/\s+/' "
 		
+		$fieldNum=0;
 		while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
 		{	//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line
 		
 			echo "length of line is " . strlen($printLine) . "<br>";
 			echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
 			echo "line number $lineNumber and line index $printLineIndex" . "<br>";
-			
 			
 			if((count($readLine)) >= 3 and (count($readLine) <= 5))
 			{	//preg_split counts end of line as a nonwhitespace line element, so we check on boundaries
@@ -140,30 +143,32 @@ function scanPrereqs($fileName, $prettyName){
 						$listOfCourses[$listOfCoursesIndex] = $currentCourse;
 						$listOfCoursesIndex++;
 					}
-					if($firstCourseOnLineFlag == true)
-						$firstCourseOnLineFlag = false;
+					// if($firstCourseOnLineFlag == true)
+					// 	$firstCourseOnLineFlag = false;
 					echo "getCourse returned true" . "<br>";
 					$itemCount++;
-					/*if($firstCourseOnLineFlag == true)
+					if($firstCourseOnLineFlag == true)
 					{
-						if $currentCourse in COURSES database already has defined prerequisites
+						if (in_array($currentCourse, $predef))
 						  {
-							fputs($logFile, "Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
-							errorOnLine = true;
+							echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
+							$errorOnLine = true;
 						  }
 						  else
 						  {
 							//add course to $listOfCourses
-							//start query "INSERT INTO ... "
+							array_push($listOfCourses, $currentCourse);
+							$insertQuery1= "INSERT INTO prereqs (course";
+							$insertQuery2= "VALUES ('$currentCourse'";
 							$firstCourseOnLineFlag = false;
 						  }
 						
 					}
 					else
 					{
-						//append to current query
-						// $sqlQuery . $currentCourse
-					}*/
+						$insertQuery1 = $insertQuery1.", prereq".$fieldNum;
+						$insertQuery2 = $insertQuery2.", '$currentCourse'";
+					}
 					if(($printLine[$printLineIndex] != " ") and ($printLine[$printLineIndex] != "\r"))
 					{//only whitespace and end of line can immediately follow a course on the line
 							$errorOnLine = true;  $errorInFile = true;
@@ -176,11 +181,24 @@ function scanPrereqs($fileName, $prettyName){
 				fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Courses in file must contain between 1 and 3 prerequisites." . PHP_EOL);
 				$errorOnLine = true;  $errorInFile = true;
 			}
+			$fieldNum++;
 		}
 			
 		if($errorOnLine == false)
 		{
-			//submit query
+			$insertQuery1 = $insertQuery1.") ";
+			$insertQuery2 = $insertQuery2.")";
+			$insertQuery = $insertQuery1.$insertQuery2;
+			$insertion = mysqli_query($link, $insertQuery);
+			if($insertion)
+ 			{
+ 				echo("insertion succeeded<br>");
+ 			}
+			else
+			{
+				echo("insertion failed<br>");
+				echo($insertQuery."<br>");
+			}
 			echo  "$lineNumber: $printLine" . "<br>";
 		}
 		else

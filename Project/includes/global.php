@@ -1,5 +1,6 @@
 <?php
-	$deptName = "Computer Science and Information Systems";
-	$userName = "Dr. Roden";
-	$userTitle = "Admin";
+	$deptName 	= "Computer Science and Information Systems";
+	$deptAbbrev = "CSIS";
+	$userName 	= "Dr. Roden";
+	$userTitle 	= "Admin";
 ?>

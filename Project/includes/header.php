@@ -1,6 +1,7 @@
 <?php include_once("global.php"); ?>
+<!-- <?php include_once("php_error.php"); ?> -->
 <?php include_once("db.php"); ?>
-<?php error_reporting(E_ERROR); ?>
+<?php error_reporting(E_ALL); ?>
 
 <html>
 	<head>
@@ -10,7 +11,7 @@
 	<body>
 	<div class="nav">
 		<nav>
-			<a href="index.php">UNA-Dept. Name</a>
+			<a href="index.php">UNA <?php echo($deptAbbrev);?></a>
 			<a href="index.php" id="home">Home</a>
 			<a href="timeSlots.php" id="timeSlots">Manage Class Times</a> 
 			<a href="manageRooms.php" id="building">Manage Rooms</a>
