@@ -5,12 +5,12 @@
 <hr /><br />
 <legend style="font-size:30px">Remove Class Room</legend>
 <form name="RemoveclassroomForm" method="post" action="removeclass.php">
-	<table height="200" border = "2">
+	<table class="manage" id="manageRooms">
 		<tr>
-			<td><p style="font-size:30px">Type</p></td>
-			<td><p style="font-size:30px">Size</p></td>
-			<td><p style="font-size:30px">Room</p></td>
-			<td><p style="font-size:30px">Remove</p></td>
+			<th>Type</th>
+			<th>Size</th>
+			<th>Room</th>
+			<th>Remove</th>
 		</tr>
 		<tr>
 			<td>C</td>
@@ -25,10 +25,11 @@
 			<td><input type="checkbox" name="r2" /></td>
 		</tr>
 	</table>
-	<p>
-		<input type="submit" name="submit" value="  remove  " />
-		<input type="reset" name="submit" value="  reset  "  />
-	</p>
+	<br>
+	<div>
+		<input type="submit" name="submit" value="Remove" />
+		<input type="reset" name="submit" value="Reset"  />
+	</div>
 </form>
 
 <?php include("includes/footer.php"); ?>

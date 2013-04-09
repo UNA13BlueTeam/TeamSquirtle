@@ -4,7 +4,7 @@
 <legend style="font-size:30px">Add Course</legend>
 
 <div class="purpleBox">
-	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddClass.php" onSubmit="return InputCheck(this)">
+	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddClass.php">
 		<input type="hidden" name="flag" value="form">
 		<div class="row">
 			<label for="course">Course</label>
@@ -51,7 +51,7 @@
 </div>
 
 <div class="goldBox">
-	<form name="scheduleForm" method="post" action="doAddClass.php" enctype="multipart/form-data" onSubmit="return InputCheck(this)">
+	<form class="fileForm" name="scheduleForm" method="post" action="doAddClass.php" enctype="multipart/form-data">
 		<input type="hidden" name="flag" value="file">
 		<label for="classFile">Class File:</label>
 			<input type="file" name="classFile"> <br /><br />

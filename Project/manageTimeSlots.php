@@ -5,11 +5,11 @@
 <hr /><br />
 <legend style="font-size:30px">Remove Class Time</legend>
 <form name="removeSlot" method="post" action="removeSlot.php" >
-	<table border = "2">
+	<table class="manage" id="manageTimeSlots">
 		<tr>
-			<td><p style="font-size:30px">minutes</p></td>
-			<td><p style="font-size:30px">Days of Week</p></td>
-			<td><p style="font-size:30px">Start Time</p></td>
+			<th>Minutes</th>
+			<th>Days of Week</th>
+			<th>Start Time</th>
 		</tr>
 		<tr>
 			<td>50</td>
@@ -34,10 +34,11 @@
 			</td>
 		</tr>
 	</table>
-	<p>
-		<input type="submit" name="submit" value="  submit  " />
-		<input type="reset" name="submit" value="  reset  "  />
-	</p>
+	<br>
+	<div>
+		<input type="submit" name="submit" value="Submit" />
+		<input type="reset" name="submit" value="Reset"  />
+	</div>
 </form>
 
 <?php include("includes/footer.php"); ?>

@@ -8,10 +8,10 @@
 <div class="homeLinks">
 	Links!
 	<ul>
-		<li> <a href="timeSlots.php" id="timeSlots">Manage Class Times</a> </li>
+		<li> <a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> </li>
 		<li> <a href="manageRooms.php" id="building">Manage Rooms</a> </li>
 		<li> <a href="manageClass.php" id="classes">Manage Classes</a> </li>
-		<li> <a href="conflicts.php" id="conflicts">Conflicts</a> </li>
+		<li> <a href="manageConflicts.php" id="conflicts">Conflicts</a> </li>
 		<li> <a href="index.php" id="deadline">Change Deadline</a></li>
 		<li> <a href="index.php" id="deadline">Help</a></li>
 	</ul>
