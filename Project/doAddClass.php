@@ -132,7 +132,13 @@ include("includes/footer.php");
 			$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
 			
 			echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
-			
+		global $link;		
+		$predefQuery = "SELECT courseName FROM courses";
+		$predefResult = mysqli_query($link, $predefQuery);
+		$predef = array();
+		while($row = mysqli_fetch_row($predefResult)){
+			array_push($predef, $row[0]);
+		}
 		
 		
 		//VARIABLES	
@@ -337,7 +343,12 @@ include("includes/footer.php");
 			}
 			if($errorOnLine == false)
 			{
-				global $link;
+				if(in_array($currentCourse, $predef))
+				{
+					$delete = "DELETE FROM courses WHERE courseName = '$currentCourse'";
+					echo("<h3>DELETING: $delete</h3>");
+					mysqli_query($link, $delete) or die("<h2>Delete failed</h2>");
+				}
 				$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery)";
 				echo("<h3>Query: $query</h3><br>");
 				mysqli_query($link, $query);
