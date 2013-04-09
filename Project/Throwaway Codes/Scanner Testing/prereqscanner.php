@@ -407,7 +407,7 @@ while($stillTesting == true)
 	 * Modified By (Name and Date):
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/ 		
-		while(($line[$lineIndex] == " ") or ($line[$lineIndex] == "\t"))
+		while(($line[$lineIndex] == " ") or ($line[$lineIndex] == "\r") or ($line[$lineIndex] == "\t"))
 		{
 			$lineIndex++;
 		}
