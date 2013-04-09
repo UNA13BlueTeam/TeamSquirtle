@@ -5,15 +5,15 @@
 <hr /><br />
 <legend style="font-size:30px">Remove Course</legend>
 <form name="removescheduleForm" method="post" action="removeschedule.php" onSubmit="return InputCheck(this)">
-	<table  border = "2">
+	<table class="manage" id="manageClass">
 		<tr height="30%">
-			<td><p style="font-size:30px">Course</p></td>
-			<td><p style="font-size:30px">Days Sections</p></td>
-			<td><p style="font-size:30px">Night Sections</p></td>
-			<td><p style="font-size:30px">Internet Sections</p></td>
-			<td><p style="font-size:30px">Class Size</p></td>
-			<td><p style="font-size:30px">Room</p></td>
-			<td><p style="font-size:30px">Remove</p></td>
+			<th>Course</th>
+			<th>Days Sections</th>
+			<th>Night Sections</th>
+			<th>Internet Sections</th>
+			<th>Class Size</th>
+			<th>Room</th>
+			<th>Remove</th>
 		</tr>
 		<tr>
 			<td>AB100</td>
@@ -34,10 +34,11 @@
 			<td><input type="checkbox" name="r2"></td>
 		</tr>
 	</table>
-	<p>
+	<br>
+	<div>
 		<input type="submit" name="submit" value="Submit" />
 		<input type="reset" name="reset" value="Reset"  />
-	</p>
+	</div>
 </form>
 
 <?php include("includes/footer.php"); ?>

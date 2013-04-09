@@ -159,7 +159,6 @@ div.footer{
 }
 
 .schedule {
-    
     border: solid #472783 2px;
     border-radius: 6px;
     box-shadow: 0 2px 2px #472783; 
@@ -168,7 +167,7 @@ div.footer{
     width: 70%;
 }
 .schedule tr:hover {
-    background: #dce9f9;
+    background: LemonChiffon;
     transition: all 0.1s ease-in-out;     
 }    
     
@@ -182,7 +181,7 @@ div.footer{
 
 .schedule th {
     background-color: aliceblue; 
-    background-image: linear-gradient(top, #ebf3fc, #dce9f9);
+    background-image: linear-gradient(top, #ebf3fc, LemonChiffon);
     box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;        
     border-top: none;
     text-shadow: 0 1px 0 rgba(255,255,255,.5); 
@@ -208,5 +207,58 @@ div.footer{
 }
 
 .schedule tr:last-child td:last-child {
+    border-radius: 0 0 6px 0;
+}
+
+.manage {
+    border: solid #472783 2px;
+    border-radius: 6px;
+    box-shadow: 0 2px 2px #472783; 
+    background-color: #beb0d9;
+    border-spacing: 0;
+    width: 70%;
+}
+.manage tr:hover {
+    background: LemonChiffon;
+    transition: all 0.1s ease-in-out;     
+}    
+    
+.manage td, .manage th {
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    height: 30px;
+    padding: 10px;
+    text-align: left;    
+}
+
+.manage th {
+    background-color: aliceblue; 
+    background-image: linear-gradient(top, #ebf3fc, LemonChiffon);
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;        
+    border-top: none;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+    font-size: 30px;
+}
+
+.manage td:first-child, .manage th:first-child {
+    border-left: none;
+}
+
+.manage th:first-child {
+    border-radius: 6px 0 0 0;
+}
+
+.manage th:last-child {
+    width:70%;
+    border-radius: 0 6px 0 0;
+}
+.manage td:last-child {
+    width:70%;
+}
+.manage tr:last-child td:first-child {
+    border-radius: 0 0 0 6px;
+}
+
+.manage tr:last-child td:last-child {
     border-radius: 0 0 6px 0;
 }
