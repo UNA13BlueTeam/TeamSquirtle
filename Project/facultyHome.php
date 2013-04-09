@@ -3,7 +3,7 @@
   <p>Schedule</p>
 	<?php
 		$rows = 6; // define number of rows
-		$cols = 2;// define number of columns
+		$cols = 3;// define number of columns
  
 		echo "<table class='schedule'>";
     echo"<tr>";
