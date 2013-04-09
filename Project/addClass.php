@@ -53,10 +53,12 @@
 <div class="goldBox">
 	<form class="fileForm" name="scheduleForm" method="post" action="doAddClass.php" enctype="multipart/form-data">
 		<input type="hidden" name="flag" value="file">
-		<label for="classFile">Class File:</label>
+		<label for="classFile">Class File: <br /></label>
 			<input type="file" name="classFile"> <br /><br />
-		<label for="prereqFile">Prequisite File:</label>
+		<label for="prereqFile">Prequisite File: <br /></label>
 			<input type="file" name="prereqFile"><br><br>
+		<label for="conflictFile">Conflicts File: <br /></label>
+			<input type="file" name="conflictFile"><br><br>
 		<input type="submit" name="submit" value="Submit File" />
 		<input type="reset" name="submit" value="Reset"  />
 	</form>

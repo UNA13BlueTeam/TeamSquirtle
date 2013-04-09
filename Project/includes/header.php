@@ -17,7 +17,6 @@
 			<a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> 
 			<a href="manageRooms.php" id="building">Manage Rooms</a>
 			<a href="manageClass.php" id="classes">Manage Classes</a>
-			<a href="manageConflicts.php" id="conflicts">Conflicts</a>
 			<a href="help.php" id="help">Help</a>
 			<a href="logout.php" id="logout">Log Out</a>
 			<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
