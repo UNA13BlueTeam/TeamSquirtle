@@ -245,11 +245,7 @@ div.footer{
 }
 
 .manage th:last-child {
-    width:70%;
     border-radius: 0 6px 0 0;
-}
-.manage td:last-child {
-    width:70%;
 }
 .manage tr:last-child td:first-child {
     border-radius: 0 0 0 6px;
