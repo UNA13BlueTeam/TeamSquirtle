@@ -130,8 +130,10 @@ include("includes/footer.php");
 
 			
 			$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
-			
-			echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
+			echo("<h2>Courses to Schedule</h2><hr>");
+			echo("<h3>Checking $prettyName for errors...</h3>");
+
+			// echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
 		global $link;		
 		$predefQuery = "SELECT courseName FROM courses";
 		$predefResult = mysqli_query($link, $predefQuery);
@@ -174,11 +176,12 @@ include("includes/footer.php");
 															//all whitespace is ignored on line for this function due to " '/\s+/' "
 			
 			while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
-			{	//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line
+			{	
+				// $printLineIndex == strlen(trim($printLine) means we are at the end of the current line
 			
-				echo "length of line is " . strlen($printLine) . "<br>";
-				echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
-				echo "line number $lineNumber and line index $printLineIndex" . "<br>";
+				// echo "length of line is " . strlen($printLine) . "<br>";
+				// echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
+				// echo "line number $lineNumber and line index $printLineIndex" . "<br>";
 				
 				
 				if((count($readLine)) == $REQUIREDITEMSONLINE)
@@ -187,7 +190,7 @@ include("includes/footer.php");
 					skipWhitespace($printLine, $printLineIndex); 
 					if(getCTS($printLine, $printLineIndex, $lineNumber, $currentCourse) == false)
 					{//an invalid course format was encountered on the line
-						echo "getCTS returned false" . "<br>";
+						// echo "getCTS returned false" . "<br>";
 						$errorOnLine = true;  $errorInFile = true;
 					}
 					
@@ -195,7 +198,7 @@ include("includes/footer.php");
 					{
 						if(in_array($currentCourse, $listOfCourses) == true)
 						{
-							echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
+							// echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
 							$errorOnLine = true; $errorInFile = true;
 						}
 						else
@@ -210,8 +213,9 @@ include("includes/footer.php");
 					if($errorOnLine == false)
 					{
 						if(verifyWhiteSpace($printLine, $printLineIndex, $lineNumber) == false)
-						{   echo "whitespace error 1" . "<br>";
-							echo $printLine[$printLineIndex] . "<br>";
+						{   
+							// echo "whitespace error 1" . "<br>";
+							// echo $printLine[$printLineIndex] . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -221,17 +225,17 @@ include("includes/footer.php");
 						skipWhitespace($printLine, $printLineIndex);
 						if(getNumber($printLine, $printLineIndex, $lineNumber, $SECTIONSFLAG, $retrievedNumber) == false)
 						{//invalid day sections count was encountered
-							echo "day sections false" . "<br>";
+							// echo "day sections false" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
 					
 					if($errorOnLine == false)
 					{//valid day sections count was encountered
-						echo "day sections true" . "<br>";
+						// echo "day sections true" . "<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $lineNumber) == false)
 						{	
-							echo "whitespace error 2" . "<br>";
+							// echo "whitespace error 2" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -242,16 +246,17 @@ include("includes/footer.php");
 						skipWhitespace($printLine, $printLineIndex);
 						if(getNumber($printLine, $printLineIndex, $lineNumber, $SECTIONSFLAG, $retrievedNumber) == false)
 						{//invalid night sections count was encountered
-							echo "night sections false"."<br>";
+							// echo "night sections false"."<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
 					
 					if($errorOnLine == false)
 					{//valid night sections count was encounterd
-						echo "night sections true"."<br>";
+						// echo "night sections true"."<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-						{	echo "whitspace error 3" . "<br>";
+						{	
+							// echo "whitspace error 3" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -262,16 +267,17 @@ include("includes/footer.php");
 						skipWhitespace($printLine, $printLineIndex);
 						if(getNumber($printLine, $printLineIndex, $lineNumber, $SECTIONSFLAG, $retrievedNumber) == false)
 						{//invalid internet sections count was encountered
-							echo "internet sections false" . "<br>";
+							// echo "internet sections false" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
 					
 					if($errorOnLine == false)
 					{//valid internet sections count was encountered
-						echo "internet sections true" . "<br>";
+						// echo "internet sections true" . "<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-						{	echo "whitespace error 4" . "<br>";
+						{	
+							// echo "whitespace error 4" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -282,17 +288,17 @@ include("includes/footer.php");
 						skipWhitespace($printLine, $printLineIndex);
 						if(getNumber($printLine, $printLineIndex, $lineNumber, $CLASSSIZEFLAG, $retrievedNumber) == false)
 						{//invalid class size count encountered
-							echo "class size false" . "<br>";
+							// echo "class size false" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
 					
 					if($errorOnLine == false)
 					{//valid class size count encountered
-						echo "class size true" . "<br>";
+						// echo "class size true" . "<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
 						{	
-							echo "whitespace error 5" . "<br>";
+							// echo "whitespace error 5" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -303,16 +309,17 @@ include("includes/footer.php");
 						skipWhitespace($printLine, $printLineIndex);
 						if(getChar($printLine, $printLineIndex, $lineNumber, $retrievedChar) == false)
 						{//character was not C or L
-							echo "getChar false" . "<br>";
+							// echo "getChar false" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
 
 					if($errorOnLine == false)
 					{//character was C or L
-						echo "getChar true" . "<br>";
+						// echo "getChar true" . "<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-						{	echo "whitespace error 6" . "<br>";
+						{	
+							// echo "whitespace error 6" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -323,21 +330,21 @@ include("includes/footer.php");
 						skipWhitespace($printLine, $printLineIndex);
 						if(getNumber($printLine, $printLineIndex, $lineNumber, $HOURSFLAG, $retrievedNumber) == false)
 						{//invalid hours count encountered
-							echo "hours false" . "<br>";
+							// echo "hours false" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
 					if($errorOnLine == false)
 					{//valid hours count encountered
-						echo "hours true" . "<br>";
+						// echo "hours true" . "<br>";
 						$hoursForQuery = $retrievedNumber;
 						//submit query
 					}		  
 				}
 				else
 				{
-					echo("Error on line $lineNumber at index $printLineIndex.  Each line in the file must have 7 items:
-									Course	DaySections	NightSections	InternetSections	ClassSize	Room	Hours." . PHP_EOL);
+					// echo("Error on line $lineNumber at index $printLineIndex.  Each line in the file must have 7 items:
+					// 				Course	DaySections	NightSections	InternetSections	ClassSize	Room	Hours." . PHP_EOL);
 					$errorOnLine = true;  $errorInFile = true;
 				}
 			}
@@ -346,19 +353,31 @@ include("includes/footer.php");
 				if(in_array($currentCourse, $predef))
 				{
 					$delete = "DELETE FROM courses WHERE courseName = '$currentCourse'";
-					echo("<h3>DELETING: $delete</h3>");
+					// echo("<h3>DELETING: $delete</h3>");
 					mysqli_query($link, $delete) or die("<h2>Delete failed</h2>");
 				}
 				$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery)";
-				echo("<h3>Query: $query</h3><br>");
-				mysqli_query($link, $query);
-				echo  "$lineNumber: $printLine" . "<br>";
+				// echo("<h3>Query: $query</h3><br>");
+				$success = mysqli_query($link, $query);
+				// echo("<p>No errors on line $lineNumber! Attempting to upload line.</p>");
+				if($success)
+				{
+					// echo("<p>File uploaded successfully!</p>");
+				}else
+				{
+					// echo("<p class="warning">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.");
+				}
+				// echo  "$lineNumber: $printLine" . "<br>";
 			}
 			else
-				echo $lineNumber . ": $printLine*" . "<br>";
+			{
+				// echo $lineNumber . ": $printLine*" . "<br>";
+				// echo("<p class="error"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
+			}
 		}
 		if($errorInFile == false)
 			echo("No errors detected." . PHP_EOL);
+		echo("<hr>");
 			
 		fclose($readFile);	
 		
