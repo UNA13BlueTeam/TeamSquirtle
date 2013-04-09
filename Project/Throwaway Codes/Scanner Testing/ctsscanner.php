@@ -350,8 +350,8 @@ while($stillTesting == true)
 	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
 	 * 
 	 ** Modifications by:
-	 * Modified By (Name and Date):
-	 * Modifications Description:
+	 * Modified By (Name and Date): Jared Cox, April 9, 2013
+	 * Modifications Description:	Fixed tab check at end of coursename
 	 *
 	 * Modified By (Name and Date):
 	 * Modifications Description:
@@ -445,7 +445,7 @@ while($stillTesting == true)
 						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  String of characters following course number is too long." . PHP_EOL);
 						return false;
 					}
-					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\r"))
+					elseif(($line[$lineIndex] !=  " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\t"))
 					{//only whitespace or carriage return can immediately follow a course on line
 						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid character in string following course number." . PHP_EOL);
 						return false;
