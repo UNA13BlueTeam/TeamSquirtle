@@ -196,11 +196,7 @@ div.footer{
 }
 
 .schedule th:last-child {
-    width:70%;
     border-radius: 0 6px 0 0;
-}
-.schedule td:last-child {
-    width:70%;
 }
 .schedule tr:last-child td:first-child {
     border-radius: 0 0 0 6px;
