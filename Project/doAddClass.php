@@ -197,7 +197,7 @@ include("includes/footer.php");
 							$listOfCourses[$listOfCoursesIndex] = $currentCourse;
 							$listOfCoursesIndex++;
 							$firstCourseOnLineFlag = false;
-							$query = "INSERT INTO courses VALUES NULL, '$currentCourse'";
+							$query = "INSERT INTO courses VALUES (NULL, '$currentCourse'";
 						}	
 					}
 					
@@ -337,8 +337,10 @@ include("includes/footer.php");
 			}
 			if($errorOnLine == false)
 			{
-				$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery";
+				global $link;
+				$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery)";
 				echo("<h3>Query: $query</h3><br>");
+				mysqli_query($link, $query);
 				echo  "$lineNumber: $printLine" . "<br>";
 			}
 			else
@@ -740,7 +742,7 @@ include("includes/footer.php");
 <?php
 function scanPrereqs($fileName, $prettyName){
 	echo("<h1>SCANNING PREREQS</h1><br>");
-	global $link;
+	global $link, $db;
 	//FLAGS
 	$firstCourseOnLineFlag = true;
 	$stillTesting = true;
