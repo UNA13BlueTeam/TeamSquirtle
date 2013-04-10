@@ -358,6 +358,7 @@ include("includes/footer.php");
 			{
 				if(in_array($currentCourse, $predef))
 				{
+					echo("<h2>$currentCourse already defined.  Attempting to overwrite...</h2><br>");
 					$delete = "DELETE FROM courses WHERE courseName = '$currentCourse'";
 					echo("<h3>DELETING: $delete</h3>");
 					mysqli_query($link, $delete) or die("<h2>Delete failed</h2>");
@@ -790,15 +791,24 @@ function scanPrereqs($fileName, $prettyName){
 	$firstCourseOnLineFlag = true;
 	$stillTesting = true;
 	
+	$predefCourses = array();	//of courses
+	$predefCoursesQuery = "SELECT DISTINCT courseName FROM courses";
+	$predefCoursesResult = mysqli_query($link, $predefCoursesQuery);
+	while($row = mysqli_fetch_row($predefCoursesResult))
+	{
+		array_push($predefCourses, $row[0]);
+	}
 	$predef = array();
-	$predefQuery = "SELECT DISTINCT course from prereqs";
+	$predefQuery = "SELECT DISTINCT course FROM prereqs";
 	$predefResult = mysqli_query($link, $predefQuery);
 	while($row = mysqli_fetch_row($predefResult))
 	{
 		array_push($predef, $row[0]);
 	}
+	
 	// $predef = mysqli_fetch_all($predefResult, MYSQLI_NUM);
 	print_r($predef);
+	print_r($predefCourses);
 	echo("<hr>");
 
 	$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
@@ -819,6 +829,7 @@ function scanPrereqs($fileName, $prettyName){
 	$listOfPrereqsIndex = 0;
 	$itemCount = 0;		//if there are more than 4  or less than 2 separate items on a line, there is an incorrect number of prerequisites
 	$errorInFile = false;
+	$firstCourseOnLine  = "";	//string used only for validation
 	$firstCourseNumber = 0;	//used in checking if a prerequisiste course is higher than the course requiring prerequisites
 	$REQUIREDITEMSMIN = 2;	//must be at least 2 courses on the line (a course and it's one prerequisite)
 	$REQUIREDITEMSMAX = 4;	//no more than 4 courses on the line (a course and up to three prerequisites)
@@ -882,12 +893,14 @@ function scanPrereqs($fileName, $prettyName){
 					{
 						print_r($predef);
 						echo("$currentCourse <br>");
+						$firstCourseOnLine = $currentCourse;
 						if (in_array(trim($currentCourse), $predef))
 						{//if the course already has prereqs defined, we delete the course from
 						 //the database and create a new record for the course
+							echo("<h2>Prerequisites already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
 							$delete = "DELETE FROM $db.prereqs WHERE course = '$currentCourse'";
 							echo("<h1>DELETING</h1><h2>$delete</h2>");
-							echo("Error on line $lineNumber.  Course prerequisites already defined. All prerequisites for a course belong on the same line." . PHP_EOL);
+							
 							mysqli_query($link, $delete);
 						}
 						//add course to $listOfPrereqs
@@ -919,20 +932,35 @@ function scanPrereqs($fileName, $prettyName){
 			
 		if($errorOnLine == false)
 		{
-			$insertQuery1 = $insertQuery1.") ";
-			$insertQuery2 = $insertQuery2.")";
-			$insertQuery = $insertQuery1.$insertQuery2;
-			$insertion = mysqli_query($link, $insertQuery);
-			if($insertion)
- 			{
- 				echo("insertion succeeded<br>");
- 			}
+			if(strlen(trim($printLine)) != 0)
+			{
+				if(in_array(trim($firstCourseOnLine), $predefCourses))
+				{
+					$insertQuery1 = $insertQuery1.") ";
+					$insertQuery2 = $insertQuery2.")";
+					$insertQuery = $insertQuery1.$insertQuery2;
+					$insertion = mysqli_query($link, $insertQuery);
+					if($insertion)
+					{
+						echo("insertion succeeded<br>");
+					}
+					else
+					{
+						echo("insertion failed<br>");
+						echo($insertQuery."<br>");
+					}
+					echo  "$lineNumber: $printLine" . "<br>";
+				}
+				else
+				{
+					echo "Line $lineNumber is correct, but $firstCourseOnLine does not exist. (Try adding $firstCourseOnLine through form submission.) <br>";
+					echo "$lineNumber: $printLine <br>";
+				}
+			}
 			else
 			{
-				echo("insertion failed<br>");
-				echo($insertQuery."<br>");
+				echo "Line $lineNumber is empty." . "<br>";
 			}
-			echo  "$lineNumber: $printLine" . "<br>";
 		}
 		else
 		{
