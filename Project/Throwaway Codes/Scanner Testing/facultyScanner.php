@@ -301,6 +301,7 @@
 	function getEmail($line,&$i, $lineNumber,&$facultyArray)
 	{
 		$email= "";
+		$ext = "";
 		
 		//Gets the email address except for the extension
 		while($line[$i] != '@' && strlen($email)<=10)
@@ -324,7 +325,7 @@
 		//Gets the email extension; for example, @UNA.EDU
 		while(ord($line[$i]) != 32 && ord($line[$i]) != 9 )
 		{
-			$email= $email .$line[$i];
+			$ext= $ext .$line[$i];
 			$i++;
 			if($i == strlen($line) )
 			{
@@ -332,7 +333,7 @@
 			}
 		}
 		
-		printf("Email = $email <br>");
+		printf("Email = $email$ext<br>");
 		return true;
 	}//end function
         
