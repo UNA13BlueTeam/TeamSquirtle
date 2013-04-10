@@ -30,6 +30,11 @@
 			}else{
 				echo ('<div style="font-size:8pt; color:red;">DB Failed</div>');
 			}
+			if (mysqli_connect_errno())
+			{
+				printf("Connect failed: %s\n", mysqli_connect_error());
+				exit();
+			}
 		?>
 	</div>
 		<div class="content">
