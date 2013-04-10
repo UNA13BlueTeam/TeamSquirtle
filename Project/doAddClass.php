@@ -120,8 +120,8 @@ include("includes/footer.php");
 	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 31, 2013
 	 * 
 	 ** Modifications by:
-	 * Modified By (Name and Date):
-	 * Modifications Description:
+	 * Modified By (Name and Date):	Jared Cox, April 9, 2013
+	 * Modifications Description:	Added a check for empty line before uploading to database
 	 *
 	 * Modified By (Name and Date):
 	 * Modifications Description:
@@ -362,23 +362,30 @@ include("includes/footer.php");
 					echo("<h3>DELETING: $delete</h3>");
 					mysqli_query($link, $delete) or die("<h2>Delete failed</h2>");
 				}
-				$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery)";
-				echo("<h3>Query: $query</h3><br>");
-				$success = mysqli_query($link, $query);
-				echo("<p>No errors on line $lineNumber! Attempting to upload line.</p>");
-				if($success)
+				if(strlen(trim($printLine)) != 0)
 				{
-					echo("<p>File uploaded successfully!</p>");
-				}else
+					$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery)";
+					echo("<h3>Query: $query</h3><br>");
+					$success = mysqli_query($link, $query);
+					echo("<p>No errors on line $lineNumber! Attempting to upload line.</p>");
+					if($success)
+					{
+						echo("<p>File uploaded successfully!</p>");
+					}else
+					{
+						echo("<p class=\"warning\">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.</p>");
+					}
+				}
+				else
 				{
-					echo("<p class="warning">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.");
+					echo "Line $lineNumber is empty. <br>";
 				}
 				echo  "$lineNumber: $printLine" . "<br>";
 			}
 			else
 			{
 				echo $lineNumber . ": $printLine*" . "<br>";
-				echo("<p class="error"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
+				echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
 			}
 		}
 		if($errorInFile == false)

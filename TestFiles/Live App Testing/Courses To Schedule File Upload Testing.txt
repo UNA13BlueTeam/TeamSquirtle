@@ -1,0 +1,53 @@
+Testing:	Courses To Schedule file upload
+
+Tested by:	Jared Cox
+
+Testing date:	April 9, 2013
+
+File name				Testing Result (E = expected result; U = unexpected result)
+cts001		(E)Each line is correct and was uploaded successfully.		
+cts002		(E)Only one line in file, and has an error. Was not uploaded. 
+cts003		(E)Last line in file has an error. All other lines were uploaded successfully.
+cts004		(E)Error in line 7.  All lines before and after were uploaded successfully.
+cts005		(E)Error in line 2.  All lines before and after were uploaded successfully.
+cts006		(E)Last line in file has an error.  All other lines were uploaded successfully.
+cts007		(E)Last line in file has an error.  All other lines were uploaded successfully.
+cts008		(E)Error in line 8.  All lines before and after were uploaded successfully.
+cts009		(E)Each line is correct and was uploaded successfully.
+cts010		(E)Each line is correct and was uploaded successfully.
+cts011		(E)Each line is correct and was uploaded successfully.
+cts012		(E)Lines 2 and 6 are correct and were uploaded.  All others were incorrect, were not uploaded, and were handled accordingly.
+cts013		(E)Only one line in file, and has an error.  Was not uploaded.
+cts014		(E)Error in line 12.  All lines before and after were uploaded successfully.
+cts015		(E)Errors on line 4, 6, and 8. All other lines were uploaded successfully.
+cts016		(E)Errors on line 2 and 4.  All other lines were uploaded successfully.
+cts017		(E)Only one lines in file, and has an error. Was not uploaded.
+cts018		(E)Errors on line 4, 9, 10, 18.  All other lines were uploaded successfully.
+cts019		(E)Each line is correct and was uploaded successfully.
+cts020		(E)Only one line in file, and is correct.  Line was uploaded successfully.
+cts021		(E)Only one line in file, and is correct.  Line was uploaded successfully.
+cts022		(E)Errors on line 5 and 9.  All other lines were uploaded successfully.
+cts023		(E)Error on line 4.  All lines before and after were uploaded successfully.
+cts024		(E)Each line is missing information.  Nothing was uploaded.
+cts025		(E)Error on line 5.  All lines before and after were uploaded successfully.
+cts026		(E)Errors on line 2, 5, 8, 13. All other lines were uploaded successfully.
+cts027		(E)Only one line in file, and has error.  Was not uploaded.
+cts028		(E)Each line is structured incorrectly.  Nothing was uploaded.
+cts029		(E)Each line is structured incorrectly.  Nothing was uploaded.
+cts030		(E)Only one line in file, and has error.  Was not uploaded.
+cts031		(E)Only one line in file, and has error.  Was not uploaded.
+cts032		(E)Only one line in file, and has error.  Was not uploaded.
+cts033		(E)Error on line 1.  All other lines uploaded successfully.
+cts034		(E)Error on line 1.  All other lines uploaded successfully.
+cts035		(E)Errors on line 7 and 12.  All other lines were uploaded successfully.
+cts036		(E)Each line is correct and was uploaded successfully.
+cts037		(E)Last line in file has an error.  All other lines were uploaded successfully.
+cts038		(U)Last line was empty and attempted to upload to database, which caused an error.
+				Issue was solved by checking for line length before attempting to upload query.
+				Afterwards, file was scanned as expected.
+cts039		(E)Errors on line 7 and 14. All other lines were uploaded successfully.
+cts040		(E)Each line is correct and was uploaded successfully.
+cts041		(E)Errors on line 7, 14, 21.  All other lines were uploaded successfully.
+cts042		(E)Error on line 6.  All lines before and after were uploaded successfully.
+cts043		(E)Errors on line 6 and 13.  All other lines were uploaded successfully.
+cts044		(E)Errors on 6, 13, 20.  All other lines were uploaded successfully.
