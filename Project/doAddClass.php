@@ -49,8 +49,14 @@
 		// if(!$success)
 		// echo("Move failed.<br>");
 		// echo($prereqFile);
-		scanCTS($classFile, $classFileName);
-		scanPrereqs($prereqFile, $prereqFileName);
+		if($classFile)
+		{
+			scanCTS($classFile, $classFileName);
+		}
+		if($prereqFile)
+		{
+			scanPrereqs($prereqFile, $prereqFileName);
+		}
 	}
 
 	mysqli_close($link);
