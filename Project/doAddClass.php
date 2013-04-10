@@ -130,8 +130,10 @@ include("includes/footer.php");
 
 			
 			$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
-			
-			echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
+			echo("<h2>Courses to Schedule</h2><hr>");
+			echo("<h3>Checking $prettyName for errors...</h3>");
+
+			// echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
 		global $link;		
 		$predefQuery = "SELECT courseName FROM courses";
 		$predefResult = mysqli_query($link, $predefQuery);
@@ -174,7 +176,8 @@ include("includes/footer.php");
 															//all whitespace is ignored on line for this function due to " '/\s+/' "
 			
 			while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
-			{	//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line
+			{	
+				// $printLineIndex == strlen(trim($printLine) means we are at the end of the current line
 			
 				echo "length of line is " . strlen($printLine) . "<br>";
 				echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
@@ -210,12 +213,8 @@ include("includes/footer.php");
 					if($errorOnLine == false)
 					{
 						if(verifyWhiteSpace($printLine, $printLineIndex, $lineNumber) == false)
-<<<<<<< HEAD
-						{   echo "whitespace error 1" . "<br>";
-=======
 						{   
 							echo "whitespace error 1" . "<br>";
->>>>>>> Put debug messages back into CTS scanner
 							echo $printLine[$printLineIndex] . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
@@ -256,12 +255,8 @@ include("includes/footer.php");
 					{//valid night sections count was encounterd
 						echo "night sections true"."<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-<<<<<<< HEAD
-						{	echo "whitspace error 3" . "<br>";
-=======
 						{	
 							echo "whitspace error 3" . "<br>";
->>>>>>> Put debug messages back into CTS scanner
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -281,12 +276,8 @@ include("includes/footer.php");
 					{//valid internet sections count was encountered
 						echo "internet sections true" . "<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-<<<<<<< HEAD
-						{	echo "whitespace error 4" . "<br>";
-=======
 						{	
 							echo "whitespace error 4" . "<br>";
->>>>>>> Put debug messages back into CTS scanner
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -327,12 +318,8 @@ include("includes/footer.php");
 					{//character was C or L
 						echo "getChar true" . "<br>";
 						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-<<<<<<< HEAD
-						{	echo "whitespace error 6" . "<br>";
-=======
 						{	
 							echo "whitespace error 6" . "<br>";
->>>>>>> Put debug messages back into CTS scanner
 							$errorOnLine = true; $errorInFile = true;
 						}
 					}
@@ -357,11 +344,7 @@ include("includes/footer.php");
 				else
 				{
 					echo("Error on line $lineNumber at index $printLineIndex.  Each line in the file must have 7 items:
-<<<<<<< HEAD
-									Course	DaySections	NightSections	InternetSections	ClassSize	Room	Hours." . PHP_EOL);
-=======
 					// 				Course	DaySections	NightSections	InternetSections	ClassSize	Room	Hours." . PHP_EOL);
->>>>>>> Put debug messages back into CTS scanner
 					$errorOnLine = true;  $errorInFile = true;
 				}
 			}
@@ -375,13 +358,6 @@ include("includes/footer.php");
 				}
 				$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery)";
 				echo("<h3>Query: $query</h3><br>");
-<<<<<<< HEAD
-				mysqli_query($link, $query);
-				echo  "$lineNumber: $printLine" . "<br>";
-			}
-			else
-				echo $lineNumber . ": $printLine*" . "<br>";
-=======
 				$success = mysqli_query($link, $query);
 				echo("<p>No errors on line $lineNumber! Attempting to upload line.</p>");
 				if($success)
@@ -398,10 +374,10 @@ include("includes/footer.php");
 				echo $lineNumber . ": $printLine*" . "<br>";
 				echo("<p class="error"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
 			}
->>>>>>> Put debug messages back into CTS scanner
 		}
 		if($errorInFile == false)
 			echo("No errors detected." . PHP_EOL);
+		echo("<hr>");
 			
 		fclose($readFile);	
 		
@@ -853,7 +829,7 @@ function scanPrereqs($fileName, $prettyName){
 		$listOfPrereqs = array();		
 		$listOfPrereqsIndex = 0;
 			
-		$readLine = preg_split('/\s+/', trim($printLine));	//splits the line into an array of elements
+		$readLine = preg_split('/\s+/', $printLine);	//splits the line into an array of elements
 														//each element will be a contiguous string of characters
 														//all whitespace is ignored on line for this function due to " '/\s+/' "
 		
