@@ -109,7 +109,6 @@ include("includes/footer.php");
 	 *							  Whitespace missing where expected
 	 *
 	 * Files Accessed:  Any file given to the program
-	 *					$logFile for reporting errors
 	 *
 	 * Function Pseudocode Author:  Jared Cox
 	 *
@@ -784,7 +783,64 @@ include("includes/footer.php");
 <!-- ------------**************************************************----------- -->
 <!-- ----------------------**************************------------------------- -->
 <?php
-function scanPrereqs($fileName, $prettyName){
+
+function scanPrereqs($fileName, $prettyName)
+{	/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: scanPrereqs ********************
+	 * Preconditions:  Data exists on the line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Validates the authenticity of a file containing information about
+	 *					  prerequisites for specified courses in the file.
+	 *
+	 * Input Expected:  Text input of the following format:
+	 *					XYZ ^ (2 - 4)
+	 *					Where X must be 2 to 4 uppercase letters
+	 *					Where Y must be a 3 digit number between 001-499
+	 *					Where Z can be up to 2 uppercase letters
+	 *					There must be at least 2 instances of XYZ per line, but no more than 4.
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *							  Courses in file must contain between 1 and 3 prerequisites
+	 *							  Whitespace must separate elements on the line
+	 *							  
+	 *
+	 * Files Accessed:  Any file given to the program
+	 *					$logFile for reporting errors
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):	Jared Cox, Michael Debs
+	 *								April 10, 2013
+	 * Modifications Description:	Fixed prerequisite scanner to check that the
+	 *								course exists in the courses table in the database.
+	 *								If it doesn't, we print out an appropriate message
+	 *								saying the line scanned correctly, but the prereqs
+	 *								were not uploaded to the database (because the course
+	 *								requiring prereqs was not in the courses section of
+	 *								the databse).  We suggest adding the course first
+	 *								through form submission, and then adding the prereqs.
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
 	echo("<h1>SCANNING PREREQS</h1><br>");
 	global $link, $db;
 	//FLAGS
@@ -853,7 +909,7 @@ function scanPrereqs($fileName, $prettyName){
 		$listOfPrereqs = array();		
 		$listOfPrereqsIndex = 0;
 			
-		$readLine = preg_split('/\s+/', $printLine);	//splits the line into an array of elements
+		$readLine = preg_split('/\s+/', trim($printLine));	//splits the line into an array of elements
 														//each element will be a contiguous string of characters
 														//all whitespace is ignored on line for this function due to " '/\s+/' "
 		
