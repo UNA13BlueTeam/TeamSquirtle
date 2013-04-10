@@ -1,45 +1,22 @@
-<?php include("includes/header.php"); ?>
-
-<?php
-	echo("<h1>".$deptName."</h1>");
-	echo("<h2>".$userName."</h2>");
-	echo("<h3>".$userTitle."</h3>");
-?>
-<div class="homeLinks">
-	Links!
-	<ul>
-		<li> <a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> </li>
-		<li> <a href="manageRooms.php" id="building">Manage Rooms</a> </li>
-		<li> <a href="manageClass.php" id="classes">Manage Classes</a> </li>
-		<li> <a href="manageConflicts.php" id="conflicts">Conflicts</a> </li>
-		<li> <a href="index.php" id="deadline">Change Deadline</a></li>
-		<li> <a href="index.php" id="deadline">Help</a></li>
-	</ul>
-</div>
-<div id="homeSchedule">
-	<?php
-		$rows = 6; // define number of rows
-		$cols = 3;// define number of columns
- 
-		echo "<table class='schedule'>";
-                echo"<tr>";
-                for($th=1;$th<=$cols;$th++){
-                    echo"<th></th>";
-                }
- 
-		for($tr=2;$tr<=$rows;$tr++){ 
-      
-   			echo "<tr>"; 
-        	for($td=1;$td<=$cols;$td++){ 
-                echo "<td></td>"; 
-        	} 
-  		echo "</tr>"; 
-		} 
-
-		echo "</table>";
-	
-        ?>        
-</div>
-
-<br style="clear:both;">
-<?php include("includes/footer.php"); ?>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/main.css" type="text/css" />
+        <title>Administrator Login</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>   
+        <div class="purpleBox">
+        <form id="login" name="login" method="post" action="chkunpw.php" onSubmit="">
+  	      <label for="Username">Username :</label>
+			      <input id="Username" name="Username" type="text" size="15"/> <br><br>
+		      <label for="Password">Password :</label>
+			      <input id="Password" name="Password" type="text" size="15" /> <br><br>
+		    <p>
+			    <input type="submit" name="submit" value="  submit  " />
+		    	<input type="reset" name="submit" value="  reset  "  />
+		    </p>
+        <p><img src="img/unaLogo.png" alt="UNA Logo" id="logo" /></p>
+        </form>
+        </div>
+    </body>
+</html>
