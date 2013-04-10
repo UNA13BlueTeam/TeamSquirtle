@@ -14,8 +14,8 @@
     }
     $password = trim($_POST['Password']);
     $username = $_POST['Username'];
-    $admin ="Select * from users where username='$username' and password='$password'";
-    $faculty = "Select * from userfaculty where username='$username' and password='$password'";
+    $admin ="SELECT * FROM users WHERE username='$username' AND password='$password'";
+    $faculty = "SELECT * FROM userfaculty WHERE username='$username' AND password='$password'";
     $facultyquery = mysqli_query( $test, $faculty );
     $queryResult = mysqli_query( $test, $admin );
     if($queryResult===false){

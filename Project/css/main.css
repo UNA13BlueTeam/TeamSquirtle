@@ -23,7 +23,7 @@
 	font-size: 16pt;
 	color: white;
 	text-decoration: none;
-	border-right-style: solid;
+	/*border-right-style: solid;*/
 	border-width: 1px;
 	border-color: white;
 	padding-right: 3px;
@@ -43,7 +43,9 @@ body{
 	font-family: Helvetica;
 	background: #eee;
 }
-
+div.content{
+	width: 100%;
+}
 body a{
 	font-weight: bold;
 	text-decoration: none;
@@ -111,6 +113,15 @@ div.purpleBox{
 	margin-right:5%;
 	padding: 7px;
 	text-align:middle;
+}
+
+div.purpleBox#login{
+	margin: 0px auto;
+	float: none;
+}
+div.purpleBox#login div.row{
+	margin: 0px auto;
+	width: auto;
 }
 
 div.goldBox{
