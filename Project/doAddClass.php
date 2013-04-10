@@ -881,8 +881,8 @@ function scanPrereqs($fileName, $prettyName)
 	$printLineIndex = 0;	
 	$currentCourse = "";		//string		
 	$errorOnLine = false;
+	$listOfCourses = array();	//first courses on each line of a file
 	$listOfPrereqs = array();	//used in detecting duplicate courses on a line
-	$listOfPrereqsIndex = 0;
 	$itemCount = 0;		//if there are more than 4  or less than 2 separate items on a line, there is an incorrect number of prerequisites
 	$errorInFile = false;
 	$firstCourseOnLine  = "";	//string used only for validation
@@ -906,8 +906,8 @@ function scanPrereqs($fileName, $prettyName)
 										//otherwise, a line without a hard return at the end
 										//will produce a whitespace error in this scanner
 		
-		$listOfPrereqs = array();		
-		$listOfPrereqsIndex = 0;
+		$listOfPrereqs = array();
+		$firstCourseOnLine = "";
 			
 		$readLine = preg_split('/\s+/', trim($printLine));	//splits the line into an array of elements
 														//each element will be a contiguous string of characters
@@ -941,30 +941,39 @@ function scanPrereqs($fileName, $prettyName)
 					}
 					else
 					{
-						$listOfPrereqs[$listOfPrereqsIndex] = $currentCourse;
-						$listOfPrereqsIndex++;
+						array_push($listOfPrereqs, $currentCourse);
 					}
 					echo "getCourse returned true" . "<br>";
 					if($firstCourseOnLineFlag == true)
-					{
-						print_r($predef);
-						echo("$currentCourse <br>");
+					{	
 						$firstCourseOnLine = $currentCourse;
-						if (in_array(trim($currentCourse), $predef))
-						{//if the course already has prereqs defined, we delete the course from
-						 //the database and create a new record for the course
-							echo("<h2>Prerequisites already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
-							$delete = "DELETE FROM $db.prereqs WHERE course = '$currentCourse'";
-							echo("<h1>DELETING</h1><h2>$delete</h2>");
-							
-							mysqli_query($link, $delete);
+						if(in_array($firstCourseOnLine, $listOfCourses))
+						{
+							echo "$firstCourseOnLine predefined in file. Put all prerequisites for a file on one line.<br>";
+							$errorOnLine = true; $errorInFile = true;
 						}
-						//add course to $listOfPrereqs
-						array_push($listOfPrereqs, $currentCourse);
-						$insertQuery1= "INSERT INTO $db.prereqs (course";
-						$insertQuery2= "VALUES ('$currentCourse'";
-						$firstCourseOnLineFlag = false;
-						
+						else
+						{
+							print_r($predef);
+							echo("$currentCourse <br>");
+							
+							array_push($listOfCourses, $firstCourseOnLine);
+							
+							if (in_array(trim($currentCourse), $predef))
+							{//if the course already has prereqs defined, we delete the course from
+							 //the database and create a new record for the course
+								echo("<h2>Prerequisites already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
+								$delete = "DELETE FROM $db.prereqs WHERE course = '$currentCourse'";
+								echo("<h1>DELETING</h1><h2>$delete</h2>");
+								
+								mysqli_query($link, $delete);
+							}
+							//add course to $listOfPrereqs
+							array_push($listOfPrereqs, $currentCourse);
+							$insertQuery1= "INSERT INTO $db.prereqs (course";
+							$insertQuery2= "VALUES ('$currentCourse'";
+							$firstCourseOnLineFlag = false;
+						}						
 					}
 					else
 					{
