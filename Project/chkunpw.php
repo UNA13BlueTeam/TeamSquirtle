@@ -24,7 +24,7 @@
     $result = mysqli_num_rows( $queryResult );
     if($result){
         echo 'admin login';
-        header("Location: index1.php");
+        header("Location: adminHome.php");
     }
     elseif(mysqli_num_rows($facultyquery )){
         echo 'faculty login';
