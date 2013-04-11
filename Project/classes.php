@@ -91,6 +91,21 @@
 		}
 	}
 	
+	class facultyPreferences
+	{
+		$professor;	//string
+		$course;	//string
+		$preferredTimeOfDay;	//string
+		$yearsOfService;	//string
+		$timeOfSubmission;	//time-date string
+		$priority;	//int
+		
+		function __construct()
+		{
+			echo "In facultyPreferences constructor. <br>";
+			self::$priority = -1;
+		}		
+	}
 	
 	$course = new Course;
 	$faculty = new Faculty;
