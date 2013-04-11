@@ -47,7 +47,7 @@
 	class ClassTime
 	{
 		private static $minutes;	//int
-		private static $daysOfWeek;	//int
+		private static $daysOfWeek;	//string
 		private static $availableTimes;	//array of strings of format 00:00 listing all available teaching times for matching daysOfWeek
 		
 		function __construct()
