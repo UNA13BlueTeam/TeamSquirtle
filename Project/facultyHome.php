@@ -1,5 +1,10 @@
-<?php include("includes/facultyHeader.php"); ?>
-  <h1>faculty homepage</h1>
+<?php include("includes/header.php"); ?>
+  
+<?php
+  echo("<h1>".$deptName."</h1>");
+  echo("<h2>".$userName."</h2>");
+  echo("<h3>".$userTitle."</h3>");
+?>
   <p>Schedule</p>
 	<?php
 		$rows = 6; // define number of rows

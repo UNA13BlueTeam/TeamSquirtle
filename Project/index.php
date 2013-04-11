@@ -24,16 +24,21 @@
             $auth = $temp[0];
             if($auth==1)
             {
+                $_SESSION['permission'] = "admin";
+                $_SESSION['username'] = $username;
                 include("adminHome.php");
             }elseif($auth==2)
             {
+                $_SESSION['username'] = $username;
+                $_SESSION['permission'] = "faculty";
                 include("facultyHome.php");
             }else
             {
                 // User fails authentication. Output login page.
+                $_SESSION['username'] = NULL;
+                $_SESSION['permission'] = NULL;
                 include("login.php");
-                echo("Auth = $auth");
-                echo("$query");
+                echo("<p> There was a problem logging in. Please try again.</p>");
             }
         }
     ?>

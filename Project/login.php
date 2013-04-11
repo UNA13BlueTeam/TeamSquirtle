@@ -2,18 +2,18 @@
     <a href="index.php">University of North Alabama</a>
     <?php 
         global $host, $user, $pass, $db, $port;
-        $test = mysqli_connect($host, $user, $pass, $db, $port);
-        if($test){
-            echo ('<div style="font-size:8pt; color:chartreuse;">DB Connected</div>');
-            mysqli_close($test);
-        }else{
-            echo ('<div style="font-size:8pt; color:red;">DB Failed</div>');
-        }
-        if (mysqli_connect_errno())
-        {
-            printf("Connect failed: %s\n", mysqli_connect_error());
-            exit();
-        }
+        // $test = mysqli_connect($host, $user, $pass, $db, $port);
+        // if($test){
+        //     echo ('<div style="font-size:8pt; color:chartreuse;">DB Connected</div>');
+        //     mysqli_close($test);
+        // }else{
+        //     echo ('<div style="font-size:8pt; color:red;">DB Failed</div>');
+        // }
+        // if (mysqli_connect_errno())
+        // {
+        //     printf("Connect failed: %s\n", mysqli_connect_error());
+        //     exit();
+        // }
     ?>
 </div>
 <div class="content">
