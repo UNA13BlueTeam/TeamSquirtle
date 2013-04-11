@@ -1,0 +1,3 @@
+Error on line 1 at index 0.  Courses in file must contain between 1 and 3 prerequisites.
+Error on line 8 at index 0.  Courses in file must contain between 1 and 3 prerequisites.
+Error on line 12 at index 12.  Prerequisite is a higher level course than course requiring prerequisites.

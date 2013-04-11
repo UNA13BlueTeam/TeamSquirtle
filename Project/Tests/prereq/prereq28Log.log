@@ -1,0 +1,7 @@
+Error on line 1 at index 0.  Courses in file must contain between 1 and 3 prerequisites.
+Error on line 3 at index 6.  Course number must be exactly 3 digits.
+Error on line 6 at index 5.  Course number must be exactly 3 digits.
+Error on line 7 at index 13.  Prerequisite is a higher level course than course requiring prerequisites.
+Error on line 11 at index 13. Course letters must be between 2 and 4 characters.
+Error on line 13 at index 5.  Course number exceeds boundaries. Must be between 001 and 499.
+Error on line 15 at index 7. Course letters must be between 2 and 4 characters.

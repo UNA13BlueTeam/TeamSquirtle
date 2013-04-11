@@ -1,0 +1,3 @@
+Error on line 1 at index 0.  Each line in the file must have at least 2 items:
+			         			Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay 
+								... DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay

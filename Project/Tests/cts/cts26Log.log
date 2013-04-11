@@ -1,0 +1,5 @@
+Error on line 2 at index 18.  Class size must be between 1 and 200.
+Error on line 5 at index 20.  Class size must be between 1 and 200.
+Error on line 8 at index 0.  Each line in the file must have 7 items:
+								Course	DaySections	NightSections	InternetSections	ClassSize	Room	Hours.
+Error on line 13 at index 24.  Number of hours must be between 1 and 12.

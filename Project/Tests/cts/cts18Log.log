@@ -1,0 +1,4 @@
+Error on line 4 at index 19.  Number of hours must be between 1 and 12.
+Error on line 9 at index 1. Course letters must be between 2 and 4 characters.
+Error on line 10 at index 6.  Course number must be exactly 3 digits.
+Error on line 18 at index 5. Course letters must be between 2 and 4 characters.

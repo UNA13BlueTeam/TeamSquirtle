@@ -1,0 +1,2 @@
+Error on line 5 at index 0.  Each line in the file must have 7 items:
+								Course	DaySections	NightSections	InternetSections	ClassSize	Room	Hours.
