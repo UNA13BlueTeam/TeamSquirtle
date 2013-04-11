@@ -1,0 +1,184 @@
+Jared’s Notes:
+SELECT DISTINCT courseName FROM courses
+            Create an array of all courses selected – coursesToSchedule
+            While coursesToSchedule is not empty
+                        SELECT day sections FROM courses WHERE courseName = arrayIndex
+                                    (nightSections and internetSections = totalSections)
+                        SELECT * FROM preferences WHERE courseName = arrayIndex
+                        Create priority queue of faculty wanting to teach course
+If queue is empty, course not scheduled. Put course on list of unscheduled courses “Course not chosen by faculty”
+ 
+Class Times
+int minutes
+string DOW
+string early[]    // Early = before 11AM
+string mid_day[]    // Mid-Day = 11AM - 2PM
+string afternoon[]    // Afternoon = after 2PM
+string night[]
+Rooms
+string roomName
+int roomSize
+char roomType
+RM[0].roomName
+RM[0].roomSize
+RM[0].roomType
+Scheduling Algorithm Pseudo:
+    bool sortByYOS,sortTOS
+    ctsIndex = 0    // Courses to schedule index
+    classTimesIndex = 0   
+   Create array of unscheduled courses (listOfUnscheduledCourses)
+   Create array of courses (coursesToSchedule)
+   Create array of class times (classTimes)
+   
+   While (ctsIndex < size of coursesToSchedule array)
+    {
+        If conflict file doesn’t exist  
+            set conflictsExistFlag (no conflicts for coursesToSchedule[ctsIndex].courseName)
+        else
+            set conflictsExistFlag (conflicts exist for coursesToSchedule[ctsIndex].courseName)
+        
+        Get day and night sections from course (as constants)
+        daySections = courseToSchedule[ctsIndex].day_sections 
+        nightSections= coursesToSchedule[ctsIndex].night_sections
+        
+        Create priority queue of faculty members that chose this course by YOS (Years of service) or TOS (Time of submission)
+                (facultyPreferenceQueue)
+        if(sortByYOS is true)
+        {
+           generate priority queue using years of service as priority in insert(facultyName, yearsOfService)
+        }
+        elseif(sortByTOS is true)
+        {
+            generate priority queue using time of submission as priority in insert(facultyName, timeOfSubmission)
+        }
+        
+        If (facultyPreferenceQueue is empty) 
+        {
+            Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
+            ctsIndex++;
+        }
+        Else (declare variables for number of day and night sections left)
+        {
+            daySectionsRemaining = daySections
+            nightSectionsRemaining = nightSections
+            scheduledSections = 0
+            currentSectionNumber = 1
+            
+            While (facultyPreferenceQueue is not empty) and (scheduledSections is less than daySections + nightSections)
+            {
+                Check front of priority queue
+                facultyMember = top of priority queue
+                Check their time preference (verify with correct array early[], midday[], afternoon[], night[]) from preference  table
+                {
+                     timePref = facultyMember.timePref
+                     create an arrayOfTimes
+                     arrayOfTimesIndex = 0;
+                     
+                     switch(timePref)
+                     {
+                        case  "early":  arrayOfTimes == classTimes[classTimesIndex].early
+                                                day_type = true
+                                                break;
+                        
+                        case "midday": arrayOfTimes ==  classTimes[classTimesIndex].midday
+                                               day_type = true
+                                                break;
+                        
+                        case "late after": arrayOfTimes ==  classTimes[classTimesIndex].lateAfter
+                                                day_type = true
+                                                break;
+                        
+                        case "night":  arrayOfTimes == classTimes[classTimesIndex].night
+                                                night_type = true
+                                                break;
+                     }
+                }
+                If ((day_type is true and daySectionsRemaining == 0) OR (night_type = true and nightSectionsRemaining == 0))
+                {
+                    Take faculty member off of priority queue and add course and section number (currentSectionNumber) to listOfUnscheduledCourses
+                    "No more sections available for preferred time chosen"
+                    currentSectionNumber++
+                }
+                Else
+                {
+                    While arrayOfTimesIndex < size of arrayOfTimes
+                    {
+                        // Loops through array of times to find a time the faculty member is not teaching at
+                       do
+                       {
+                            Check to see if arrayOfTimes[arrayOfTimesIndex] is in database in “Scheduled Courses Table” WHERE facultyName = facultyMember.name   (alreadyTeaching == result)
+                            If arrayOfTimes[arrayOfTimesIndex] and facultyMember.name already exists together (alreadyTeaching == true)
+                            {
+                                arrayOfTimesIndex++
+                            }
+                        }while(alreadyTeaching == true) and (arrayOfTimesIndex < size of (arrayOfTimes))
+                        
+                        if(alreadyTeaching == false) //we found a time slot that does not conflict with that particular faculty member
+                        {
+                            if (conflictsExistFlag == true)
+                            {
+                                do
+                                {
+                                    conflictExists = false
+                                    Check to see if arrayOfTimes[arrayOfTimesIndex] is in database in “Conflicts Table” WHERE “conflictsString is arrayOfTimes[arrayOfTimesIndex]
+                                    If conflict exists
+                                    {
+                                        conflictExists = true
+                                        arrayOfTimesIndex++
+                                    }
+                                }while(conflictExists == true) and (arrayOfTimesIndex < size(arrayOfTimes))
+                            }
+                            else
+                            {
+                               if(conflictExists == false)
+                               {
+                                    //Find room
+                                    Create an arrayOfRooms (SELECT DISTINCT roomName FROM Rooms)
+                                    
+                                ***To find a room for the selected time slot (Scheduled Courses Table)
+                                    For (aorIndex = 0; aorIndex < size(arrayOfRooms); aorIndex++)
+                                    {
+                                        //check if room type is ok
+                                        If (coursesToSchedule[ctsIndex].classType == arrayOfRooms[aorIndex].roomType)
+                                        {
+                                            //check if room size requirement is ok
+                                            If (coursesToSchedule[ctsIndex].classSize <= arrayOfRooms[aorIndex].roomSize)
+                                            {
+                                                Check database to see if it is in use at the specific time (roomAvailable flag)
+                                                if(roomAvailable == true)
+                                                {
+                                                   foundRoom = true
+                                                   add courseName-sectionNumber to scheduledCourses table
+                                                   /*
+                                                       courseName
+                                                       course section number
+                                                       facultyMember
+                                                       classTime
+                                                       room
+                                                       time slot
+                                                   */    
+                                                   break out of for loop                                                                                          
+                                                }  
+                                            }//endif
+                                        }//endif
+                                    }//endfor
+                                    if(foundRoom == true)
+                                    {
+                                        currentSectionNumber++
+                                    }
+                                    else
+                                    {
+                                        arrayOfTimesIndex++
+                                    }
+                                }//endif
+                            }//endif
+                        }//endif
+                    }//endwhile
+                    
+                    pop off faculty member
+                }//endelse
+            }//endwhile
+            
+            ctsIndex++
+        }//endelse
+    }//endwhile
