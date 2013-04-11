@@ -838,8 +838,15 @@ function scanPrereqs($fileName, $prettyName)
 	 *								the databse).  We suggest adding the course first
 	 *								through form submission, and then adding the prereqs.
 	 *
-	 * Modified By (Name and Date):
-	 * Modifications Description:
+	 * Modified By (Name and Date): Jared Cox, April 10, 2013
+	 * Modifications Description:	Moved the check for preexisting prerequisites to right
+	 *								before the full query is submitted.  Otherwise, it was
+	 *								deleting a course found on a wholy incorrect line.
+	 *								ex.		AB101	AB98
+	 *								AB101 already in prereqs, so we drop that record to 
+	 *								overwrite. But an error is later found on the line, 
+	 *								so a query is never submitted (thus, AB101 never gets
+	 *								stored in the prereq table again.
 	 -------------------------------------------------------------------------------------------------*/ 		
 	echo("<h1>SCANNING PREREQS</h1><br>");
 	global $link, $db;
@@ -959,15 +966,6 @@ function scanPrereqs($fileName, $prettyName)
 							
 							array_push($listOfCourses, $firstCourseOnLine);
 							
-							if (in_array(trim($currentCourse), $predef))
-							{//if the course already has prereqs defined, we delete the course from
-							 //the database and create a new record for the course
-								echo("<h2>Prerequisites already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
-								$delete = "DELETE FROM $db.prereqs WHERE course = '$currentCourse'";
-								echo("<h1>DELETING</h1><h2>$delete</h2>");
-								
-								mysqli_query($link, $delete);
-							}
 							//add course to $listOfPrereqs
 							array_push($listOfPrereqs, $currentCourse);
 							$insertQuery1= "INSERT INTO $db.prereqs (course";
@@ -999,6 +997,15 @@ function scanPrereqs($fileName, $prettyName)
 		{
 			if(strlen(trim($printLine)) != 0)
 			{
+				if(in_array(trim($firstCourseOnLine), $predef))
+				{//if the course already has prereqs defined, we delete the course from
+				 //the database and create a new record for the course
+					echo("<h2>Prerequisites already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
+					$delete = "DELETE FROM $db.prereqs WHERE course = '$firstCourseOnLine'";
+					echo("<h1>DELETING</h1><h2>$delete</h2>");
+					
+					mysqli_query($link, $delete);
+				}
 				if(in_array(trim($firstCourseOnLine), $predefCourses))
 				{
 					$insertQuery1 = $insertQuery1.") ";

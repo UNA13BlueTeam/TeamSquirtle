@@ -1,0 +1,34 @@
+Testing:	Prerequisite file upload
+
+Tested by:	Jared Cox
+
+Testing date:	April 10, 2013
+
+File name				Testing Result (E = expected result; U = unexpected result)
+prereq001.txt		(U)Gave me an error with max elements on the line.  Fixed that, then got
+						an insertion failed error on an empty line.
+						
+		ME AND DEBS FIXED A BUNCH OF STUFF AND NOW I'M STARTING TESTING OVER OKAY
+
+prereq001.txt		(E)No errors in file.  Each line uploaded successfully.
+prereq002.txt		(E)No errors in file.  Each line uploaded successfully.
+prereq003.txt		(E)No errors in file.  Each line uploaded successfully.
+prereq004.txt		(E)Error on line 1. All other lines uploaded successfully.
+prereq005.txt		(E)Error on line 4.  All lines before and after uploaded successfully.
+prereq006.txt		(E)Error on line 6.  All lines before and after uploaded successfully.
+prereq007.txt		(E)Error on lines 2, 3, 6, 13.  All other lines uploaded successfully.
+prereq008.txt		(E)Only one line in file. Line is correct and was uploaded successfully. 
+prereq009.txt		(E)Only one line in file. Line was incorrect and was not uploaded.
+prereq010.txt		(E)Only one line in file. Line was incorrect and was not uploaded.
+prereq011.txt		(E)Only one line in file. Line was incorrect and was not uploaded.
+prereq012.txt		(E)Only one line in file. Line was correct and was uploaded successfully.
+prereq013.txt		(E)Only one line in file. Line was incorrect and was not uploaded.
+prereq014.txt		(E)Only one line in file. Line was incorrect and was not uploaded.
+prereq015.txt		(E)Error on last line.  All other lines were uploaded successfully.
+prereq016.txt		(E)No errors in file.  Each line uploaded successfully.
+prereq017.txt		(E)Error on line 6.  All lines before and after uploaded successfully.
+prereq018.txt		(E)Error on line 7.  All lines before and after uploaded successfully.
+prereq019.txt		(E)Error on last line.  All other lines were uploaded successfully.
+prereq020.txt		(E)Error on lines 2, 5, 7.  All other lines were uploaded successfully.
+prereq021.txt		(E)Error on lines 1, 8, 12.  All other lines were uploaded successfully.
+prereq022.txt		(E)Error on lines 7, 12.  All other lines were uploaded successfully.
