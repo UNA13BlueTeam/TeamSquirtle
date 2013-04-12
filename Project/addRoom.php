@@ -6,6 +6,7 @@
 
 <div class="purpleBox">
 	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddRoom.php">
+		<input type="hidden" name="flag" value="form">
 		<div class="row">
 			<label for="roomType">Room Type</label>
 			<select name="roomType">
@@ -29,10 +30,11 @@
 </div>
 
 <div class="goldBox">
-	<form class="fileForm" name="scheduleForm" method="post" action="addRoomFilePHP.php" enctype="multipart/form-data">
+	<form class="fileForm" name="scheduleForm" method="post" action="doAddRoom.php" enctype="multipart/form-data">
+		<input type="hidden" name="flag" value="file">
 		<div class="row">
-			<label for="upfile">File to upload:</label>
-			<input type="file" name="upfile"> 
+			<label for="roomFile">File to upload:</label>
+			<input type="file" name="roomFile"> 
 		</div> <br /><br /> <hr>
 		<div class="row">
 			<input type="submit" name="submit" value="Submit File" />

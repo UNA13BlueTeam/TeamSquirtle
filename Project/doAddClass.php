@@ -40,13 +40,13 @@
 	}elseif($_POST['flag']=="file"){
 		echo ("I got files!<br>");
 		
-		$classFile 		= $_FILES["classFile"]["tmp_name"];
-		$classFileName 	= $_FILES["classFile"]["name"];
+		$classFile = $_FILES["classFile"]["tmp_name"];
+		$classFileName = $_FILES["classFile"]["name"];
 		
-		$prereqFile 	= $_FILES["prereqFile"]["tmp_name"];
+		$prereqFile = $_FILES["prereqFile"]["tmp_name"];
 		$prereqFileName = $_FILES["prereqFile"]["name"];
 		
-		$conflictFile   = $_FILES["conflictFile"]["tmp_name"];
+		$conflictFile = $_FILES["conflictFile"]["tmp_name"];
 		$conflictFileName = $_FILES["conflictFile"]["name"];
 		
 		if($classFile)
