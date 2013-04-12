@@ -39,16 +39,16 @@
 		echo "Conflicts: $conflict <br>";
 	}elseif($_POST['flag']=="file"){
 		echo ("I got files!<br>");
-		// $classFile = $_POST['classFile'];
-		// $prereqFile = $_POST['prereqFile'];
+		
 		$classFile 		= $_FILES["classFile"]["tmp_name"];
 		$classFileName 	= $_FILES["classFile"]["name"];
+		
 		$prereqFile 	= $_FILES["prereqFile"]["tmp_name"];
 		$prereqFileName = $_FILES["prereqFile"]["name"];
-		// $success = move_uploaded_file($prereqFile, "uploads/prereqs.txt");
-		// if(!$success)
-		// echo("Move failed.<br>");
-		// echo($prereqFile);
+		
+		$conflictFile   = $_FILES["conflictFile"]["tmp_name"];
+		$conflictFileName = $_FILES["conflictFile"]["name"];
+		
 		if($classFile)
 		{
 			scanCTS($classFile, $classFileName);
@@ -56,6 +56,10 @@
 		if($prereqFile)
 		{
 			scanPrereqs($prereqFile, $prereqFileName);
+		}
+		if($conflictFile)
+		{
+			scanConflicts($conflictFile, $conflictFileName);
 		}
 	}
 
@@ -127,7 +131,6 @@ include("includes/footer.php");
 	 -------------------------------------------------------------------------------------------------*/ 		
 	
 	//FLAGS
-		$stillTesting = true;
 		$startQuery = true;
 		$SECTIONSFLAG = 1;		//these three flags have integer values to distinguish between the
 		$CLASSSIZEFLAG = 2;		//types of flags passed to the "getNumber" function
@@ -852,7 +855,6 @@ function scanPrereqs($fileName, $prettyName)
 	global $link, $db;
 	//FLAGS
 	$firstCourseOnLineFlag = true;
-	$stillTesting = true;
 	
 	$predefCourses = array();	//of courses
 	$predefCoursesQuery = "SELECT DISTINCT courseName FROM courses";
@@ -1167,7 +1169,7 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 				
 				$courseNumberInt = intval(implode($courseNumbers));	//converts the integer array to a solid string
 																	//and converts the string value to an integer
-				
+				/*
 				//SPECIFIC TO PREREQSCANNER. REMOVE IF REUSED ELSEWHERE
 					if($firstCourseOnLineFlag == true)
 					{
@@ -1179,7 +1181,7 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 						return false;
 					} 
 				///////////////////////////////////////////////////////
-				
+				*/
 																	
 				if(($courseNumberInt < $COURSENUMBERMIN) or ($courseNumberInt > $COURSENUMBERMAX))
 				{
@@ -1260,3 +1262,685 @@ function skipWhitespace($line, &$lineIndex)
 <!-- ----------------------**************************------------------------- -->
 
 
+
+
+
+
+
+
+
+
+
+<!-- --------------------------****************------------------------------- -->
+<!-- ------------**************************************************----------- -->
+<!-- --------------------------CONFLICT FILE SCANNER------------------------------ -->
+<!-- ------------**************************************************----------- -->
+<!-- --------------------------****************------------------------------- -->
+<?php 
+	function scanConflicts($fileName, $prettyName)
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: ctsscanner ********************
+	 * Preconditions:  None
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Validates the authenticity of a file containing conflict times
+	 *					  for scheduled courses by analyzing the contents of each line
+	 *					  in a file.
+	 *
+	 * Input Expected:  Text input of the following format:
+	 *						XYZ DoW/00:00 DoW/00:00
+	 *						Where X must be 2 to 4 uppercase letters
+	 *						Where Y must be a 3 digit number between 001-499
+	 *						Where Z can be up to 2 uppercase letters
+	 *						Where DoW can be any in-order substring of MTWRFS
+	 *						Where 00:00 can be any valid military time specification
+	 *						There can be any number of instances of DoW/00:00 provided
+	 *							there are no duplicates
+	 *
+	 * Exceptions/Errors Thrown:  Course letters must be between 2 and 4 characters
+	 *							  Course letters is not a part of the department
+	 *							  Files must contain ONLY uppercase letters
+	 *							  Invalid character encountered
+	 *							  Course number must immediately follow course letters
+	 *							  Course number must be exactly 3 digits
+	 *							  Prerequisite is a higher level course than course requiring prerequisites
+	 *							  Course number exceeds boundaries. Must be between 001 and 499
+	 *							  String of characters following course number is too long
+	 *							  Invalid character in string following course number
+	 *							  Conflict time already defined in file
+	 *							  Invalid time format error thrown if the time of day
+	 *							  is not valid.
+	 *							  Expected digit error thrown if a digit is not found
+	 *							  where expected.
+	 *							  Expected colon error thrown if a colon is not found
+	 *							  where expected.
+	 *							  Days of week out of order
+	 *							  Duplicate found in days of week
+	 *							  Character found does not represent day of week
+	 *							  Lowercase character encountered
+	 *							  No days of week specified
+	 *							  Expected '/' not found
+	 *
+	 * Files Accessed:  Any file given to the program
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: April 4, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE): Jared Cox, April 6, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):	Michael Debs April 11, 2013
+	 * Modifications Description: Integrated scanner to sync with database
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/
+
+	echo("<h1>SCANNING CONFLICTS</h1><br>");
+	// get global variables used
+	global $link, $db;
+	
+	$predefCourses = array();	//of courses
+	$predefCoursesQuery = "SELECT DISTINCT courseName FROM courses";
+	$predefCoursesResult = mysqli_query($link, $predefCoursesQuery);
+	while($row = mysqli_fetch_row($predefCoursesResult))
+	{
+		array_push($predefCourses, $row[0]);
+	}
+	
+	$predef = array();
+	$predefQuery = "SELECT DISTINCT course FROM conflicts";
+	$predefResult = mysqli_query($link, $predefQuery);
+	while($row = mysqli_fetch_row($predefResult))
+	{
+		array_push($predef, $row[0]);
+	}
+	
+	echo "Array of predefined courses <br>";
+	print_r($predefCourses);
+	
+	echo "<br> Array of predefined courses with conflicts already existing: <br>";
+	print_r($predef);
+	
+	$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
+
+	echo("Scanning $prettyName - ".strftime('%c'));
+	
+	echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
+	
+	//VARIABLES
+	$lineNumber = 0;	//used in listing errors
+	$printLine = " ";	//line read in from file
+	$printLineIndex = 0;	
+	$currentCourse = "";		//string variable
+	$listOfCourses = array();
+	$listOfCoursesIndex = 0;
+	$errorOnLine = false;
+	$errorInFile = false;
+	$REQUIREDITEMSONLINE = 2;	//there must be at least 2 items on a line, otherwise there is an error
+	$listOfConflictTimes = array();
+	$listOfConflictTimesIndex = 0;
+	$conflictTime = " ";
+	$readLine = " ";
+	
+	while(!feof($readFile))
+	{
+		$listOfConflictTimes = array();
+		$listOfConflictTimesIndex = 0;
+		
+		$errorOnLine = false;
+		$printLineIndex = 0;
+		do
+		{//this block will skip over any empty lines in a file
+		  $printLine = fgets($readFile);
+		  $lineNumber++;
+		}while((strlen(trim($printLine)) == 0) and (!feof($readFile)));
+		//0 means an empty line
+		$printLine = $printLine . "\r"; //append a carriage return to the end of each line
+										//otherwise, a line without a hard return at the end
+										//will produce a whitespace error in this scanner
+		
+		
+		$readLine = preg_split('/\s+/', trim($printLine));  //splits the line into an array of elements
+														//each element will be a contiguous string of characters
+														//all whitespace is ignored on line for this function due to " '/\s+/' "
+		
+		echo "length of line is " . strlen($printLine) . "<br>";
+		echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
+		echo "line number $lineNumber and line index $printLineIndex" . "<br>";
+		
+		if((count($readLine)) >= $REQUIREDITEMSONLINE)
+		{//if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
+			
+			skipWhitespace($printLine, $printLineIndex);
+			if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $logFile) == false)
+			{
+				echo "getCourse returned false" . "<br>";
+				$errorOnLine = true; $errorInFile = true;
+			}
+			
+			if($errorOnLine == false)
+			{
+				if(in_array($currentCourse, $listOfCourses) == true)
+				{
+					fputs($logFile, "Error on line $lineNumber.  Conflict time already defined in file." . PHP_EOL);
+					$errorOnLine = true; $errorInFile = true;
+				}
+				else
+				{
+					$listOfCourses[$listOfCoursesIndex] = $currentCourse;
+					$listOfCoursesIndex++;
+					
+					// Add course to list of conflict times
+					array_push($listOfConflictTimes, $currentCourse);
+					
+					//start new query
+					$insertQuery1= "INSERT INTO $db.conflicts (course";
+					$insertQuery2= "VALUES ('$currentCourse'";
+				}
+			}
+			// Keeps track with the number of conflicts associated with this class
+			$numberOfConflicts = 0;
+			
+			while(($printLineIndex < strlen(trim($printLine))) and ($errorOnLine == false))
+			{//buildling the conflict time
+				if($errorOnLine == false)
+				{//add $currentCourse to sql query
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					{
+						echo "printline[printlineindex] at index $printLineIndex is $printLine[$printLineIndex]" . "<br>";
+						echo "whitespace error 1" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+			
+				if($errorOnLine == false)
+				{
+					skipWhitespace($printLine, $printLineIndex);
+				}
+				if($errorOnLine == false)
+				{
+					if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW, $logFile) == false)
+					{
+						echo "getDaysOfWeek returned false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//add $retrievedDOW to sql query
+					echo "getDaysOfWeek returned true" . "<br>";
+					if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash, $logFile) == false)
+					{
+						echo "getSlash returned false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{
+					echo "getSlash returned true" . "<br>";
+					if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime, $logFile) == false)
+					{
+						echo "getTime returned false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{
+					$conflictTime = $retrievedDOW . $retrievedSlash . $retrievedTime;
+					if(in_array($conflictTime, $listOfConflictTimes) == false)
+					{
+						$listOfConflictTimes[$listOfConflictTimesIndex] = $conflictTime;
+						$listOfConflictTimesIndex++;
+						$numberOfConflicts++;
+						
+						$insertQuery1 = $insertQuery1.",times$numberOfConflicts";
+						$insertQuery2 = $insertQuery2.", '$conflictTime'";
+					}
+					else
+					{
+						fputs($logFile, "Error on line $lineNumber at index $printLineIndex. Conflict time already exists on line." . PHP_EOL);
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+			}
+		}
+		else 
+		{
+			if(strlen(trim($printLine)) != 0)
+			{
+				fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Each line in the file must have at least 2 items:
+			         			Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay 
+								... DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay" . PHP_EOL);
+				$errorOnLine = true;  $errorInFile = true;
+			}	
+		}
+		
+		// If done gathering info and ready to submit to query
+		if($errorOnLine == false)
+		{
+			// If course already exist, then delete before submitting
+			if(in_array(trim($currentCourse), $predef))
+			{//if the course already has conflicts defined, we delete the course from
+			 //the database and create a new record for the course
+				echo("<h2>Prerequisites already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
+				$delete = "DELETE FROM $db.conflicts WHERE course = '$currentCourse'";
+				echo("<h1>DELETING</h1><h2>$delete</h2>");
+				
+				mysqli_query($link, $delete);
+			}
+			
+			//submit query
+			if(in_array($currentCourse, $predefCourses))
+			{
+				$insertQuery1 = $insertQuery1.") ";
+				$insertQuery2 = $insertQuery2.")";
+				$insertQuery = $insertQuery1.$insertQuery2;
+				$insertion = mysqli_query($link, $insertQuery);
+				if($insertion)
+				{
+					echo("insertion succeeded<br>");
+				}
+				else
+				{
+					echo("insertion failed<br>");
+					echo($insertQuery."<br>");
+				}
+			}
+			else
+			{
+				echo "Line $lineNumber is correct, but $currentCourse does not exist. (Try adding $currentCourse through form submission.) <br>";
+			}
+			echo  "$lineNumber: $printLine" . "<br>";
+		}
+		else
+		{
+			echo $lineNumber . ": $printLine*" . "<br>";
+		}
+	}
+	if($errorInFile == false)
+	{
+		fputs($logFile, "No errors detected." . PHP_EOL);
+	}
+	
+	fclose($readFile);
+	}
+	
+	
+	
+	
+	
+	##################################################################################################
+
+	function getTime($line, &$lineIndex, $lineNumber, &$retrievedTime, $logFile)
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: getTime ********************
+	 * Preconditions:  This function is not called unless contents of input have been
+	 *				   correct up until a time of day is required
+	 *
+	 * Postconditions:  Input validation will either terminate in this function, if
+	 *					invalid data is provided, or will advance validation if 
+	 *					valid data is provided.
+	 *
+	 * Function Purpose:  This function validates times of day provided by
+	 *					  file or user input.  A valid time follows the format
+	 *					  XX:XX in military format.  
+	 *
+	 * Input Expected:	$line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$retrievedTimer = time of day gathered from the line to add to SQL query
+	 *					$times = list of times already found on line
+	 *					$timeIndex = current index for $times
+	 *					$logFile = text file that errors are logged to
+	 *					  
+	 * Exceptions/Errors Thrown:  Invalid time format error thrown if the time of day
+	 *							  is not valid.
+	 *							  Expected digit error thrown if a digit is not found
+	 *							  where expected.
+	 *							  Expected colon error thrown if a colon is not found
+	 *							  where expected.
+	 *
+	 * Files Accessed:			  $logFile - to report errors to
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:			    Jared Cox
+	 *
+	 * Date of Original Implementation:  April 3, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE): Jared Cox, April 3, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 
+	
+	echo "called getTime" . "<br> <br> <br>";
+	//VARIABLES
+		$timeString = array();
+		$timeStringIndex = 0;
+		$firstDigit = 0;
+	
+	////////////////////////////
+	
+		//retrieve first digit in time value
+		if(ctype_digit($line[$lineIndex]) == false)
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			return false;
+		}
+		else
+		{
+			if(($line[$lineIndex] >= 0) && ($line[$lineIndex] <= 2))
+			{
+				$timeString[$timeStringIndex] = $line[$lineIndex];
+				$firstDigit = $timeString[$timeStringIndex];
+				$timeStringIndex++;
+				$lineIndex++;
+			}
+			else
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				return false;
+			}			
+		}
+		
+		//second digit in time
+		if(ctype_digit($line[$lineIndex]) == false)
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			return false;
+		}
+		else
+		{
+			if(($firstDigit == 2) && ($line[$lineIndex] > 3))
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				return false;
+			}
+			else
+			{
+				$timeString[$timeStringIndex] = $line[$lineIndex];
+				$firstDigit = $timeString[$timeStringIndex];
+				$timeStringIndex++;
+				$lineIndex++;
+			}
+		}
+		
+		//check for ":"
+		if($line[$lineIndex] != ':')
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a ':'." . PHP_EOL);
+			return false;
+		}
+		else
+		{
+			$timeString[$timeStringIndex] = $line[$lineIndex];
+			$firstDigit = $timeString[$timeStringIndex];
+			$timeStringIndex++;
+			$lineIndex++;
+		}
+		
+		//third digit in time
+		if(ctype_digit($line[$lineIndex]) == false)
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			return false;
+		}
+		else
+		{
+			if(($line[$lineIndex] < 0) or ($line[$lineIndex] > 5))
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				return false;
+			}
+			else
+			{
+				$timeString[$timeStringIndex] = $line[$lineIndex];
+				$firstDigit = $timeString[$timeStringIndex];
+				$timeStringIndex++;
+				$lineIndex++;
+			}
+		}
+		
+		//fourth digit in time
+		if(ctype_digit($line[$lineIndex]) == false)
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			return false;
+		}
+		else
+		{
+			if(($line[$lineIndex] < 0) or ($line[$lineIndex] > 9))
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				return false;
+			}
+			else
+			{
+				$timeString[$timeStringIndex] = $line[$lineIndex];
+				$firstDigit = $timeString[$timeStringIndex];
+				$timeStringIndex++;
+				$lineIndex++;
+			}
+		}
+		
+		$retrievedTime = implode($timeString);
+		return true;
+	}
+	
+##################################################################################################
+
+	function getDaysOfWeek($line, &$lineIndex, $lineNumber, &$retrievedDOW, $logFile)
+	{/*-----------------------------------------------------------------------------------------------
+	********************** Function Prologue Comment: getDaysOfWeek ********************
+	* Preconditions:  This function is not called unless valid input has been provided
+	*					leading up to it.
+	*
+	* Postconditions: After termination of this function, a forward slash ("/") is
+	*					expected on the line.
+	*
+	* Function Purpose:  This function validates the days of the week a course will be
+	*					 taught that have been provided by file or user.  Valid input
+	*					 is any substring (or whole string, in order) of MTWRFS.
+	*
+	* Input Expected:	$line = line of text read in from the test file
+	*					$lineIndex = current index for $line
+	*					$lineNumber = current line of file
+	*					$retrievedDOW = stores string gathered from the line to add to SQL query
+	*					$logFile = text file that errors are logged to
+	*
+	* Exceptions/Errors Thrown:  Days of week out of order
+	*							  Duplicate found in days of week
+	*							  Character found does not represent day of week
+	*							  Lowercase character encountered
+	*							  No days of week specified
+	*
+	* Files Accessed:			  $logFile for reporting errors
+	*
+	* Function Pseudocode Author:  Jared Cox
+	*
+	* Function Author:	Jared Cox
+	*
+	* Date of Original Implementation:  April 3, 2013
+	*
+	* Tested by SQA Member (NAME and DATE): Jared Cox, April 3, 2013
+	* 
+	** Modifications by:
+	* Modified By (Name and Date):
+	* Modifications Description:
+	*
+	* Modified By (Name and Date):
+	* Modifications Description:
+	-------------------------------------------------------------------------------------------------*/ 
+	//VARIABLES
+		$daysFound = array();
+		$daysFoundIndex = 0;
+		$DAYSOFWEEK = array('M', 'T', 'W', 'R', 'F', 'S');
+		$previousDays = array();
+		
+		while(ctype_upper($line[$lineIndex]) == true)
+		{
+			if(in_array($line[$lineIndex], $DAYSOFWEEK) == true)
+			{
+				if(in_array($line[$lineIndex], $daysFound) == false)
+				{
+					if(in_array($line[$lineIndex], $previousDays) == false)
+					{
+						$daysFound[$daysFoundIndex] = $line[$lineIndex];
+						setPreviousDays($daysFound[$daysFoundIndex], $previousDays);
+						$daysFoundIndex++;
+						$lineIndex++;
+					}
+					else
+					{
+						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Days of week out of order." . PHP_EOL);
+						return false;
+					}
+				}
+				else
+				{
+					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Duplicate found in days of week." . PHP_EOL);
+					return false;
+				}
+			}
+			else
+			{
+				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Character found is not one of MTWRFS." . PHP_EOL);
+				return false;
+			}
+		}
+		if(ctype_lower($line[$lineIndex]) == true)
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  All characters must be uppercase." . PHP_EOL);
+			return false;
+		}
+		$retrievedDOW = implode($daysFound);
+		if(strlen(trim($retrievedDOW)) < 1)
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Days of week not specified." . PHP_EOL);
+			return false;
+		}
+		return true;
+	}
+
+##################################################################################################
+	
+	function setPreviousDays($dayOfWeek, &$previousDays)
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment Template ********************
+	 * Preconditions:  Only called by getDaysOfWeek to track order of days of week,
+	 *				   and only if valid information has been provided up to this point
+	 *
+	 * Postconditions:  Maintains running list of days already specified in a line
+	 *
+	 * Function Purpose:  Using the input provided, this function maintains a list of
+	 *					  days of the week occuring before those that have been listed
+	 *
+	 * Input Expected:	$dayOfWeek = character specifiying a (valid) day of the week
+	 *					$previousDays = array that will contain days of the week prior
+	 *					to that specified by $dayOfWeek
+	 *
+	 * Exceptions/Errors Thrown: None
+	 *
+	 * Files Accessed:	None
+	 *
+	 * Function Pseudocode Author:	Jared Cox
+	 *
+	 * Function Author:	Jared Cox
+	 *
+	 * Date of Original Implementation: April 3, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE): Jared Cox, April 3, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 
+		switch($dayOfWeek)
+		{
+			case 'S': $previousDays = array('M', 'T', 'W', 'R', 'F');
+					  break;
+			case 'F': $previousDays= array('M', 'T', 'W', 'R');
+					  break;
+			case 'R': $previousDays = array('M', 'T', 'W');
+					  break;
+			case 'W': $previousDays = array('M', 'T');
+					  break;
+			case 'T': $previousDays = array('M');
+					  break;
+			default:  break;
+		}
+	}
+	
+##################################################################################################
+
+	function getSlash($line, &$lineIndex, $lineNumber, &$retrievedChar, $logFile)
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: getSlash ********************
+	 * Preconditions:	Valid data has been provided up to this point
+	 *
+	 * Postconditions:  Times of day should follow this function
+	 *
+	 * Function Purpose:  Validates a forward slash ("/") separating days of the week
+	 *					  from times of day
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *					$lineNumber = current line of file
+	 *					$retrievedChar = stores character gathered from the line to add to SQL query
+	 *					$logFile = text file that errors are logged to
+	 *
+	 * Exceptions/Errors Thrown:  Expected '/' not found
+	 *
+	 * Files Accessed:  $logFile - for reporting errors
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation:  April 3, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE): Jared Cox, April 3, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 	//VARIABLES
+		$charOnLine = $line[$lineIndex];
+	
+	/////////////////////////////////////
+	
+		if($charOnLine != '/')
+		{
+			fputs($logFile, "Error on line $lineNumber at index $lineIndex. Expected '/'." . PHP_EOL);
+			return false;
+		}
+		else
+		{
+			$retrievedChar = $charOnLine;
+			$lineIndex++;
+			return true;
+		}
+	}
+
+
+
+
+			
