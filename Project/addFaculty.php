@@ -30,7 +30,7 @@
 <div class="goldBox">
 	<form class="fileForm" name="facultyForm" method="post" action="doAddFaculty.php" enctype="multipart/form-data">
 		<input type="hidden" name="flag" value="file">
-		<label for="FacultyFile">Faculty File: <br /></label>
+		<label for="facultyFile">Faculty File: <br /></label>
 			<input type="file" name="facultyFile"> <br /><br />
 		<input type="submit" name="submit" value="Submit File" />
 		<input type="reset" name="submit" value="Reset"  />
