@@ -358,15 +358,16 @@ include("includes/footer.php");
 			}
 			if($errorOnLine == false)
 			{
-				if(in_array($currentCourse, $predef))
-				{
-					echo("<h2>$currentCourse already defined.  Attempting to overwrite...</h2><br>");
-					$delete = "DELETE FROM courses WHERE courseName = '$currentCourse'";
-					echo("<h3>DELETING: $delete</h3>");
-					mysqli_query($link, $delete) or die("<h2>Delete failed</h2>");
-				}
 				if(strlen(trim($printLine)) != 0)
 				{
+					if(in_array($currentCourse, $predef))
+					{
+						echo("<h2>$currentCourse already defined.  Attempting to overwrite...</h2><br>");
+						$delete = "DELETE FROM courses WHERE courseName = '$currentCourse'";
+						echo("<h3>DELETING: $delete</h3>");
+						mysqli_query($link, $delete) or die("<h2>Delete failed</h2>");
+					}
+					
 					$query = $query.", $daySection, $nightSection, $internetSection, $sizeForQuery, '$typeForQuery', $hoursForQuery)";
 					echo("<h3>Query: $query</h3><br>");
 					$success = mysqli_query($link, $query);
@@ -377,13 +378,13 @@ include("includes/footer.php");
 					}else
 					{
 						echo("<p class=\"warning\">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.</p>");
-					}
+					}					
 				}
 				else
 				{
 					echo "Line $lineNumber is empty. <br>";
 				}
-				echo  "$lineNumber: $printLine" . "<br>";
+				echo "$lineNumber: $printLine" . "<br>";
 			}
 			else
 			{
@@ -1279,7 +1280,7 @@ function skipWhitespace($line, &$lineIndex)
 <?php 
 	function scanConflicts($fileName, $prettyName)
 	{/*-----------------------------------------------------------------------------------------------
-	 ********************** Function Prologue Comment: ctsscanner ********************
+	 ********************** Function Prologue Comment: scanConflicts ********************
 	 * Preconditions:  None
 	 *
 	 * Postconditions: None
@@ -1336,8 +1337,9 @@ function skipWhitespace($line, &$lineIndex)
 	 * Modified By (Name and Date):	Michael Debs April 11, 2013
 	 * Modifications Description: Integrated scanner to sync with database
 	 *
-	 * Modified By (Name and Date):
-	 * Modifications Description:
+	 * Modified By (Name and Date):	Jared Cox April 12, 2013
+	 * Modifications Description:	Removed fputs and logFile parameters
+	 *								Added check for empty lines
 	 -------------------------------------------------------------------------------------------------*/
 
 	echo("<h1>SCANNING CONFLICTS</h1><br>");
@@ -1419,7 +1421,7 @@ function skipWhitespace($line, &$lineIndex)
 		{//if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
 			
 			skipWhitespace($printLine, $printLineIndex);
-			if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse, $logFile) == false)
+			if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse) == false)
 			{
 				echo "getCourse returned false" . "<br>";
 				$errorOnLine = true; $errorInFile = true;
@@ -1429,7 +1431,7 @@ function skipWhitespace($line, &$lineIndex)
 			{
 				if(in_array($currentCourse, $listOfCourses) == true)
 				{
-					fputs($logFile, "Error on line $lineNumber.  Conflict time already defined in file." . PHP_EOL);
+					echo "Error on line $lineNumber.  Conflict time already defined in file. <br>";
 					$errorOnLine = true; $errorInFile = true;
 				}
 				else
@@ -1452,10 +1454,9 @@ function skipWhitespace($line, &$lineIndex)
 			{//buildling the conflict time
 				if($errorOnLine == false)
 				{//add $currentCourse to sql query
-					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber, $logFile) == false)
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
 					{
-						echo "printline[printlineindex] at index $printLineIndex is $printLine[$printLineIndex]" . "<br>";
-						echo "whitespace error 1" . "<br>";
+						
 						$errorOnLine = true; $errorInFile = true;
 					}
 				}
@@ -1466,7 +1467,7 @@ function skipWhitespace($line, &$lineIndex)
 				}
 				if($errorOnLine == false)
 				{
-					if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW, $logFile) == false)
+					if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW) == false)
 					{
 						echo "getDaysOfWeek returned false" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
@@ -1476,7 +1477,7 @@ function skipWhitespace($line, &$lineIndex)
 				if($errorOnLine == false)
 				{//add $retrievedDOW to sql query
 					echo "getDaysOfWeek returned true" . "<br>";
-					if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash, $logFile) == false)
+					if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash) == false)
 					{
 						echo "getSlash returned false" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
@@ -1486,7 +1487,7 @@ function skipWhitespace($line, &$lineIndex)
 				if($errorOnLine == false)
 				{
 					echo "getSlash returned true" . "<br>";
-					if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime, $logFile) == false)
+					if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime) == false)
 					{
 						echo "getTime returned false" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
@@ -1504,7 +1505,7 @@ function skipWhitespace($line, &$lineIndex)
 					}
 					else
 					{
-						fputs($logFile, "Error on line $lineNumber at index $printLineIndex. Conflict time already exists on line." . PHP_EOL);
+						echo "Error on line $lineNumber at index $printLineIndex. Conflict time already exists on line. <br>";
 						$errorOnLine = true; $errorInFile = true;
 					}
 				}
@@ -1514,21 +1515,21 @@ function skipWhitespace($line, &$lineIndex)
 		{
 			if(strlen(trim($printLine)) != 0)
 			{
-				fputs($logFile, "Error on line $lineNumber at index $printLineIndex.  Each line in the file must have at least 2 items:
+				echo "Error on line $lineNumber at index $printLineIndex.  Each line in the file must have at least 2 items:
 			         			Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay 
-								... DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay" . PHP_EOL);
+								... DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay <br>";
 				$errorOnLine = true;  $errorInFile = true;
 			}	
 		}
 		
 		// If done gathering info and ready to submit to query
-		if($errorOnLine == false)
+		if(($errorOnLine == false) and (strlen(trim($printLine)) != 0))
 		{
 			// If course already exist, then delete before submitting
 			if(in_array(trim($currentCourse), $predef))
 			{//if the course already has conflicts defined, we delete the course from
 			 //the database and create a new record for the course
-				echo("<h2>Prerequisites already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
+				echo("<h2>Conflicts already defined for course on line $lineNumber.  Attempting to overwrite... </h2><br>");
 				$delete = "DELETE FROM $db.conflicts WHERE course = '$currentCourse'";
 				echo("<h1>DELETING</h1><h2>$delete</h2>");
 				
@@ -1560,12 +1561,19 @@ function skipWhitespace($line, &$lineIndex)
 		}
 		else
 		{
-			echo $lineNumber . ": $printLine*" . "<br>";
+			if(strlen(trim($printLine)) == 0)
+			{
+				echo "Line $lineNumber is empty. <br>";
+			}
+			else
+			{
+				echo $lineNumber . ": $printLine*" . "<br>";
+			}
 		}
 	}
 	if($errorInFile == false)
 	{
-		fputs($logFile, "No errors detected." . PHP_EOL);
+		echo "No errors detected. <br>";
 	}
 	
 	fclose($readFile);
@@ -1577,7 +1585,7 @@ function skipWhitespace($line, &$lineIndex)
 	
 	##################################################################################################
 
-	function getTime($line, &$lineIndex, $lineNumber, &$retrievedTime, $logFile)
+	function getTime($line, &$lineIndex, $lineNumber, &$retrievedTime)
 	{/*-----------------------------------------------------------------------------------------------
 	 ********************** Function Prologue Comment: getTime ********************
 	 * Preconditions:  This function is not called unless contents of input have been
@@ -1635,7 +1643,7 @@ function skipWhitespace($line, &$lineIndex)
 		//retrieve first digit in time value
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex.  Expected a digit. <br>";
 			return false;
 		}
 		else
@@ -1649,7 +1657,7 @@ function skipWhitespace($line, &$lineIndex)
 			}
 			else
 			{
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo "Error on line $lineNumber at index $lineIndex.  Invalid time encountered. <br>";
 				return false;
 			}			
 		}
@@ -1657,14 +1665,14 @@ function skipWhitespace($line, &$lineIndex)
 		//second digit in time
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex.  Expected a digit. <br>";
 			return false;
 		}
 		else
 		{
 			if(($firstDigit == 2) && ($line[$lineIndex] > 3))
 			{
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo "Error on line $lineNumber at index $lineIndex.  Invalid time encountered. <br>";
 				return false;
 			}
 			else
@@ -1679,7 +1687,7 @@ function skipWhitespace($line, &$lineIndex)
 		//check for ":"
 		if($line[$lineIndex] != ':')
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a ':'." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex.  Expected a ':'. <br>";
 			return false;
 		}
 		else
@@ -1693,14 +1701,14 @@ function skipWhitespace($line, &$lineIndex)
 		//third digit in time
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex.  Expected a digit. <br>";
 			return false;
 		}
 		else
 		{
 			if(($line[$lineIndex] < 0) or ($line[$lineIndex] > 5))
 			{
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo "Error on line $lineNumber at index $lineIndex.  Invalid time encountered. <br>";
 				return false;
 			}
 			else
@@ -1715,14 +1723,14 @@ function skipWhitespace($line, &$lineIndex)
 		//fourth digit in time
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex.  Expected a digit. <br>";
 			return false;
 		}
 		else
 		{
 			if(($line[$lineIndex] < 0) or ($line[$lineIndex] > 9))
 			{
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo "Error on line $lineNumber at index $lineIndex.  Invalid time encountered. <br>";
 				return false;
 			}
 			else
@@ -1740,7 +1748,7 @@ function skipWhitespace($line, &$lineIndex)
 	
 ##################################################################################################
 
-	function getDaysOfWeek($line, &$lineIndex, $lineNumber, &$retrievedDOW, $logFile)
+	function getDaysOfWeek($line, &$lineIndex, $lineNumber, &$retrievedDOW)
 	{/*-----------------------------------------------------------------------------------------------
 	********************** Function Prologue Comment: getDaysOfWeek ********************
 	* Preconditions:  This function is not called unless valid input has been provided
@@ -1803,31 +1811,31 @@ function skipWhitespace($line, &$lineIndex)
 					}
 					else
 					{
-						fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Days of week out of order." . PHP_EOL);
+						echo "Error on line $lineNumber at index $lineIndex.  Days of week out of order. <br>";
 						return false;
 					}
 				}
 				else
 				{
-					fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Duplicate found in days of week." . PHP_EOL);
+					echo "Error on line $lineNumber at index $lineIndex.  Duplicate found in days of week. <br>";
 					return false;
 				}
 			}
 			else
 			{
-				fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Character found is not one of MTWRFS." . PHP_EOL);
+				echo "Error on line $lineNumber at index $lineIndex.  Character found is not one of MTWRFS. <br>";
 				return false;
 			}
 		}
 		if(ctype_lower($line[$lineIndex]) == true)
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  All characters must be uppercase." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex.  All characters must be uppercase. <br>";
 			return false;
 		}
 		$retrievedDOW = implode($daysFound);
 		if(strlen(trim($retrievedDOW)) < 1)
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex.  Days of week not specified." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex.  Days of week not specified. <br>";
 			return false;
 		}
 		return true;
@@ -1887,7 +1895,7 @@ function skipWhitespace($line, &$lineIndex)
 	
 ##################################################################################################
 
-	function getSlash($line, &$lineIndex, $lineNumber, &$retrievedChar, $logFile)
+	function getSlash($line, &$lineIndex, $lineNumber, &$retrievedChar)
 	{/*-----------------------------------------------------------------------------------------------
 	 ********************** Function Prologue Comment: getSlash ********************
 	 * Preconditions:	Valid data has been provided up to this point
@@ -1928,7 +1936,7 @@ function skipWhitespace($line, &$lineIndex)
 	
 		if($charOnLine != '/')
 		{
-			fputs($logFile, "Error on line $lineNumber at index $lineIndex. Expected '/'." . PHP_EOL);
+			echo "Error on line $lineNumber at index $lineIndex. Expected '/'. <br>";
 			return false;
 		}
 		else

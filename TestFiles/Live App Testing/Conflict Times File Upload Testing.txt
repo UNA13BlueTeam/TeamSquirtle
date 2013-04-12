@@ -1,0 +1,30 @@
+Testing:	Conflict times file upload
+
+Tested by:	Jared Cox
+
+Testing date:	April 12, 2013
+
+File name				Testing Result (E = expected result; U = unexpected result)
+conflictt1.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt2.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt3.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt4.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt5.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt6.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt7.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt8.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt9.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt10.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt11.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt12.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt13.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt14.txt		(E)Only one line in file. Has an error.  Was not uploaded.
+conflictt15.txt		(E)Error on line 3.  All other lines uploaded successfully.
+conflictt16.txt		(E)File is empty.  Didn't crash the scanner \o/
+conflictt17.txt		(E)File is correct with no errors.  All lines uploaded successfully.
+conflictt18.txt		(E)File is correct with no errors.  All lines uploaded successfully.
+conflictt19.txt		(E)File is correct with no errors.  All lines uploaded successfully.
+conflictt20.txt		(E)Error on each line.  Nothing was uploaded.
+conflictt21.txt		(E)Error on each line.  Nothing was uploaded.
+conflictt22.txt		(E)So much wrong with this file.  But our scanner caught everything
+						and nothing was uploaded.
