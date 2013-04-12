@@ -8,7 +8,7 @@
 		<input type="hidden" name="flag" value="form">
 		<div class="row">
 			<label for="course">Course</label>
-			<input id="course" name="course" type="text" maxlength="6"/>
+			<input id="course" name="course" type="text" maxlength="7"/>
 		</div> <br> <hr>
 		<div class="row">
 			<label for="dsection">No. of Day Sections</label>
