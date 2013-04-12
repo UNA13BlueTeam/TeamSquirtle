@@ -1392,6 +1392,8 @@ function skipWhitespace($line, &$lineIndex)
 		$listOfConflictTimes = array();
 		$listOfConflictTimesIndex = 0;
 		
+		$allConflicts = "";
+		
 		$errorOnLine = false;
 		$printLineIndex = 0;
 		do
@@ -1498,10 +1500,7 @@ function skipWhitespace($line, &$lineIndex)
 					{
 						$listOfConflictTimes[$listOfConflictTimesIndex] = $conflictTime;
 						$listOfConflictTimesIndex++;
-						$numberOfConflicts++;
-						
-						$insertQuery1 = $insertQuery1.",times$numberOfConflicts";
-						$insertQuery2 = $insertQuery2.", '$conflictTime'";
+						$allConflicts = $allConflicts." ".$conflictTime;
 					}
 					else
 					{
@@ -1539,8 +1538,8 @@ function skipWhitespace($line, &$lineIndex)
 			//submit query
 			if(in_array($currentCourse, $predefCourses))
 			{
-				$insertQuery1 = $insertQuery1.") ";
-				$insertQuery2 = $insertQuery2.")";
+				$insertQuery1 = $insertQuery1.", times) ";
+				$insertQuery2 = $insertQuery2.", '$allConflicts')";
 				$insertQuery = $insertQuery1.$insertQuery2;
 				$insertion = mysqli_query($link, $insertQuery);
 				if($insertion)
