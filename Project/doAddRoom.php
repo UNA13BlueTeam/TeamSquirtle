@@ -296,6 +296,7 @@
         {
               printf ("Error on line %d: Room number must all be digits and followed by nothing.<br>",$lineNumber);
         }else{
+        	global $link;
         	$query = "INSERT INTO rooms VALUES (NULL, '$roomType', $roomSize, '$roomName', $roomNumber)";
         	$success = mysqli_query($link, $query);
         	if($success)
@@ -304,7 +305,6 @@
         	{
         		echo("<h3>Insertion Failed</h3>");
         		echo("<h4>$query</h4>");
-        		echo("<h5>".mysqli_error($link)."</h5>");
         	}
         }
         echo("<hr><br>");
