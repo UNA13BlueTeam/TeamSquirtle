@@ -15,12 +15,12 @@
 			</select>
 		</div> <br> <hr>
 		<div class="row">
-			<label for="hours">Room Size</label>
-			<input id="hours" name="hours" type="text" size="15" maxlength="2"/>
+			<label for="size">Room Size</label>
+			<input id="size" name="size" type="text" size="15" maxlength="3"/>
 		</div> <br> <hr>
 		<div class="row">
-			<label for="prereq">Room Name</label>
-			<input id="prereq" name="prereq" type="text" size="15" maxlength="15"/>
+			<label for="roomName">Room Name</label>
+			<input id="roomName" name="roomName" type="text" size="15" maxlength="15"/>
 		</div> <br> <hr>
 		<div class="row">
 			<input type="submit" name="submit" value="Submit" />
