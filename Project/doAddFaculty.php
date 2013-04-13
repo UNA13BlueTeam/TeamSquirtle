@@ -98,17 +98,6 @@ include("includes/footer.php");
 		// get global variables used
 		global $link, $db;
 		
-		$predef = array();
-		$predefQuery = "SELECT DISTINCT email FROM faculty";
-		$predefResult = mysqli_query($link, $predefQuery);
-		while($row = mysqli_fetch_row($predefResult))
-		{
-			array_push($predef, $row[0]);
-		}
-		
-		echo "Array of predefined faculty member emails: <br>";
-		print_r($predef);
-		
 		$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
 
 		echo("Scanning $prettyName - ".strftime('%c'));
@@ -160,6 +149,15 @@ include("includes/footer.php");
 			if($errorFlag == true)
 			{
 				// If faculty already exist, then delete before submitting
+				
+				$predef = array();
+				$predefQuery = "SELECT DISTINCT email FROM faculty";
+				$predefResult = mysqli_query($link, $predefQuery);
+				while($row = mysqli_fetch_row($predefResult))
+				{
+					array_push($predef, $row[0]);
+				}
+				
 				if(in_array(trim($email), $predef))
 				{
 					echo("<h2>Faculty member already defined in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
