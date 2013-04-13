@@ -3,13 +3,13 @@
 	// Get variables from input form
 	$flag = $_POST['flag'];
 
-    $link = mysqli_connect ($host, $user, $pass, $db);
+    $link = mysqli_connect ($host, $user, $pass, $db, $port);
     if(!link){
         die('cannot connect database'. mysqli_error($link));
     }
-    mysqli_query ("INSERT INTO tablename (roomType, size, roomName )
-    VALUES (\'$type\',\'$size\', \'$name\')
-    ");
+    //mysqli_query ("INSERT INTO tablename (roomType, size, roomName )
+    //VALUES (\'$type\',\'$size\', \'$name\')
+    //");
 
 	if($flag==="form"){
 		
@@ -274,7 +274,7 @@
             echo(", RoomSize= ".$roomSize);
             echo(", RoomName= ".$roomName );
             echo(", RoomNumber= ".$roomNumber);
-            $CompleteRoomName= $roomName .$roomNumber;
+            $completeRoomName= $roomName .$roomNumber;
         	// printf("<br>CompleteRoomName= %s <br>",$CompleteRoomName);
         }
       $completeRoomName= $roomName .$roomNumber;
@@ -296,101 +296,20 @@
         {
               printf ("Error on line %d: Room number must all be digits and followed by nothing.<br>",$lineNumber);
         }else{
-        	global $link;
-        	$query = "INSERT INTO rooms VALUES (NULL, '$roomType', $roomSize, '$roomName', $roomNumber)";
-        	$success = mysqli_query($link, $query);
+        	global $link, $db;
+        	$insertQuery = "INSERT INTO $db.rooms (roomType, size, roomName) VALUES ('$roomType', '$roomSize', '$completeRoomName')";
+        	$success = mysqli_query($link, $insertQuery);
         	if($success)
         		echo("<h3>Insertion Succeeded</h3>");
         	else
         	{
         		echo("<h3>Insertion Failed</h3>");
-        		echo("<h4>$query</h4>");
+        		echo("<h4>$insertQuery</h4>");
         	}
         }
         echo("<hr><br>");
-        // Now the valid data is taken and put into an array.
-        /*$result = insert ($completeRoomName,$roomArray,$i);
-        if ($result == true)
-             $i= $i + 1; */
-        //IF result == false, then don't change value of i.
       }//end function    
       
-	         
-	/*-----------------------------------------------------------------------------------------------
-	 ********************** Function Prologue Comment: insert ********************
-	 * Preconditions: The variable $completeRoomName contains the room name concatenated with the room
-	 *                room number with no space. The variable $i is the next available index to insert 
-	 *                into the array.
-	 * Postconditions: Returns true if insertion into the roomArray is performed. Otherwise, it returns false.                 
-	 * Function Purpose: Checks to see if the currently identified room name is
-	 *                   is already in the roomArray. If it is not then it will
-	 *                   insert it into the array. If it is it will not insert.
-	 *                   The goal is to identify duplicate rooms in the file.
-	 * Input Expected: the room name and number called completeRoomName an array with the already identified 
-	 *                 called roomArray
-	 * Exceptions/Errors Thrown: None
-	 * Files Accessed: None
-	 *
-	 * Function Pseudocode Author: Alla Salah
-	 *
-	 * Function Author: Alla Salah
-	 *
-	 * Date of Original Implementation: 3-30-2013
-	 *
-	 * Tested by SQA Member (NAME and DATE): 3-30-2013 and 4-4-2013
-	 * 
-	 ** Modifications by:
-	 * Modified By (Name and Date):
-	 * Modifications Description:
-	 *
-	 * Modified By (Name and Date):
-	 * Modifications Description:
-	 -------------------------------------------------------------------------------------------------*/
-
-	/* function insert ($completeRoomName,&$roomArray,&$i)
-    {
-          //Varaible Declarations
-          $duplicateFound=false;
-          printf("i= %d<br>",$i);
-          
-          if ($i == 0)
-          {
-              //Array is empty. Just insert into it
-              $roomArray[$i]= $completeRoomName;
-              return true;
-          }
-          else 
-          {
-              //Array is first searched to make sure the room is not already in there
-              for($count=0; $count < $i;$count++)
-              {
-       
-                  
-                  if (strcmp($roomArray[$i],$completeRoomName)==0)
-                  {
-                      //Set flag to true; indictating that the roomName is already in the array
-                      $duplicateFound= true;
-                  }
-              }//end for
-              
-              if ($duplicateFound==false)
-              {
-                  //Then room name identified is not in the array. So just insert it.
-                  $roomArray[$i]= $completeRoomName;
-                  return true;
-              }
-              //If duplicateFound is true, then don't insert it into the array
-              else
-              {
-                  return false;
-              }
-          }//end else
-          
-          //just to check the contents of roomArray
-          for($k=0; $k < $i; $k++)
-                printf("k= %d-- %s <br>",$k,$roomArray[$k]);
-          
-    }//end function   */
 	         
 	        /*------------------------------------------------------------
 	         Purpose: This function check the index in the buffer line to see
