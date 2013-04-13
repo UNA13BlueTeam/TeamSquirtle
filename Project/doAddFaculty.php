@@ -167,7 +167,7 @@ include("includes/footer.php");
 					mysqli_query($link, $delete);
 				}
 				// submit to query
-				$insertQuery= "INSERT INTO $db.faculty (facultyName, yos, email, minHours) VALUES ('$facultyName', '$yos', '$email', '$minHours')";
+				$insertQuery = "INSERT INTO $db.faculty (facultyName, yos, email, minHours) VALUES ('$facultyName', '$yos', '$email', '$minHours')";
 				echo "$insertQuery";
 				$insertion = mysqli_query($link, $insertQuery);
 				
