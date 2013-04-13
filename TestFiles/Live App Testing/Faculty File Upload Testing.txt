@@ -1,0 +1,32 @@
+Testing:	Faculty file upload
+
+Tested by:	Jared Cox
+
+Testing date:	April 13, 2013
+
+File name				Testing Result (E = expected result; U = unexpected result)	
+faculty1.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty2.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty3.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty4.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty5.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty6.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty7.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty8.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty9.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty10.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty11.txt		(E)Empty file. Nothing is uploaded.
+faculty12.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty13.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty14.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty15.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty16.txt		(E)File is correct with no errors.  All lines uploaded successfully.
+faculty17.txt		(E)File is correct with no errors.  All lines uploaded successfully.
+faculty18.txt		(E)File is correct with no errors.  All lines uploaded successfully.
+faculty19.txt		(E)File is correct with no errors.  All lines uploaded successfully.
+faculty20.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty21.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty22.txt		(E)One line in file.  Has an error.  Was not uploaded.
+faculty23.txt		(E)Each line has an error.  Nothing was uploaded.
+faculty24.txt		(E)Line 3 has an error.  All other lines uploaded successfully.
+faculty25.txt		(E)Error on line 1. All other lines uploaded successfully.
