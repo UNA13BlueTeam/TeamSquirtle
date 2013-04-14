@@ -11,7 +11,7 @@
     //VALUES (\'$type\',\'$size\', \'$name\')
     //");
 
-	if($flag==="form")if($flag==="form"){
+	if($flag==="form"){
 		
 		
 		$type = $_POST['roomType'];
