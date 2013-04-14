@@ -1,3 +1,32 @@
+/*-----------------------------------------------------------------------------------------------
+ ********************** Scheduling Algorithm Function Prologue  ********************
+ * Preconditions: 
+ *
+ * Postconditions: 
+ *                  
+ * Function Purpose: 
+ *
+ * Input Expected: 
+ *
+ * Exceptions/Errors Thrown: 
+ * Files Accessed: 
+ *
+ * Function Pseudocode Author: Alla, Jared, Cody, and Michael
+ *
+ * Function Author: Alla, Jared, Cody, and Michael
+ *
+ * Date of Original Implementation: 4-13-2013
+ *
+ * Tested by SQA Member (NAME and DATE): 
+ * 
+ ** Modifications by:
+ * Modified By (Name and Date):
+ * Modifications Description:
+ *
+ * Modified By (Name and Date):
+ * Modifications Description:
+ -------------------------------------------------------------------------------------------------*/
+
 <?php
 include ("classes.php");
 //Varaible declarations
