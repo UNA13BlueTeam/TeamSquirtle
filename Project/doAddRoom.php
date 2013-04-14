@@ -306,6 +306,24 @@
               printf ("Error on line %d: Room number must all be digits and followed by nothing.<br>",$lineNumber);
         }else{
         	global $link, $db;
+			
+			$predef = array();
+			$predefQuery = "SELECT DISTINCT roomName FROM rooms";
+			$predefResult = mysqli_query($link, $predefQuery);
+			while($row = mysqli_fetch_row($predefResult))
+			{
+				array_push($predef, $row[0]);
+			}
+			
+			if(in_array(trim($completeRoomName), $predef))
+			{
+				echo("<h2>Room already defined in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
+				$delete = "DELETE FROM $db.rooms WHERE roomName = '$completeRoomName'";
+				echo("<h1>DELETING</h1><h2>$delete</h2>");
+				
+				mysqli_query($link, $delete);
+			}
+			
         	$insertQuery = "INSERT INTO $db.rooms (roomType, size, roomName) VALUES ('$roomType', '$roomSize', '$completeRoomName')";
         	$success = mysqli_query($link, $insertQuery);
         	if($success)
