@@ -12,49 +12,49 @@
 			<th>Start Time</th>
 		</tr>
 		<?php
-		$link = mysqli_connect($host, $user, $pass, $db, $port);
-			
-		$predefMinutes = array();
-		$predefQuery = "SELECT minutes FROM timeSlots";
-		$predefResult = mysqli_query($link, $predefQuery);
-		while($row = mysqli_fetch_row($predefResult))
-		{
-			array_push($predefMinutes, $row[0]);
-		}	
-		
-		$predefDOW = array();
-		$predefQuery = "SELECT daysOfWeek FROM timeSlots";
-		$predefResult = mysqli_query($link, $predefQuery);
-		while($row = mysqli_fetch_row($predefResult))
-		{
-			array_push($predefDOW, $row[0]);
-		}		
-		
-		$predefTimes = array();
-		$predefQuery = "SELECT timesOfDay FROM timeSlots";
-		$predefResult = mysqli_query($link, $predefQuery);
-		while($row = mysqli_fetch_row($predefResult))
-		{
-			array_push($predefTimes, $row[0]);
-		}	
-		
-		for($i = 0; $i < count($predefMinutes); $i++)
-		{
-			echo "<tr>";
-			echo "<td>$predefMinutes[$i]</td>";
-			echo "<td>$predefDOW[$i]</td>";
-			echo "<td>";
-			
-			$times = explode(" ", $predefTimes[$i]);
-			
-			for($j = 0; $j < count($times); $j++)
+			$link = mysqli_connect($host, $user, $pass, $db, $port);
+				
+			$predefMinutes = array();
+			$predefQuery = "SELECT minutes FROM timeSlots";
+			$predefResult = mysqli_query($link, $predefQuery);
+			while($row = mysqli_fetch_row($predefResult))
 			{
-				$submittedValue = $predefMinutes[$i]." ".$predefDOW[$i]." ".$times[$j];
-				echo "<input type='checkbox' name='check[]' value='$submittedValue'/> $times[$j] ";			
-			}
-			echo "</td>";
-			echo "<tr>";
-		}	
+				array_push($predefMinutes, $row[0]);
+			}	
+			
+			$predefDOW = array();
+			$predefQuery = "SELECT daysOfWeek FROM timeSlots";
+			$predefResult = mysqli_query($link, $predefQuery);
+			while($row = mysqli_fetch_row($predefResult))
+			{
+				array_push($predefDOW, $row[0]);
+			}		
+			
+			$predefTimes = array();
+			$predefQuery = "SELECT timesOfDay FROM timeSlots";
+			$predefResult = mysqli_query($link, $predefQuery);
+			while($row = mysqli_fetch_row($predefResult))
+			{
+				array_push($predefTimes, $row[0]);
+			}	
+			
+			for($i = 0; $i < count($predefMinutes); $i++)
+			{
+				echo "<tr>";
+				echo "<td>$predefMinutes[$i]</td>";
+				echo "<td>$predefDOW[$i]</td>";
+				echo "<td>";
+				
+				$times = preg_split('/\s+/', trim($predefTimes[$i]));
+				
+				for($j = 0; $j < count($times); $j++)
+				{
+					$submittedValue = $predefMinutes[$i]." ".$predefDOW[$i]." ".$times[$j];
+					echo "<input type='checkbox' name='check[]' value='$submittedValue'/> $times[$j] ";			
+				}
+				echo "</td>";
+				echo "<tr>";
+			}	
 		
 		?>	
 		

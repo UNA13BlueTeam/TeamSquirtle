@@ -15,7 +15,7 @@
 			{
 				array_push($predef, $row[0]);
 			}
-			
+			print_r($predef);
 			for($num = 0; $num < count($predef); $num++)
 			{
 				echo "<option>".$predef[$num]."</option>";

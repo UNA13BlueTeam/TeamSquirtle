@@ -15,6 +15,15 @@
 			echo "$checkedCourses[$i] <br>";
 			$delete = "DELETE FROM courses WHERE courseName = '$checkedCourses[$i]'";
 			mysqli_query($link, $delete);
+			
+			//$query = "SELECT prereq1 FROM prereqs WHERE course = '$checkedCourses[$i]'";
+			//$predefResult = mysqli_query($link, $query);
+			//if($predefResult)
+			{
+				$delete = "DELETE FROM prereqs WHERE course = '$checkedCourses[$i]'";
+				mysqli_query($link, $delete);
+			}
+			
 
 			$query = "SELECT times FROM conflicts WHERE course = '$checkedCourses[$i]'";
 			$predefResult = mysqli_query($link, $query);

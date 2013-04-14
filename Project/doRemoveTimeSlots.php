@@ -30,14 +30,16 @@
 			
 			
 			// PATTERN MATCHING ISSUE HERE
-			$timeRemoved = substr_replace($times, " ", $newValue[2], 6);
+			$timeRemoved = str_replace($newValue[2], "", $times);
 			echo "$timeRemoved <br>";
 			
 			$delete = "DELETE FROM $db.timeSlots WHERE minutes = '$newValue[0]' AND daysOfWeek = '$newValue[1]'";
 			mysqli_query($link, $delete);
-			
-			$query = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay) VALUES ('$newValue[0]', '$newValue[1]', '$timeRemoved')";
-			mysqli_query($link, $query);
+			if(strlen(trim($timeRemoved)) != 0)
+			{
+				$query = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay) VALUES ('$newValue[0]', '$newValue[1]', '$timeRemoved')";
+				mysqli_query($link, $query);
+			}
 		}
 	}
 	
