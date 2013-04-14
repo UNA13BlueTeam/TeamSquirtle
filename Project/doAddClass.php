@@ -14,30 +14,44 @@
 		$classSize = $_POST['classSize'];
 		$roomType = $_POST['roomType'];
 		$hours = $_POST['hours'];
-		$prereq = $_POST['prereq'];
-		$conflict = $_POST['conflict'];
+		$prereqs = $_POST['prereq'];
+		$conflicts = $_POST['conflict'];
 		
-		$query = "INSERT INTO courses values (NULL, '$courseName', $dsection, $nsection, $isection, $classSize, '$roomType', $hours);";
-
-		$insertion = mysqli_query($link, $query);
-		if($insertion)
-			echo("insertion succeeded<br>");
-		else{
-			echo("insertion failed<br>");
-			echo($query."<br>");
+		$outForm = "$courseName $dsection $nsection $isection $classSize $roomType $hours";
+		
+		$outFile = fopen("formSubmissionFile.txt", "w");
+		$outFileName = "formSubmissionFile.txt";
+		fwrite($outFile, $outForm);
+		fclose($outFile);
+		
+		scanCTS($outFileName, $outFile);
+		
+		if($prereqs)
+		{
+			$outForm = "$courseName $prereqs";
+		
+			$outFile = fopen("formSubmissionFile.txt", "w");
+			$outFileName = "formSubmissionFile.txt";
+			fwrite($outFile, $outForm);
+			fclose($outFile);
+			
+			scanPrereqs($outFileName, $outFile);
 		}
-		// Print out contents accepted
-		// echo "You have successfully added this course information to the database! <br>";
-		echo "Course Name: $courseName <br>";
-		echo "Day Sections: $dsection <br>";
-		echo "Night Sections: $nsection <br>";
-		echo "Internet Sections: $isection <br>";
-		echo "Class Size: $classSize <br>";
-		echo "Room Type: $roomType <br>";
-		echo "Hours: $hours <br>";
-		echo "Prerequisites: $prereq <br>";
-		echo "Conflicts: $conflict <br>";
-	}elseif($_POST['flag']=="file"){
+		if($conflicts)
+		{
+			$outForm = "$courseName $conflicts";
+		
+			$outFile = fopen("formSubmissionFile.txt", "w");
+			$outFileName = "formSubmissionFile.txt";
+			fwrite($outFile, $outForm);
+			fclose($outFile);
+			
+			scanConflicts($outFileName, $outFile);
+		}
+		
+	}
+	elseif($_POST['flag']=="file")
+	{
 		echo ("I got files!<br>");
 		
 		$classFile = $_FILES["classFile"]["tmp_name"];

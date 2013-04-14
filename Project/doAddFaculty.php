@@ -15,21 +15,14 @@
 		$email = $_POST['email'];
 		$minHours = $_POST['hours'];
 		
-		$query = "INSERT INTO $db.faculty VALUES ('$name', '$yos', '$email', '$minHours');";
-
-		$insertion = mysqli_query($link, $query);
-		if($insertion)
-			echo("insertion succeeded<br>");
-		else{
-			echo("insertion failed<br>");
-			echo($query."<br>");
-		}
-		// Print out contents accepted
-		// echo "You have successfully added this course information to the database! <br>";
-		echo "Faculty Name: $name <br>";
-		echo "Years of Service: $yos <br>";
-		echo "Email: $email <br>";
-		echo "Minimum Hours: $minHours <br>";
+		$outForm = "$name $yos $email $minHours";
+		
+		$outFile = fopen("formSubmissionFile.txt", "w");
+		$outFileName = "formSubmissionFile.txt";
+		fwrite($outFile, $outForm);
+		fclose($outFile);
+		
+		scanFaculty($outFileName, $outFile);
 		
 	}
 	

@@ -11,40 +11,35 @@
     //VALUES (\'$type\',\'$size\', \'$name\')
     //");
 
-	if($flag==="form"){
-		
-		
+	if($flag==="form")
+	{	
 		$type = $_POST['roomType'];
 		$size = $_POST['size'];
 		$name = $_POST['roomName'];
 		
-		$query = "INSERT INTO rooms values ('$type','$size', '$name');";
-		$insertion = mysqli_query($link, $query);   
-		if($insertion)
-		{	
-			echo "Success <br>";
-			// Print out contents accepted
-			echo "You have successfully added this course information to the database! <br>";
-			echo "Room Type: $type <br>";
-			echo "Room Size: $size <br>";
-			echo "Room Name: $name <br>";
-		}
-		else
-		{
-			echo "Failed <br>";
-		}
-	}elseif($flag==="file")
+		$outForm = "$type $size $name";
+		
+		$outFile = fopen("formSubmissionFile.txt", "w");
+		$outFileName = "formSubmissionFile.txt";
+		fwrite($outFile, $outForm);
+		fclose($outFile);
+		
+		scanRooms($outFileName, $outFile);
+		
+		
+	}
+	elseif($flag==="file")
 	{
 		$roomFile = $_FILES["roomFile"]["tmp_name"];
 		$roomFileName = $_FILES["roomFile"]["name"];
-		scanFile($roomFile, $roomFileName);
+		scanRooms($roomFile, $roomFileName);
 	}
 	mysqli_close($link);
 	include("includes/footer.php");
 ?>
 
 <?php
-    function scanFile($fileName, $prettyName){
+    function scanRooms($fileName, $prettyName){
         
         $roomInfo = array ();
         $lineNumber=1;

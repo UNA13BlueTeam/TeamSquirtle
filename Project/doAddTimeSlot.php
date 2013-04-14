@@ -14,33 +14,14 @@
 		$daysOfWeek = $_POST['daysOfWeek'];
 		$timesOfDay = $_POST['timesOfDay'];
 		
-		$outter = "$minutes $daysOfWeek"."/"."$timesOfDay";
+		$outForm = "$minutes $daysOfWeek"."/"."$timesOfDay";
 		
 		$outFile = fopen("formSubmissionFile.txt", "w");
 		$outFileName = "formSubmissionFile.txt";
-		fwrite($outFile, $outter);
+		fwrite($outFile, $outForm);
+		fclose($outFile);
 		
-		scanClassTimes($outFile, $outFileName);
-		
-		
-		/*$query = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay)  VALUES ('$minutes', '$daysOfWeek', '$timesOfDay')";
-
-		$insertion = mysqli_query($link, $query);
-		if($insertion)
-		{
-			echo("insertion succeeded<br>");
-		}
-		else
-		{
-			echo("insertion failed<br>");
-			echo($query."<br>");
-		}*/
-		
-		
-		// Print out contents accepted
-		echo "Room Type: $minutes <br>";
-		echo "Days of the week: $daysOfWeek <br>";
-		echo "Start Times: $startTime <br>";
+		scanClassTimes($outFileName, $outFile);
 	}
 	
 	// File Submission
@@ -56,8 +37,7 @@
 		{
 			scanClassTimes($timeSlotFile, $timeSlotFileName);
 		}
-	}
-	fclose($outFile);  
+	} 
 ?>
 	
 <!-- ------------------------************************------------------------- -->
@@ -119,10 +99,6 @@
 	* Modifications Description:
 	-------------------------------------------------------------------------------------------------*/ 
 		echo("<h1>SCANNING CLASS TIMES</h1><br>");
-
-		//FLAGS
-			$stillTesting = true;
-			$startQuery = true;
 			
 		global $link, $db;
 
