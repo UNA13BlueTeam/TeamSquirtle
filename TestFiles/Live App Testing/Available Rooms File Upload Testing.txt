@@ -1,0 +1,38 @@
+Testing:	Available Rooms file upload
+
+Tested by:	Jared Cox
+
+Testing date:	April 13, 2013
+
+File name				Testing Result (E = expected result; U = unexpected result)
+rooms1.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms2.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms3.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms4.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms5.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms6.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms7.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms8.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms9.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms10.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms11.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms12.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms13.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms14.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms15.txt		(E)One line in file.  Has an error.  Was not uploaded.
+rooms16.txt		(E)File is correct with no errors.  Each line was uploaded successfully.
+rooms17.txt		(E)File is correct with no errors.  Each line was uploaded successfully.
+rooms18.txt		(E)File is correct with no errors.  Each line was uploaded successfully.
+rooms19.txt		(E)File is correct with no errors.  Each line was uploaded successfully.
+rooms20.txt		(E)File is correct with no errors.  Each line was uploaded successfully.
+rooms21.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms22.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms23.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms24.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms25.txt		(E)Error on line 3. All other lines were uploaded successfully.
+rooms26.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms27.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms28.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms29.txt		(E)Each line has an error.  Nothing was uploaded.
+rooms30.txt		(E)Empty file. Nothing was uploaded.
+rooms31.txt		(E)Line 2 has an error.  All other lines were uploaded successfully.
