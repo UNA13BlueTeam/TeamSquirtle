@@ -4,39 +4,64 @@
 <a href="addTimeSlot.php"><p style = "font-size:30px">Add Class time</p></a><br />
 <hr /><br />
 <legend style="font-size:30px">Remove Class Time</legend>
-<form name="removeSlot" method="post" action="removeSlot.php" >
+<form name="removeSlot" method="post" action="doRemoveTimeSlots.php" >
 	<table class="manage" id="manageTimeSlots">
 		<tr>
 			<th>Minutes</th>
 			<th>Days of Week</th>
 			<th>Start Time</th>
 		</tr>
-		<tr>
-			<td>50</td>
-			<td>MWF</td>
-			<td>
-				<label><input type="checkbox" name="t1" />08:00</label>
-				<label><input type="checkbox" name="t2" />09:00</label>
-				<label><input type="checkbox" name="t3" />10:00</label><br />
-				<label><input type="checkbox" name="t4" />11:00</label>
-				<label><input type="checkbox" name="t5" />12:00</label>
-				<label><input type="checkbox" name="t6" />13:00</label>
-			</td>
-		</tr>
-		<tr>
-			<td>50</td>
-			<td>MTWR</td>
-			<td>
-				<label><input type="checkbox" name="t7" />08:00</label>
-				<label><input type="checkbox" name="t8" />09:00</label>
-				<label><input type="checkbox" name="t9" />10:00</label><br />
-
-			</td>
-		</tr>
+		<?php
+		$link = mysqli_connect($host, $user, $pass, $db, $port);
+			
+		$predefMinutes = array();
+		$predefQuery = "SELECT minutes FROM timeSlots";
+		$predefResult = mysqli_query($link, $predefQuery);
+		while($row = mysqli_fetch_row($predefResult))
+		{
+			array_push($predefMinutes, $row[0]);
+		}	
+		
+		$predefDOW = array();
+		$predefQuery = "SELECT daysOfWeek FROM timeSlots";
+		$predefResult = mysqli_query($link, $predefQuery);
+		while($row = mysqli_fetch_row($predefResult))
+		{
+			array_push($predefDOW, $row[0]);
+		}		
+		
+		$predefTimes = array();
+		$predefQuery = "SELECT timesOfDay FROM timeSlots";
+		$predefResult = mysqli_query($link, $predefQuery);
+		while($row = mysqli_fetch_row($predefResult))
+		{
+			array_push($predefTimes, $row[0]);
+		}	
+		
+		for($i = 0; $i < count($predefMinutes); $i++)
+		{
+			echo "<tr>";
+			echo "<td>$predefMinutes[$i]</td>";
+			echo "<td>$predefDOW[$i]</td>";
+			echo "<td>";
+			
+			$times = explode(" ", $predefTimes[$i]);
+			
+			for($j = 0; $j < count($times); $j++)
+			{
+				$submittedValue = $predefMinutes[$i]." ".$predefDOW[$i]." ".$times[$j];
+				echo "<input type='checkbox' name='check[]' value='$submittedValue'/> $times[$j] ";			
+			}
+			echo "</td>";
+			echo "<tr>";
+		}	
+		
+		?>	
+		
 	</table>
 	<br>
 	<div>
-		<input type="submit" name="submit" value="Submit" />
+		<input type="submit" name="submit" value="Remove" />
 		<input type="reset" name="submit" value="Reset"  />
 	</div>
 </form>
