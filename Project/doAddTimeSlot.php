@@ -14,10 +14,11 @@
 		$daysOfWeek = $_POST['daysOfWeek'];
 		$timesOfDay = $_POST['timesOfDay'];
 		
+		$outter = "$minutes $daysOfWeek"."/"."$timesOfDay";
 		
 		$outFile = fopen("formSubmissionFile.txt", "w");
-		$outFileName = "formSubmissionFile.txt"
-		fwrite($outFile, "$minutes $daysOfWeek"."/"."$timesOfDay");
+		$outFileName = "formSubmissionFile.txt";
+		fwrite($outFile, $outter);
 		
 		scanClassTimes($outFile, $outFileName);
 		
