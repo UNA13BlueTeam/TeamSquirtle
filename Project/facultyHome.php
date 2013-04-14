@@ -1,9 +1,11 @@
-<?php include("includes/header.php"); ?>
+<?php include("includes/facultyHeader.php"); ?>
   
 <?php
-  echo("<h1>".$deptName."</h1>");
-  echo("<h2>".$userName."</h2>");
-  echo("<h3>".$userTitle."</h3>");
+	session_start();
+	
+	echo("<h1>".$deptName."</h1>");
+	echo("<h2>".$_SESSION['username']."</h2>");
+	echo("<h3> Faculty </h3>");
 ?>
   <p>Schedule</p>
 	<?php
@@ -11,21 +13,23 @@
 		$cols = 3;// define number of columns
  
 		echo "<table class='schedule'>";
-    echo"<tr>";
-    for($th=1;$th<=$cols;$th++){
-        echo"<th></th>";
-    }
+		echo"<tr>";
+		
+		for($th=1;$th<=$cols;$th++)
+		{
+			echo"<th></th>";
+		}
  
-		for($tr=2;$tr<=$rows;$tr++){ 
-      
+		for($tr=2;$tr<=$rows;$tr++)
+		{ 
    			echo "<tr>"; 
-        	for($td=1;$td<=$cols;$td++){ 
+        	for($td=1;$td<=$cols;$td++)
+			{ 
                 echo "<td></td>"; 
         	} 
-  		echo "</tr>"; 
+			echo "</tr>"; 
 		} 
 
 		echo "</table>";
 	
-  ?>
-<?php include ('includes/footer.php');
+include ('includes/footer.php'); ?>

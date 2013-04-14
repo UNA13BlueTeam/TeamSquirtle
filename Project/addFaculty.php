@@ -16,7 +16,7 @@
 		</div> <br> <hr>
 		<div class="row">
 			<label for="email">Email: </label>
-			<input id="email" name="email" type="text" maxlength="10"/>
+			<input id="email" name="email" type="text" maxlength="18"/>
 		</div> <br> <hr>
 		<div class="row">
 			<label for="hours">Hours: </label>

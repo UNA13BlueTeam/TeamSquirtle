@@ -1,7 +1,8 @@
 <?php include_once("global.php"); ?>
 <?php include_once("php_error.php"); ?>
 <?php include_once("db.php"); ?>
-<!-- <?php error_reporting(E_ALL); ?>  -->
+<!-- <?php error_reporting(E_ALL); 
+			global $deptAbbrev;?>  -->
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -13,10 +14,10 @@
 	<body>
 	<div class="nav">
 		<nav>
-			<a href="index.php">UNA <?php echo($deptAbbrev);?></a>
-			<a href="index.php" id="home">Home</a>
+			<a href="facultyHome.php">UNA <?php echo($deptAbbrev);?></a>
+			<a href="facultyHome.php" id="home">Home</a>
 			<a href="viewschedule.php" id="timeSlots">View Schedules</a> 
-			<a href="Pickcourses.php" id="building">Pick Courses</a>
+			<a href="pickCourses.php" id="building">Pick Courses</a>
 			<a href="help.php" id="help">Help</a>
 			<a href="logout.php" id="logout">Log Out</a>
 			<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />

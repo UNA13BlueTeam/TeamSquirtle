@@ -78,8 +78,7 @@
 	        	   $lineNumber= $lineNumber + 1;
 	        	}
 	        }//end while loop  
-        }
-		echo " $line <br>";//end else
+        }//end else
     }
     //************************************************************************************************
     // FUNCTIONS DEFINITIONS
@@ -306,13 +305,9 @@
         {
               printf ("Error on line %d: Room number must all be digits and followed by nothing.<br>",$lineNumber);
         }
-		else if ($invalidSpace == true)
-		{
-			  printf("Error: Expecting a white space or tab after %s on line %d <br>",$line[$index],$lineNumber);
-        }
 		else
 		{
-			global $link, $db;
+        	global $link, $db;
 			
 			$predef = array();
 			$predefQuery = "SELECT DISTINCT roomName FROM rooms";
@@ -393,6 +388,7 @@
 	        }
 	        else 
 	        {
+	            printf("Error: Expecting a white space or tab after %s on line %d <br>",$line[$index-1],$lineNumber);
 	            return false;
 	        }
 	        
