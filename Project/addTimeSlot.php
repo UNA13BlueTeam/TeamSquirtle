@@ -6,17 +6,18 @@
 
 <div class="purpleBox">
 	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddTimeSlot.php">
+		<input type="hidden" name="flag" value="form">
 		<div class="row">
 			<label for="hours">Minutes</label>
-			<input id="hours" name="hours" type="text" size="15" maxlength="2"/>
+			<input id="minutes" name="minutes" type="text" size="15" maxlength="2"/>
 		</div> <br> <hr>
 		<div class="row">
 			<label for="prereq">Days of Week</label>
-			<input id="prereq" name="prereq" type="text" size="15" maxlength="15"/>
+			<input id="timesOfDay" name="daysOfWeek" type="text" size="15" maxlength="15"/>
 		</div> <br> <hr>
 		<div class="row">
 			<label for="conflict">Start Time</label>
-			<input id="conflict" name="conflict" type="text" size="15" maxlength="15"/>
+			<input id="timesOfDay" name="timesOfDay" type="text" size="15" maxlength="15"/>
 		</div> <br> <hr>
 		<div class="row">
 			<input type="submit" name="submit" value="Submit" />
@@ -27,10 +28,11 @@
 
 
 <div class="goldBox">
-	<form class="fileForm" name="scheduleForm" method="post" action="addTimeSlotFilePHP.php" enctype="multipart/form-data">
+	<form class="fileForm" name="scheduleForm" method="post" action="doAddTimeSlot.php" enctype="multipart/form-data">
+		<input type="hidden" name="flag" value="file">
 		<div class="row">
-			<label for="upfile">File to upload:</label>
-			<input type="file" name="upfile">
+			<label for="timeSlotFile">File to upload:</label>
+			<input type="file" name="timeSlotFile">
 		</div> 
 		<br /><br />
 		<input type="submit" name="submit" value="Submit File" />

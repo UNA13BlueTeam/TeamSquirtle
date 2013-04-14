@@ -1,24 +1,62 @@
 <?php include("includes/header.php");
 	  include_once("includes/db.php");
 	  
-	// Get variables from input form
-	$minutes = $_POST['minutes'];
-	$mon = $_POST['Mon'];
-	$tue = $_POST['Tue'];
-	$wed = $_POST['Wed'];
-	$thu = $_POST['Thu'];
-	$fri = $_POST['Fri'];
-	$sat = $_POST['Sat'];
-	$startTime = $_POST['startTime'];
+	$link = mysqli_connect($host, $user, $pass, $db, $port);
+    if(!$link)
+	{
+        die('cannot connect database'. mysqli_error($link));
+    }
+	// Form submission
+    if($_POST['flag']=="form")
+	{
+		// Get variables from input form
+		$minutes = $_POST['minutes'];
+		$daysOfWeek = $_POST['daysOfWeek'];
+		$timesOfDay = $_POST['timesOfDay'];
+		
+		
+		$outFile = fopen("formSubmissionFile.txt", "w");
+		$outFileName = "formSubmissionFile.txt"
+		fwrite($outFile, "$minutes $daysOfWeek"."/"."$timesOfDay");
+		
+		scanClassTimes($outFile, $outFileName);
+		
+		
+		/*$query = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay)  VALUES ('$minutes', '$daysOfWeek', '$timesOfDay')";
+
+		$insertion = mysqli_query($link, $query);
+		if($insertion)
+		{
+			echo("insertion succeeded<br>");
+		}
+		else
+		{
+			echo("insertion failed<br>");
+			echo($query."<br>");
+		}*/
+		
+		
+		// Print out contents accepted
+		echo "Room Type: $minutes <br>";
+		echo "Days of the week: $daysOfWeek <br>";
+		echo "Start Times: $startTime <br>";
+	}
 	
-	//$days = ARRAY(0 => $mon, 1 => $tue, 2 => $wed);
-	
-	
-	// Print out contents accepted
-	echo "You have successfully added this course information to the database! <br>";
-	echo "Room Type: $minutes <br>";
-	echo "Days of the week: $mon  $tue  $wed  $thu  $fri  $sat <br>";
-	echo "Start Times: $startTime <br>";
+	// File Submission
+	elseif($_POST['flag']=="file")
+	{
+		echo ("I got files!<br>");
+		
+		$timeSlotFile = $_FILES["timeSlotFile"]["tmp_name"];
+		$timeSlotFileName = $_FILES["timeSlotFile"]["name"];
+		
+		
+		if($timeSlotFile)
+		{
+			scanClassTimes($timeSlotFile, $timeSlotFileName);
+		}
+	}
+	fclose($outFile);  
 ?>
 	
 <!-- ------------------------************************------------------------- -->
@@ -79,176 +117,217 @@
 	* Modified By (Name and Date):
 	* Modifications Description:
 	-------------------------------------------------------------------------------------------------*/ 
-	echo("<h1>SCANNING CLASS TIMES</h1><br>");
+		echo("<h1>SCANNING CLASS TIMES</h1><br>");
 
 		//FLAGS
 			$stillTesting = true;
 			$startQuery = true;
 			
-		global $link;
+		global $link, $db;
 
-		$predef = array();
-		$predefQuery = "SELECT DISTINCT course from prereqs";
+		$predefMinutes = array();
+		$predefQuery = "SELECT minutes FROM timeSlots";
 		$predefResult = mysqli_query($link, $predefQuery);
 		while($row = mysqli_fetch_row($predefResult))
 		{
-			array_push($predef, $row[0]);
+			array_push($predefMinutes, $row[0]);
 		}
-		// $predef = mysqli_fetch_all($predefResult, MYSQLI_NUM);
-		print_r($predef);
+		print_r($predefMinutes);
+		
+		$predefDOW = array();
+		$predefQuery = "SELECT daysOfWeek FROM timeSlots";
+		$predefResult = mysqli_query($link, $predefQuery);
+		while($row = mysqli_fetch_row($predefResult))
+		{
+			array_push($predefDOW, $row[0]);
+		}
+		print_r($predefDOW);
+		
+		//We concatenate each element of $predefMinutes with $predefDOW
+		//in order to successfully check for duplicate time slots
+			$predef = array();
+			for($i = 0; $i < count($predefDOW); $i++)
+			{
+				$predef[$i] = $predefMinutes[$i] . $predefDOW[$i];
+			}
+			print_r($predef);
+		
+		
 		echo("<hr>");
-		while($stillTesting == true)
-		{//loops through and tests each prereq test file in the current directory
-			
-			$readFile = fopen($fileName, "r") or die("Unable to open $fileName");
-			
-			//VARIABLES
-			$lineNumber = 0;	//used in listing errors
-			$printLine = " ";	//line read in from file
-			$printLineIndex = 0;		
-			$errorOnLine = false;
-			$errorInFile = false;
-			$REQUIREDITEMSONLINE = 2;	//there must be at least 2 items on a line, otherwise there is an error
+		$readFile = fopen($fileName, "r") or die("Unable to open $fileName");
+		
+		//VARIABLES
+		$lineNumber = 0;	//used in listing errors
+		$printLine = " ";	//line read in from file
+		$printLineIndex = 0;		
+		$errorOnLine = false;
+		$errorInFile = false;
+		$REQUIREDITEMSONLINE = 2;	//there must be at least 2 items on a line, otherwise there is an error
+		$listOfTimes = array();
+		$listOfTimesIndex = 0;
+		$readLine = " ";
+		$retrievedNumber = 0;
+		$retrievedDOW = " ";
+		$retrievedSlash = " ";
+		$retrievedTime = " ";
+		
+		while(!feof($readFile))
+		{
+		
 			$listOfTimes = array();
 			$listOfTimesIndex = 0;
-			$readLine = " ";
-			$retrievedNumber = 0;
-			$retrievedDOW = " ";
-			$retrievedSlash = " ";
-			$retrievedTime = " ";
 			
-			while(!feof($readFile))
-			{
+			$errorOnLine = false;
+			$printLineIndex = 0;
+			do
+			{//this block will skip over any empty lines in a file
+			  $printLine = fgets($readFile);
+			  $lineNumber++;
+			}while((strlen(trim($printLine)) == 0) and (!feof($readFile)));
+			//0 means an empty line
+			$printLine = $printLine . "\r"; //append a carriage return to the end of each line
+											//otherwise, a line without a hard return at the end
+											//will produce a whitespace error in this scanner
 			
-				$listOfTimes = array();
-				$listOfTimesIndex = 0;
+			
+			$readLine = preg_split('/\s+/', trim($printLine));  //splits the line into an array of elements
+															//each element will be a contiguous string of characters
+															//all whitespace is ignored on line for this function due to " '/\s+/' "
+			
+			echo "length of line is " . strlen($printLine) . "<br>";
+			echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
+			echo "line number $lineNumber and line index $printLineIndex" . "<br>";
+			
+			if((count($readLine)) >= $REQUIREDITEMSONLINE)
+			{ //if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
 				
-				$errorOnLine = false;
-				$printLineIndex = 0;
-				do
-				{//this block will skip over any empty lines in a file
-				  $printLine = fgets($readFile);
-				  $lineNumber++;
-				}while((strlen(trim($printLine)) == 0) and (!feof($readFile)));
-				//0 means an empty line
-				$printLine = $printLine . "\r"; //append a carriage return to the end of each line
-												//otherwise, a line without a hard return at the end
-												//will produce a whitespace error in this scanner
+				skipWhitespace($printLine, $printLineIndex);
+				if(getNumber($printLine, $printLineIndex, $lineNumber, $retrievedNumber) == false)
+				{//invalid amount of minutes was encountered on the line
+					echo "getNumber returned false" . "<br>";
+					$errorOnLine = true; $errorInFile = true;
+				}
 				
-				
-				$readLine = preg_split('/\s+/', trim($printLine));  //splits the line into an array of elements
-																//each element will be a contiguous string of characters
-																//all whitespace is ignored on line for this function due to " '/\s+/' "
-				
-				echo "length of line is " . strlen($printLine) . "<br>";
-				echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
-				echo "line number $lineNumber and line index $printLineIndex" . "<br>";
-				
-				if((count($readLine)) >= $REQUIREDITEMSONLINE)
-				{ //if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
-					
-					skipWhitespace($printLine, $printLineIndex);
-					if(getNumber($printLine, $printLineIndex, $lineNumber, $retrievedNumber) == false)
-					{//invalid amount of minutes was encountered on the line
-						echo "getNumber returned false" . "<br>";
+				if($errorOnLine == false)
+				{//valid amount of minutes was encountered on the line
+					echo "getNumber returned true" . "<br>";
+					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
+					{
+						echo "whitespace error 1" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
 					}
+				}
 					
-					if($errorOnLine == false)
-					{//valid amount of minutes was encountered on the line
-						echo "getNumber returned true" . "<br>";
-						if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-						{
-							echo "whitespace error 1" . "<br>";
-							$errorOnLine = true; $errorInFile = true;
-						}
-					}
-						
-					if($errorOnLine == false)
-					{//start new query and add $retrievedNumber to it
-						skipWhitespace($printLine, $printLineIndex);
-						if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW) == false)
-						{
-							echo "getDaysOfWeek returned false" . "<br>";
-							$errorOnLine = true; $errorInFile = true;
-						}
-					}
-					
-					if($errorOnLine == false)
-					{//add $retrievedDOW to query
-						if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash) == false)
-						{
-							echo "getSlash returned false" . "<br>";
-							$errorOnLine = true; $errorInFile = true;
-						}
-					}
-					
-					if($errorOnLine == false)
-					{//add $retrievedSlash to query
-						if(ctype_digit($printLine[$printLineIndex]) == false)
-						{
-							echo("Error on line $lineNumber at index $printLineIndex.  Time of day should immediately follow '/'" . PHP_EOL);
-							$errorOnLine = true; $errorInFile = true;
-						}
-					}
-					
-					if($errorOnLine == false)
+				if($errorOnLine == false)
+				{//start new query and add $retrievedNumber to it
+					skipWhitespace($printLine, $printLineIndex);
+					if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW) == false)
 					{
-						while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
-						{//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line				
-							if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime, $listOfTimes, $listOfTimesIndex) == false)
+						echo "getDaysOfWeek returned false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//add $retrievedDOW to query
+					if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash) == false)
+					{
+						echo "getSlash returned false" . "<br>";
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{//add $retrievedSlash to query
+					if(ctype_digit($printLine[$printLineIndex]) == false)
+					{
+						echo("Error on line $lineNumber at index $printLineIndex.  Time of day should immediately follow '/'" . PHP_EOL);
+						$errorOnLine = true; $errorInFile = true;
+					}
+				}
+				
+				if($errorOnLine == false)
+				{
+					while(($printLineIndex < (strlen(trim($printLine)))) and ($errorOnLine == false))
+					{//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line				
+						if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime, $listOfTimes, $listOfTimesIndex) == false)
+						{
+							echo "getTime returned false" . "<br>";
+							$errorOnLine = true; $errorInFile = true;
+						}
+						else
+						{
+							//add $retrievedTime to query
+							if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
 							{
-								echo "getTime returned false" . "<br>";
+								echo "whitespace error between times of day" . "<br>";
 								$errorOnLine = true; $errorInFile = true;
 							}
 							else
 							{
-								//add $retrievedTime to query
-								if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
-								{
-									echo "whitespace error between times of day" . "<br>";
-									$errorOnLine = true; $errorInFile = true;
-								}
-								else
-								{
-									skipWhitespace($printLine, $printLineIndex);
-								}
+								skipWhitespace($printLine, $printLineIndex);
 							}
 						}
-					}	
-				}
-				else 
-				{
-					if(strlen(trim($printLine)) != 0)
-					{
-						echo("Error on line $lineNumber at index $printLineIndex.  Each line in the file must have at least 2 items:
-					         			Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay1 MilitaryTimeOfDay2 ... MilitaryTimeOfDayN" . PHP_EOL);
-						$errorOnLine = true;  $errorInFile = true;
 					}
-					
-				}
-					
-				if($errorOnLine == false)
+				}	
+			}
+			else 
+			{
+				if(strlen(trim($printLine)) != 0)
 				{
-					//submit query
-					echo  "$lineNumber: $printLine" . "<br>";
+					echo("Error on line $lineNumber at index $printLineIndex.  Each line in the file must have at least 2 items:
+									Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay1 MilitaryTimeOfDay2 ... MilitaryTimeOfDayN" . PHP_EOL);
+					$errorOnLine = true;  $errorInFile = true;
+				}
+				
+			}
+				
+			if($errorOnLine == false)
+			{
+				//submit query
+				echo  "$lineNumber: $printLine" . "<br>";
+				
+				
+				$minutesDOW = $retrievedNumber . $retrievedDOW;
+				echo "$minutesDOW <br>";
+				if(in_array($minutesDOW, $predef))
+				{
+					echo("<h2>Class times already defined for $retrievedNumber minutes on $retrievedDOW in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
+					$delete = "DELETE FROM $db.timeSlots WHERE minutes = '$retrievedNumber' AND daysOfWeek = '$retrievedDOW'";
+					echo("<h1>DELETING</h1><h2>$delete</h2>");
+					
+					mysqli_query($link, $delete);
+				}
+				
+				$listOfTimes = implode(" ", $listOfTimes);
+				echo "$listOfTimes";
+				
+				$insertQuery = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay) VALUES ('$retrievedNumber', '$retrievedDOW', '$listOfTimes')";
+				echo "$insertQuery";
+				$insertion = mysqli_query($link, $insertQuery);
+				
+				if($insertion)
+				{
+					echo("insertion succeeded<br>");
 				}
 				else
 				{
-					echo $lineNumber . ": $printLine*" . "<br>";
+					echo("insertion failed<br>");
+					echo($insertQuery."<br>");
 				}
 			}
-			if($errorInFile == false)
-				echo("No errors detected." . PHP_EOL);
-			
-			
-			fclose($readFile);	
-			fclose($logFile);
-			
-			$testNum += 1;
-			if($testNum > "30")
-				$stillTesting = false;
+			else
+			{
+				echo $lineNumber . ": $printLine*" . "<br>";
+			}
 		}
+		if($errorInFile == false)
+			echo("No errors detected." . PHP_EOL);
+		
+		
+		fclose($readFile);	
+		fclose($logFile);
+			
 	}
 ##################################################################################################
 
@@ -739,6 +818,44 @@
 		else
 		{
 			return true;
+		}
+	}
+	
+	
+	function skipWhitespace($line, &$lineIndex)
+	{/*-----------------------------------------------------------------------------------------------
+	 ********************** Function Prologue Comment: skipWhitespace ********************
+	 * Preconditions:  Data exists on a line
+	 *
+	 * Postconditions: None
+	 *
+	 * Function Purpose:  Advances the index past continous strings of whitespace
+	 *
+	 * Input Expected:  $line = line of text read in from the test file
+	 *					$lineIndex = current index for $line
+	 *
+	 * Exceptions/Errors Thrown:  None
+	 *
+	 * Files Accessed:  None
+	 *
+	 * Function Pseudocode Author:  Jared Cox
+	 *
+	 * Function Author:  Jared Cox
+	 *
+	 * Date of Original Implementation: March 26, 2013
+	 *
+	 * Tested by SQA Member (NAME and DATE):  Jared Cox, March 26, 2013
+	 * 
+	 ** Modifications by:
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 *
+	 * Modified By (Name and Date):
+	 * Modifications Description:
+	 -------------------------------------------------------------------------------------------------*/ 		
+		while(($line[$lineIndex] == " ") or ($line[$lineIndex] == "\t"))
+		{
+			$lineIndex++;
 		}
 	}
 
