@@ -46,21 +46,21 @@ include ("classes.php");
  
  //Create array of class times (classTimes)
 
-While ($ctsIndex < count(oursesToSchedule))
+While ($ctsIndex < count($coursesToSchedule))
     {
-        if ($missingConflictFile== true ) 
+        if ($missingConflictFile == true ) 
         {//if((SELECT * FROM conflicts WHERE courseName = coursesToSchedule[ctsIndex].courseName) returns null)
-            $conflictExists=false; // (no conflicts for coursesToSchedule[ctsIndex].courseName)
+            $conflictFileExists=false; // (no conflicts for coursesToSchedule[ctsIndex].courseName)
         }
         else
         {
-            $conflictsExists=true; //(conflicts exist for coursesToSchedule[ctsIndex].courseName)
+            $conflictFileExists=true; //(conflicts exist for coursesToSchedule[ctsIndex].courseName)
         }
         
         //Get day and night sections from course (as constants)
         
-        $daySections = $courseToSchedule[$ctsIndex].day_sections; 
-        $nightSections= $coursesToSchedule[$ctsIndex].night_sections;
+        $daySections = $courseToSchedule[$ctsIndex].$daySections; 
+        $nightSections= $coursesToSchedule[$ctsIndex].$nightSections;
      
         //Retrieve all faculty members that chose coursesToSchedule[ctsIndex].courseName in their preferences
         {
@@ -92,11 +92,7 @@ While ($ctsIndex < count(oursesToSchedule))
          while (($facultyPreferenceQueue.isEmpty() == false) and ($scheduledSections < $daySections + $nightSections))
             {
                 //Check front of priority queue
-                $facultyMember.$name = $facultyPreferenceQueue.top(); 
-                $facultyMember.$email = $facultyPreferenceQueue.top();
-                $facultyMember.$yearsOfService = $facultyPreferenceQueue.top();
-                $facultyMember.$requiredMinHours = $facultyPreferenceQueue.top();
-                $facultyMember.$timePref = $facultyPreferenceQueue.top();
+                $facultyMember.$name = $facultyPreferenceQueue.top();
             
                 //Check their time preference (verify with correct array early[], midday[], afternoon[], night[])    
                  $arrayOfTimes = array();
@@ -104,19 +100,19 @@ While ($ctsIndex < count(oursesToSchedule))
                      
                  switch($facultyMember.$timePref)
                  {
-                     case  "early":  $arrayOfTimes = $classTimes[$classTimesIndex].early;
+                     case  "early":  $arrayOfTimes = $classTimes[$classTimesIndex].$early;
                                           $dayType = true;
                                           break;
                         
-                     case "midday": $arrayOfTimes =  $classTimes[$classTimesIndex].midday;
+                     case "midday": $arrayOfTimes =  $classTimes[$classTimesIndex].$midday;
                                           $dayType = true;
                                           break;
                         
-                     case "late after": $arrayOfTimes =  $classTimes[$classTimesIndex].lateAfter;
+                     case "late after": $arrayOfTimes =  $classTimes[$classTimesIndex].$lateAfter;
                                           $dayType = true;
                                           break;
                         
-                     case "night":  $arrayOfTimes = $classTimes[$classTimesIndex].night;
+                     case "night":  $arrayOfTimes = $classTimes[$classTimesIndex].$night;
                                           $nighType = true;
                                           break;
                      }
@@ -136,7 +132,7 @@ While ($ctsIndex < count(oursesToSchedule))
                     while($arrayOfTimesIndex < count($arrayOfTimes))
                     {
                         $conflictExists = false;
-                        if ($conflictsExists == true)
+                        if ($conflictFileExists == true)
                         {
                             do
                             {
@@ -167,11 +163,11 @@ While ($ctsIndex < count(oursesToSchedule))
                                     $alreadyTeaching = true;
                                 }
                                 
-                                if $arrayOfTimes[arrayOfTimesIndex] and $facultyMember.name already exists together (alreadyTeaching == true)
+                                if $arrayOfTimes[$arrayOfTimesIndex] and $facultyMember.name already exists together ($alreadyTeaching == true)
                                 {
                                     $arrayOfTimesIndex++
                                 }
-                            }while($alreadyTeaching == true) and ($arrayOfTimesIndex < count(arrayOfTimes))
+                            }while($alreadyTeaching == true) and ($arrayOfTimesIndex < count($arrayOfTimes))
                         
                             if($alreadyTeaching == false) //we found a time slot that does not conflict with that particular faculty member
                             {
@@ -180,10 +176,10 @@ While ($ctsIndex < count(oursesToSchedule))
                                 //Find room
                                 $arrayOfRooms = array();
                                 //(SELECT DISTINCT FROM Rooms)
-                               // Create a Rooms object for each row returned from above statement
+								// Create a Rooms object for each row returned from above statement
                                 
-                            ***To find a room for the selected time slot (Scheduled Courses Table)
-                                for ($aorIndex = 0; $aorIndex < count(arrayOfRooms) and ($foundRoom = false); $aorIndex++)
+								//To find a room for the selected time slot (Scheduled Courses Table)
+                                for ($aorIndex = 0; $aorIndex < count($arrayOfRooms) and ($foundRoom = false); $aorIndex++)
                                 {
                                     //check if room type is ok
                                     if ($coursesToSchedule[$ctsIndex].$classType == $arrayOfRooms[$aorIndex].$roomType) and 
@@ -191,7 +187,7 @@ While ($ctsIndex < count(oursesToSchedule))
                                     {                                                                                
                                         //$unanvailableTimesArray = split arrayofRooms[aorIndex].unavailableTimes into an array of times // preg_split function
                                         
-                                        if(NOT in_array($arrayOfTimes[$arrayOfTimesIndex], $unanvailableTimesArray))
+                                        if(!in_array($arrayOfTimes[$arrayOfTimesIndex], $unanvailableTimesArray))
                                         {
                                             $roomAvailable = true;
                                         }
@@ -237,7 +233,7 @@ While ($ctsIndex < count(oursesToSchedule))
                         $classTimesIndex++
                     }
                 }//endelse
-                if($facultyPreferenceQueue.isEmpty()==false and $foundRoom == true)
+                if($facultyPreferenceQueue.isEmpty()== false and $foundRoom == true)
                 {
                     //pop off top faculty member
                     $temp= $facultyPreferenceQueue.extract(); //do nothing with temp
