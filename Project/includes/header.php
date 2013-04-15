@@ -1,6 +1,7 @@
-<?php 
+<?php
 	session_start();
 	include("global.php");
+	include("db.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -10,7 +11,8 @@
 	</head>
 	<body>
 		<?php  
-			global $deptAbbrev;
+			global $deptAbbrev, $permission;
+			// echo("<h1>$permission</h1>");
 			if($_SESSION['permission']==="admin")
 			{
 				echo('
@@ -44,22 +46,21 @@
 			}else
 			{
 				// include("logout.php");
-				echo("Session expiring...");
 			}
 
-			// global $host, $user, $pass, $db, $port;
-			// $test = mysqli_connect($host, $user, $pass, $db, $port);
-			// if($test){
-			// 	echo ('<div style="font-size:8pt; color:chartreuse;">DB Connected</div>');
-			// 	mysqli_close($test);
-			// }else{
-			// 	echo ('<div style="font-size:8pt; color:red;">DB Failed</div>');
-			// }
-			// if (mysqli_connect_errno())
-			// {
-			// 	printf("Connect failed: %s\n", mysqli_connect_error());
-			// 	exit();
-			// }
+			global $host, $user, $pass, $db, $port;
+			$test = mysqli_connect($host, $user, $pass, $db, $port);
+			if($test){
+				echo ('<div style="font-size:8pt; color:chartreuse;">DB Connected</div>');
+				mysqli_close($test);
+			}else{
+				echo ('<div style="font-size:8pt; color:red;">DB Failed</div>');
+			}
+			if (mysqli_connect_errno())
+			{
+				printf("Connect failed: %s\n", mysqli_connect_error());
+				exit();
+			}
 		?>
 	</div>
 	<div class="content">

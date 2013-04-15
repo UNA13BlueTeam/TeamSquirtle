@@ -1,4 +1,7 @@
-<?php require("includes/global.php"); ?>
+<?php 
+    session_start();
+    require("includes/global.php");
+?>
 <html>
     <head>
         <link rel="stylesheet" href="css/main.css" type="text/css" />
@@ -28,13 +31,15 @@
             {
                 $_SESSION['loggedIn'] = true;
                 $_SESSION['permission'] = "admin";
+                $permission = $_SESSION['permission'];
                 $_SESSION['username'] = $username;
                 include("adminHome.php");
             }elseif($auth==2)
             {
                 $_SESSION['loggedIn'] = true;
-                $_SESSION['username'] = $username;
                 $_SESSION['permission'] = "faculty";
+                $permission = $_SESSION['permission'];
+                $_SESSION['username'] = $username;
                 include("facultyHome.php");
             }else
             {

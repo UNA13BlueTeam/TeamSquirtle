@@ -47,7 +47,7 @@
 			echo "<td>$predefRoomSizes[$i]</td>";
 			echo "<td>$predefRoomNames[$i]</td>";
 			echo "<td><input type='checkbox' name='check[]' value='$predefRoomNames[$i]'/></td>";
-			echo "<tr>";
+			echo "</tr>";
 		}	
 	?>
 	</table>

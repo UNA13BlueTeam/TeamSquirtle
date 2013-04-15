@@ -1,4 +1,4 @@
-<?php include("includes/facultyHeader.php"); ?>
+<?php include("includes/header.php"); ?>
   
 <?php
   global $deptAbbrev, $deptName, $userName, $userTitle;
