@@ -21,7 +21,7 @@
         <form id="login" name="login" method="post" action=".">
             <div class="row">
                 <label for="username">Username:&nbsp;</label>
-                <input id="username" name="username" type="text" size="15"/>
+                <input id="username" name="username" type="text" size="15" autofocus/>
             </div>
             <div class="row">
                 <label for="password">Password:&nbsp;&nbsp;</label>
