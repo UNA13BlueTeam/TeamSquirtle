@@ -31,6 +31,13 @@ int yearsOfService
 date timeOfSubmission
 string courseName
 
+Scheduled Courses Table:
+course name
+course section
+time slot
+faculty email
+room name
+
 Scheduling Algorithm Pseudo:
    bool sortByYOS,sortTOS
    ctsIndex = 0    // Courses to schedule index

@@ -24,60 +24,26 @@
 			$NUMBEROFPREREQS = 3;
 				
 			$predefClasses = array();
-			$predefQuery = "SELECT courseName FROM courses";
+			$predefDaySect = array();
+			$predefNightSect = array();
+			$predefInternetSect = array();
+			$predefSize = array();
+			$predefRoomType = array();
+			$predefHours = array();
+			
+			$predefQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses";
 			$predefResult = mysqli_query($link, $predefQuery);
 			while($row = mysqli_fetch_row($predefResult))
 			{
 				array_push($predefClasses, $row[0]);
+				array_push($predefDaySect, $row[1]);
+				array_push($predefNightSect, $row[2]);
+				array_push($predefInternetSect, $row[3]);
+				array_push($predefSize, $row[4]);
+				array_push($predefRoomType, $row[5]);
+				array_push($predefHours, $row[6]);				
 			}	
 			
-			$predefDaySect = array();
-			$predefQuery = "SELECT dsection FROM courses";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefDaySect, $row[0]);
-			}			
-				
-			$predefNightSect = array();
-			$predefQuery = "SELECT nsection FROM courses";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefNightSect, $row[0]);
-			}
-			
-			$predefInternetSect = array();
-			$predefQuery = "SELECT isection FROM courses";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefInternetSect, $row[0]);
-			}
-			
-			$predefSize = array();
-			$predefQuery = "SELECT classSize FROM courses";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefSize, $row[0]);
-			}	
-			
-			$predefRoomType = array();
-			$predefQuery = "SELECT roomType FROM courses";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefRoomType, $row[0]);
-			}	
-			
-			$predefHours = array();
-			$predefQuery = "SELECT hours FROM courses";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefHours, $row[0]);
-			}	
 			
 			for($i = 0; $i < count($predefClasses); $i++)
 			{				
@@ -99,7 +65,7 @@
 				echo "</td>";
 				
 					
-				// Get conflict times from the database
+				// Get conflict times from the database per course
 				$query = "SELECT times FROM conflicts WHERE course = '$predefClasses[$i]'";
 				$predefResult = mysqli_query($link, $query);
 				$row = mysqli_fetch_row($predefResult);

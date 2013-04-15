@@ -82,19 +82,21 @@
 		// Check if a conflict exists for this course
 		$courseNamer = $coursesToSchedule[$ctsIndex]->name;
 		echo "$courseNamer  ";
-		$conflictQuery = "SELECT course FROM conflicts WHERE course = '$courseNamer'";
+		$conflictQuery = "SELECT course, times FROM conflicts WHERE course = '$courseNamer'";
 		$missingConflict = mysqli_query($link, $conflictQuery);
 		$row = mysqli_fetch_row($missingConflict);
 		
         if ($row[0] != $courseNamer)
 		{			
             $conflictFileExists = false;
-			//echo "No conflict found <br>";
+			$conTimes = $row[1];
+			$conflictTimes = preg_split('/\s+/', trim($conTimes));
+			echo "<br>No conflict found <br>";
         }
         else
         {
             $conflictFileExists = true;
-			//echo "Conflict found <br>";
+			echo "<br>Conflict found <br>";
         }
         
         //Get day and night sections from course (as constants)
@@ -104,6 +106,8 @@
 		
 		
 		$facultyPQ = array();
+		$facultyPQIndex = 0;
+		$classTimesIndex = 0;
 		
 		// Sort preferences table by years of service
 		if($sortByYOS == true)
@@ -160,7 +164,7 @@
             $scheduledSections = 0;
             $currentSectionNumber = 1;
 			
-			while ((count($facultyPQ) != 0) and ($scheduledSections < $daySections + $nightSections))
+			while (($facultyPQIndex < count($facultyPQ)) and ($scheduledSections < $daySections + $nightSections) and ($classTimesIndex < count($classTimes)))
             {
                 //Check front of priority queue
                 $facultyMember = $facultyPQ[0];
@@ -190,7 +194,7 @@
 									$nightType = true;
 									break;
                 }
-				
+				/*
 				if($dayType == true)
 				{
 					echo "<br>DAY-TYPE FOUND <br>";
@@ -203,7 +207,7 @@
 					print_r($arrayOfTimes);
 					echo "<br>";
 				}
-				
+				*/
                 if(($dayType== true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
                 {
                     //add course and section number (currentSectionNumber) to listOfUnscheduledCourses 
@@ -216,28 +220,30 @@
                     $currentSectionNumber++;
                 }
 				
-				$scheduledSections++;	// <- TAKE THIS OUT WHEN YOU MOVE ON
+				//$scheduledSections++;	//		<- TAKE THIS OUT WHEN YOU MOVE ON
 				
-				/*
+				
                 else
                 {
                     while($arrayOfTimesIndex < count($arrayOfTimes))
                     {
                         $conflictExists = false;
+						
+						// For debugging purposes!
+						echo "<br>Array of Times: ".$arrayOfTimes[$arrayOfTimesIndex]."<br>";
+						
                         if ($conflictFileExists == true)
                         {
                             do
                             {
                                 $conflictExists = false;
-                                //SELECT conflictString FROM conflicts WHERE courseName = coursesToSchedule[ctsIndex]
-                                //$arrayOfConflicts = explode(trim(conflictString returned from above statement))
                                 
-                                if ($arrayOfTimes[$arrayOfTimesIndex] in $arrayOfConflicts)
+                                if (in_array($arrayOfTimes[$arrayOfTimesIndex], $conflictTimes))
                                 {
                                     $conflictExists = true;
                                     $arrayOfTimesIndex++;
                                 }
-                            }while($conflictExists == true) and ($arrayOfTimesIndex < count($arrayOfTimes))
+                            }while(($conflictExists == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
                         }
                         // Loops through array of times to find a time the faculty member is not teaching at
                         if($conflictExists == false)
@@ -245,31 +251,39 @@
                             do
                             {
                                 //Check to see if arrayOfTimes[arrayOfTimesIndex] is in database in “Scheduled Courses Table” WHERE facultyName = facultyMember.name   (alreadyTeaching == result)
-                                //SELECT DISTINCT classTime FROM scheduleCourses WHERE facultyEmail = facultyMember.facultyEmail
-                                if(above statement returns null)
+								
+								$facultyMember = $facultyPQ[$facultyPQIndex];
+								$facultyName = $facultyMember->userName;
+								
+                                $query = "SELECT timeSlot FROM scheduledCourses WHERE facultyUser = '$facultyName'";
+								$queryResult = mysqli_query($link, $query);
+								$row = mysqli_fetch_row($queryResult);
+								
+                                if($row[0] == NULL)
                                 {
                                     $alreadyTeaching = false;
                                 }
                                 else
                                 {
                                     $alreadyTeaching = true;
+									$conflictExist = true;
+									echo "<br>Already Teaching increment<br>";
+									$arrayOfTimesIndex++;
                                 }
-                                
-                                if $arrayOfTimes[$arrayOfTimesIndex] and $facultyMember.name already exists together ($alreadyTeaching == true)
-                                {
-                                    $arrayOfTimesIndex++
-                                }
-                            }while($alreadyTeaching == true) and ($arrayOfTimesIndex < count($arrayOfTimes))
-                        
-                            if($alreadyTeaching == false) //we found a time slot that does not conflict with that particular faculty member
+                            }while(($alreadyTeaching == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
+							
+							
+                            if(($alreadyTeaching == false) and ($conflictExists == false)) //we found a time slot that does not conflict with that particular 
+																							//faculty member 
                             {
-                            
-                                //conflictExists == false
                                 //Find room
                                 $arrayOfRooms = array();
+								echo "<br>SCHEDULED TEACHER:  ".$facultyPQ[$facultyPQIndex]->userName.":  ".$coursesToSchedule[$ctsIndex]->name."-$currentSectionNumber<br>";
+								$facultyPQIndex++;
+								$currentSectionNumber++;
                                 //(SELECT DISTINCT FROM Rooms)
 								// Create a Rooms object for each row returned from above statement
-                                
+                                /*
 								//To find a room for the selected time slot (Scheduled Courses Table)
                                 for ($aorIndex = 0; $aorIndex < count($arrayOfRooms) and ($foundRoom = false); $aorIndex++)
                                 {
@@ -299,38 +313,42 @@
                                                 classTime
                                                 room
                                                 time slot
-                                            *   
+                                            *  
                                             $scheduledSections++
                                             //append time slot to arrayofRooms[aorIndex].unavailableTimes     
                                             break; //exit for loop                                                                                          
                                         }
                                     }//endif
-                                }//endfor
+                                }//endfor */
+								
+								$foundRoom = false;
                                 if($foundRoom == true)
                                 {
-                                    $currentSectionNumber++
-                                    $scheduledSection++
+                                    $currentSectionNumber++;
+                                    $scheduledSection++;
                                 }
                                 else
                                 {
-                                    $arrayOfTimesIndex++
+                                    $arrayOfTimesIndex++;
                                 }
-                            }//end else
-                        }//end if
+                            }//end if 
+                        }//end if 
                     }//end while
                     if($foundRoom == false)
                     {
                         //"Unable to find an available room for courseName-currentSectionNumber during selected time preference"
                         //Put course-sectionNumber on list of unscheduled courses
-                        $classTimesIndex++
+                        $classTimesIndex++;
+						$scheduledSections++;	// TEMPORARY
                     }
                 }//endelse
-                if($facultyPQ.isEmpty()== false and $foundRoom == true)
+				/*
+                if(($facultyPQIndex < count($facultyPQ)) and ($foundRoom == true))
                 {
                     //pop off top faculty member
-                    $temp= $facultyPQ.extract(); //do nothing with temp
-                    $currentSectionNumber++
-                    $scheduledSection++
+                    //$temp= $facultyPQ.extract();
+                    $currentSectionNumber++;
+                    $scheduledSection++;
                 }
                 else
                 {
@@ -351,8 +369,7 @@
                         $scheduledSection++;
                         $currentSectionNumber++;
                     }
-                }
-				*/
+                }*/
             }//endwhile
         }//endelse
 		

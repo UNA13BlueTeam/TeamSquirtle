@@ -144,7 +144,7 @@
 		function __construct($user, $yos, $tos, $pref, $minHours)
 		{
 			echo "In Faculty constructor. <br>";
-			$this->username = $user;
+			$this->userName = $user;
 			$this->yearsOfService = $yos;
 			$this->timeOfSubmission = $tos;
 			$this->timePref = $pref;
@@ -165,7 +165,7 @@
 		function printer()
 		{
 			echo "FACULTY OUTPUT:<br>";
-			echo "Username: $this->username <br>";
+			echo "Username: $this->userName <br>";
 			echo "Years of service: $this->yearsOfService <br>";
 			echo "Time of submission: $this->timeOfSubmission <br>";
 			echo "Time preference: $this->timePref <br>";

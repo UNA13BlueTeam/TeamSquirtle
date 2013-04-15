@@ -5,7 +5,7 @@
 	echo($userName);
 	echo($userInfo['lastName']);
 	echo("<h1>".$deptName."</h1>");
-	echo("<h2>".$userName."</h2>");
+	echo("<h2>".$_SESSION['username']."</h2>");
 	echo("<h3>".$userTitle."</h3>");
 ?>
 <div class="homeLinks">

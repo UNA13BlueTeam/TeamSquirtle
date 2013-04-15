@@ -168,7 +168,17 @@ include("includes/footer.php");
 				$insertion = mysqli_query($link, $insertQuery);
 				
 				// submit to users table
-				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName) VALUES ('$email', '2', 'password', '$facultyName')";
+				
+				$temp = preg_split('/[,]/', $facultyName);
+				$last = $temp[0];
+				$first = trim($temp[1]);
+				
+				
+				$first = ucfirst(strtolower($first));
+				$last = ucfirst(strtolower($last));
+				$email = strtolower($email);
+				
+				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName, lastName) VALUES ('$email', '2', 'password', '$first', '$last')";
 				echo "$insertQuery <br>";
 				$insertion = mysqli_query($link, $insertQuery);
 				
