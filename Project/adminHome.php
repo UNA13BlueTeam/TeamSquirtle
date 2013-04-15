@@ -1,7 +1,9 @@
 <?php include("includes/header.php"); ?>
 
 <?php
-	global $deptAbbrev, $deptName, $userName, $userTitle;
+	global $deptAbbrev, $deptName, $userName, $userTitle, $userInfo;
+	echo($userName);
+	echo($userInfo['lastName']);
 	echo("<h1>".$deptName."</h1>");
 	echo("<h2>".$userName."</h2>");
 	echo("<h3>".$userTitle."</h3>");
@@ -43,6 +45,4 @@
 	
         ?>        
 </div>
-
-<br style="clear:both;">
 <?php include("includes/footer.php"); ?>

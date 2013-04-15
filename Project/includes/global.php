@@ -15,11 +15,15 @@
 		{
 			$un = $_SESSION["username"];
 			$infoQuery = "SELECT * FROM users WHERE username = '$un'";
+			echo($un);
+			echo($infoQuery);
 			$infoResults = mysqli_query($link, $infoQuery);
 			$userInfo = mysqli_fetch_assoc($infoResults);
-			$deptName 	= "Computer Science and Information Systems";
+			echo($userInfo['lastName']);
+			$deptName 	= "Computer Science and Information Blah";
 			$deptAbbrev = "CSIS";
 			$userName 	= $userInfo['title']." ".$userInfo['lastName'];
+			echo($userName);
 			$userTitle 	= "Admin";
 		}
 	}
