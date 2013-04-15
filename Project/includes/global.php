@@ -22,9 +22,7 @@
 			echo($userInfo['lastName']);
 			$deptName 	= "Computer Science and Information Blah";
 			$deptAbbrev = "CSIS";
-			$userName 	= $userInfo['title']." ".$userInfo['lastName'];
 			echo($userName);
-			$userTitle 	= "Admin";
 		}
 	}
 ?>

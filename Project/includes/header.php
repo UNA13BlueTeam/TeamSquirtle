@@ -1,5 +1,5 @@
 <?php // include_once("php_error.php"); ?> 
-<?php // include_once("db.php"); ?>
+<?php include_once("db.php"); ?>
 <?php include_once("global.php"); ?>
 <?php error_reporting(E_ERROR); ?>
 
