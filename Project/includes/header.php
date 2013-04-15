@@ -1,8 +1,4 @@
-<!-- <?php include_once("php_error.php"); ?>  -->
-<?php include_once("db.php"); ?>
 <?php include_once("global.php"); ?>
-<?php error_reporting(E_ERROR); ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -11,6 +7,7 @@
 	</head>
 	<body>
 		<?php 
+			global $deptAbbrev;
 			if($_SESSION['permission']==="admin")
 			{
 				echo('
@@ -43,20 +40,8 @@
 				');
 			}else
 			{
-				echo('
-					<div class="nav">
-						<nav>
-							<a href="index.php">UNA '.$deptAbbrev.'</a>
-							<a href="index.php" id="home">Home</a>
-							<a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> 
-							<a href="manageRooms.php" id="building">Manage Rooms</a>
-							<a href="manageClass.php" id="classes">Manage Classes</a>
-							<a href="help.php" id="help">Help</a>
-							<a href="logout.php" id="logout">Log Out</a>
-							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
-						</nav>
-				');
-				//include("logout.php");
+				// include("logout.php");
+				echo("Session expiring...");
 			}
 		?>
 		<?php 
