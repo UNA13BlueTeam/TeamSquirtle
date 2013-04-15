@@ -15,7 +15,7 @@
 	
 	$facultyUser = $_SESSION['username'];
 	
-	$retrieval = "SELECT yos FROM faculty WHERE facultyName = '$facultyUser'";
+	$retrieval = "SELECT yos FROM faculty WHERE email = '$facultyUser'";
 	$results = mysqli_query($link, $retrieval);
 	$row = mysqli_fetch_row($results);
 	$yos = $row[0];

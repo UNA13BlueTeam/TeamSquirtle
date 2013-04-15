@@ -1,3 +1,4 @@
+<?php 
 /*-----------------------------------------------------------------------------------------------
  ********************** Scheduling Algorithm Function Prologue  ********************
  * Preconditions: 
@@ -26,61 +27,131 @@
  * Modified By (Name and Date):
  * Modifications Description:
  -------------------------------------------------------------------------------------------------*/
-
-<?php
-include ("classes.php");
-//Varaible declarations
- $sortByYOS = false;
- $sortTimeOfSubmission=false;
- $ctsIndex = 0;    // Courses to schedule index
- $classTimesIndex = 0;   
- $missingConflictFile=false;
- $conflictExists=false;
- $facultyPreferenceQueue= new SplPriorityQueue();
- $scheduledSections=0;
- $facultyMember = new Faculty;
- //put if stmt to heck for missing conflict file.
- //Create array of unscheduled courses (listOfUnscheduledCourses)
  
- //Create array of courses (coursesToSchedule)
  
- //Create array of class times (classTimes)
+	$host = "127.0.0.1";
+	$user = "leonie";
+	$pass = "4EzvHW5C";
+	$db = "teamsquirtle";
+	$port = 45000;
+	  
+	$link = mysqli_connect($host, $user, $pass, $db, $port);
 
-While ($ctsIndex < count($coursesToSchedule))
+	include ("classes.php");
+	
+	//Varaible declarations
+	$sortByYOS = true;
+	$sortByTOS = false;
+	$ctsIndex = 0;    // Courses to schedule index
+	$classTimesIndex = 0;   
+	$missingConflictFile = false;
+	$conflictExists = false;
+	$scheduledSections = 0;
+	
+	//put if stmt to check for missing conflict file.
+	//Create array of unscheduled courses (listOfUnscheduledCourses)
+	$unscheduledCourses = array();
+	 
+	//Create array of courses (coursesToSchedule)
+	$coursesToSchedule = array();
+	$predefQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses";
+	$predefResult = mysqli_query($link, $predefQuery);
+	while($row = mysqli_fetch_row($predefResult))
+	{
+		$addCourse = new Course($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6]);
+		// Uncomment below to print out array of courses
+		//$addCourse->printer();
+		array_push($coursesToSchedule, $addCourse);
+	}	
+	
+	//Create array of class times (classTimes)
+	$classTimes = array();
+	$classTimesQuery = "SELECT minutes, daysOfWeek, timesOfDay FROM timeSlots";
+	$result = mysqli_query($link, $classTimesQuery);
+	while($row = mysqli_fetch_row($result))
+	{
+		$addTimeSlot = new ClassTime($row[0], $row[1], $row[2]);
+		// Uncomment below to print out array of courses
+		//$addTimeSlot->printer();
+		array_push($classTimes, $addTimeSlot);
+	}
+	
+	
+	while ($ctsIndex < count($coursesToSchedule))
     {
-        if ($missingConflictFile == true ) 
-        {//if((SELECT * FROM conflicts WHERE courseName = coursesToSchedule[ctsIndex].courseName) returns null)
-            $conflictFileExists=false; // (no conflicts for coursesToSchedule[ctsIndex].courseName)
+		// Check if a conflict exists for this course
+		$courseNamer = $coursesToSchedule[$ctsIndex]->name;
+		echo "$courseNamer  ";
+		$conflictQuery = "SELECT course FROM conflicts WHERE course = '$courseNamer'";
+		$missingConflict = mysqli_query($link, $conflictQuery);
+		$row = mysqli_fetch_row($missingConflict);
+		
+        if ($row[0] != $courseNamer)
+		{			
+            $conflictFileExists = false;
+			//echo "No conflict found <br>";
         }
         else
         {
-            $conflictFileExists=true; //(conflicts exist for coursesToSchedule[ctsIndex].courseName)
+            $conflictFileExists = true;
+			//echo "Conflict found <br>";
         }
         
         //Get day and night sections from course (as constants)
         
-        $daySections = $courseToSchedule[$ctsIndex].$daySections; 
-        $nightSections= $coursesToSchedule[$ctsIndex].$nightSections;
-     
-        //Retrieve all faculty members that chose coursesToSchedule[ctsIndex].courseName in their preferences
+        $daySections = $coursesToSchedule[$ctsIndex]->daySections; 
+        $nightSections= $coursesToSchedule[$ctsIndex]->nightSections;
+		
+		
+		$facultyPQ = array();
+		
+		// Sort preferences table by years of service
+		if($sortByYOS == true)
         {
-            //SELECT * FROM preferences WHERE courseName = coursesToSchedule[ctsIndex].courseName                
+			//Retrieve all faculty members that chose this course in their preferences
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos DESC";
+			$facultyResult = mysqli_query($link, $facultyQuery);
+			
+			while($row = mysqli_fetch_row($facultyResult))
+			{
+				// Call to get minimum hours for faculty
+				$facultyQuery2 = "SELECT minHours FROM faculty WHERE email = '$row[0]'";
+				$facultyResult2 = mysqli_query($link, $facultyQuery2);
+				$row2 = mysqli_fetch_row($facultyResult2);
+				
+									//	username   yos      tos     timePref   minHours   
+				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
+				$addFaculty->printer();
+				array_push($facultyPQ, $addFaculty);
+			}
+		   
         }
-        if($sortByYOS ==true)
+		// Sort preference table by time of submission
+		elseif($sortByTOS == true)
         {
-           //generate priority queue using years of service as priority in insert(facultyPreference.facultyName, yearsOfService)
-               //using faculty members retrieved from SQL statement above      (facultyPreference.PreferenceQueue)
+			//Retrieve all faculty members that chose this course in their preferences
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos ASC";
+			$facultyResult = mysqli_query($link, $facultyQuery);
+			while($row = mysqli_fetch_row($facultyResult))
+			{
+				// Call to get minimum hours for faculty
+				$facultyQuery2 = "SELECT minHours FROM faculty WHERE email = '$row[0]'";
+				$facultyResult2 = mysqli_query($link, $facultyQuery2);
+				$row2 = mysqli_fetch_row($facultyResult2);
+				
+									//	username   yos      tos     timePref   minHours   
+				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
+				$addFaculty->printer();
+				array_push($facultyPQ, $addFaculty);
+			}
         }
-        elseif($sortByTOS ==true)
+		
+		
+		
+        if (count($facultyPQ) == 0)
         {
-            //generate priority queue using time of submission as priority in insert(facultyPreference.facultyName, timeOfSubmission)
-                //using faculty members retrieved from SQL statement above    (facultyPreferenceQueue)
-        }
-        
-        if ($facultyPreferenceQueue.isEmpty()==true )
-        {
-           // Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
-            $ctsIndex++;
+			// Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
+			array_push($unscheduledCourses, $courseNamer);
         }
         else //(declare variables for number of day and night sections left)
         {
@@ -88,12 +159,12 @@ While ($ctsIndex < count($coursesToSchedule))
             $nightSectionsRemaining = $nightSections;
             $scheduledSections = 0;
             $currentSectionNumber = 1;
-        }
-         while (($facultyPreferenceQueue.isEmpty() == false) and ($scheduledSections < $daySections + $nightSections))
+			/*
+			while ((count($facultyPQ) != 0) and ($scheduledSections < $daySections + $nightSections))
             {
                 //Check front of priority queue
-                $facultyMember.$name = $facultyPreferenceQueue.top();
-            
+                $facultyMember = $facultyPQ[0];
+				
                 //Check their time preference (verify with correct array early[], midday[], afternoon[], night[])    
                  $arrayOfTimes = array();
                  $arrayOfTimesIndex = 0;
@@ -207,7 +278,7 @@ While ($ctsIndex < count($coursesToSchedule))
                                                 classTime
                                                 room
                                                 time slot
-                                            */    
+                                            *   
                                             $scheduledSections++
                                             //append time slot to arrayofRooms[aorIndex].unavailableTimes     
                                             break; //exit for loop                                                                                          
@@ -233,10 +304,10 @@ While ($ctsIndex < count($coursesToSchedule))
                         $classTimesIndex++
                     }
                 }//endelse
-                if($facultyPreferenceQueue.isEmpty()== false and $foundRoom == true)
+                if($facultyPQ.isEmpty()== false and $foundRoom == true)
                 {
                     //pop off top faculty member
-                    $temp= $facultyPreferenceQueue.extract(); //do nothing with temp
+                    $temp= $facultyPQ.extract(); //do nothing with temp
                     $currentSectionNumber++
                     $scheduledSection++
                 }
@@ -260,20 +331,17 @@ While ($ctsIndex < count($coursesToSchedule))
                         $currentSectionNumber++;
                     }
                 }
-            }//endwhile        
+            }//endwhile
+			*/
         }//endelse
+		
         $ctsIndex++;
         //schedule next course
     }//end while
 
 
-
-
-
-
-
-
-
+	echo "Unscheduled Courses: <br>";
+	print_r($unscheduledCourses);
 
 
 

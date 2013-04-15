@@ -155,13 +155,21 @@ include("includes/footer.php");
 				{
 					echo("<h2>Faculty member already defined in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
 					$delete = "DELETE FROM $db.faculty WHERE email = '$email'";
+					$delete2 = "DELETE FROM $db.users WHERE username = '$email'";
 					echo("<h1>DELETING</h1><h2>$delete</h2>");
 					
+					// Delete from faculty and users table
 					mysqli_query($link, $delete);
+					mysqli_query($link, $delete2);
 				}
-				// submit to query
+				// submit to faculty table
 				$insertQuery = "INSERT INTO $db.faculty (facultyName, yos, email, minHours) VALUES ('$facultyName', '$yos', '$email', '$minHours')";
-				echo "$insertQuery";
+				echo "$insertQuery <br>";
+				$insertion = mysqli_query($link, $insertQuery);
+				
+				// submit to users table
+				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName) VALUES ('$email', '2', 'password', '$facultyName')";
+				echo "$insertQuery <br>";
 				$insertion = mysqli_query($link, $insertQuery);
 				
 				if($insertion)
@@ -376,6 +384,7 @@ include("includes/footer.php");
 	-------------------------------------------------------------------------------------------------*/ 
 	function getEmail($line, &$lineIndex, $lineNumber, &$email)
 	{	
+		$ext = "";
 		//Gets the email address except for the extension
 		while($line[$lineIndex] != '@' && strlen($email)<=10)
 		{
@@ -398,7 +407,7 @@ include("includes/footer.php");
 		//Gets the email extension; for example, @UNA.EDU
 		while(ord($line[$lineIndex]) != 32 && ord($line[$lineIndex]) != 9 )
 		{
-			$email= $email.$line[$lineIndex];
+			$ext= $ext.$line[$lineIndex];
 			$lineIndex++;
 			if($lineIndex == strlen($line) )
 			{
@@ -406,7 +415,7 @@ include("includes/footer.php");
 			}
 		}
 		
-		printf("Email = $email <br>");
+		printf("Email = $email$ext <br>");
 		return true;
 	}//end function
         

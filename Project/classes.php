@@ -30,12 +30,12 @@
 	
 	class Faculty
 	{
-		private static name;	//string
-		//private static $lastName;	//string
+		private static $firstName;	//string
+		private static $lastName;	//string
 		private static $email;		//string
 		private static $yearsOfService;	//int
 		private static $requiredMinHours;	//int
-		private static $timePref;			//string
+		
 		function __construct()
 		{
 			echo "In Faculty constructor. <br>";
@@ -60,10 +60,9 @@
 	
 	class Room
 	{
-		//private static $building;	//string
-		private static $roomName; //string
+		private static $building;	//string
+		private static $roomNumber; //string
 		private static $roomSize;	//int
-		private static $roomType;  //char or string
 		private static $unavailableTimes;	//array of strings of format MWF/00:00, initially empty
 		
 		function __construct()
