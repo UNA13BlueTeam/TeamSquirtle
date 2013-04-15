@@ -7,6 +7,7 @@
 	</head>
 	<body>
 		<?php 
+			global $deptAbbrev;
 			if($_SESSION['permission']==="admin")
 			{
 				echo('

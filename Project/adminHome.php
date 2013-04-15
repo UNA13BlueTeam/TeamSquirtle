@@ -1,12 +1,13 @@
 <?php include("includes/header.php"); ?>
 
 <?php
+	global $deptAbbrev, $deptName, $userName, $userTitle;
 	echo("<h1>".$deptName."</h1>");
 	echo("<h2>".$userName."</h2>");
 	echo("<h3>".$userTitle."</h3>");
 ?>
 <div class="homeLinks">
-	Links!
+	<h4>Links!</h4>
 	<ul>
 		<li> <a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> </li>
 		<li> <a href="manageRooms.php" id="building">Manage Rooms</a> </li>
@@ -17,6 +18,7 @@
 	</ul>
 </div>
 <div id="homeSchedule">
+	<h4>Schedule</h4>
 	<?php
 		$rows = 6; // define number of rows
 		$cols = 2;// define number of columns
@@ -27,10 +29,11 @@
                     echo"<th></th>";
                 }
  
-		for($tr=2;$tr<=$rows;$tr++){ 
-      
+		for($tr=2;$tr<=$rows;$tr++)
+		{ 
    			echo "<tr>"; 
-        	for($td=1;$td<=$cols;$td++){ 
+        	for($td=1;$td<=$cols;$td++)
+        	{ 
                 echo "<td></td>"; 
         	} 
   		echo "</tr>"; 
