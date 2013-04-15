@@ -32,3 +32,17 @@ prereq019.txt		(E)Error on last line.  All other lines were uploaded successfull
 prereq020.txt		(E)Error on lines 2, 5, 7.  All other lines were uploaded successfully.
 prereq021.txt		(E)Error on lines 1, 8, 12.  All other lines were uploaded successfully.
 prereq022.txt		(E)Error on lines 7, 12.  All other lines were uploaded successfully.
+prereq023.txt		(E)Error on lines 1, 5, 13.  All other lines were uploaded successfully.
+prereq024.txt		(E)Error on lines 5, 7, 10, 11, 14, 19, 21, 24.  All other lines were uploaded successfully.
+prereq025.txt		(E)Error on last line.  All other lines uploaded successfully.
+prereq026.txt		(E)Error on line 4.  All other lines uploaded successfully.
+prereq027.txt		(E)Error on line 6.  All other lines uploaded successfully.
+prereq028.txt		(E)Error on lines 1, 3, 6, 11, 13, 15.  All other lines uploaded successfully.
+prereq029.txt		(E)Error on line 3.  All other lines uploaded successfully.
+prereq030.txt		(E)Error on line 3.  All other lines uploaded successfully.
+prereq031.txt		(E)Error on last line.  All other lines uploaded successfully.
+prereq032.txt		(E)Error on line 9.  All other lines uploaded successfully.
+prereq033.txt		(E)Error on line 3.  All other lines uploaded successfully.
+prereq034.txt		(E)Error on line 5.  All other lines uploaded successfully.
+prereq035.txt		(E)Error on lines 5, 6, 10, 11, 16, 19.  All other lines uploaded successfully.
+prereq036.txt

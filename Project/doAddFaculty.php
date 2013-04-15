@@ -15,21 +15,14 @@
 		$email = $_POST['email'];
 		$minHours = $_POST['hours'];
 		
-		$query = "INSERT INTO $db.faculty VALUES ('$name', '$yos', '$email', '$minHours');";
-
-		$insertion = mysqli_query($link, $query);
-		if($insertion)
-			echo("insertion succeeded<br>");
-		else{
-			echo("insertion failed<br>");
-			echo($query."<br>");
-		}
-		// Print out contents accepted
-		// echo "You have successfully added this course information to the database! <br>";
-		echo "Faculty Name: $name <br>";
-		echo "Years of Service: $yos <br>";
-		echo "Email: $email <br>";
-		echo "Minimum Hours: $minHours <br>";
+		$outForm = "$name $yos $email $minHours";
+		
+		$outFile = fopen("formSubmissionFile.txt", "w");
+		$outFileName = "formSubmissionFile.txt";
+		fwrite($outFile, $outForm);
+		fclose($outFile);
+		
+		scanFaculty($outFileName, $outFile);
 		
 	}
 	
@@ -98,17 +91,6 @@ include("includes/footer.php");
 		// get global variables used
 		global $link, $db;
 		
-		$predef = array();
-		$predefQuery = "SELECT DISTINCT email FROM faculty";
-		$predefResult = mysqli_query($link, $predefQuery);
-		while($row = mysqli_fetch_row($predefResult))
-		{
-			array_push($predef, $row[0]);
-		}
-		
-		echo "Array of predefined faculty member emails: <br>";
-		print_r($predef);
-		
 		$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
 
 		echo("Scanning $prettyName - ".strftime('%c'));
@@ -160,6 +142,15 @@ include("includes/footer.php");
 			if($errorFlag == true)
 			{
 				// If faculty already exist, then delete before submitting
+				
+				$predef = array();
+				$predefQuery = "SELECT DISTINCT email FROM faculty";
+				$predefResult = mysqli_query($link, $predefQuery);
+				while($row = mysqli_fetch_row($predefResult))
+				{
+					array_push($predef, $row[0]);
+				}
+				
 				if(in_array(trim($email), $predef))
 				{
 					echo("<h2>Faculty member already defined in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
@@ -169,7 +160,7 @@ include("includes/footer.php");
 					mysqli_query($link, $delete);
 				}
 				// submit to query
-				$insertQuery= "INSERT INTO $db.faculty (facultyName, yos, email, minHours) VALUES ('$facultyName', '$yos', '$email', '$minHours')";
+				$insertQuery = "INSERT INTO $db.faculty (facultyName, yos, email, minHours) VALUES ('$facultyName', '$yos', '$email', '$minHours')";
 				echo "$insertQuery";
 				$insertion = mysqli_query($link, $insertQuery);
 				
