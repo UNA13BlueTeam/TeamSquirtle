@@ -53,14 +53,56 @@
 	{
 		private static $minutes;	//int
 		private static $daysOfWeek;	//string
-		private static $timesOfDay;	//array of strings of format 00:00 listing all available teaching times for matching daysOfWeek
+		private static $early;	//array of strings of format 00:00 listing all available early morning teaching times for matching daysOfWeek
+		private static $midDay;	//array of strings of format 00:00 listing all available mid-day teaching times for matching daysOfWeek
+		private static $lateAfternoon;	//array of strings of format 00:00 listing all available late afternoon teaching times for matching daysOfWeek
+		private static $night;	//array of strings of format 00:00 listing all available night teaching times for matching daysOfWeek
 		
 		function __construct($min, $dow, $tod)
 		{
 			//echo "In  ClassTime construtor. <br>";
 			$this->minutes = $min;
 			$this->daysOfWeek = $dow;
-			$this->timesOfDay = $tod;
+			$this->early = array();
+			$this->midDay = array();
+			$this->lateAfternoon = array();
+			$this->night = array();
+			
+			// Split times of day into an array
+			$tod = preg_split('/\s+/', trim($tod));
+			
+			// Separate days of week into early, mid-day, late afternoon, and night sections
+			for($i = 0; $i < count($tod); $i++)
+			{
+				// Splits the string by the ':', then puts it back together without it.
+				$temp = preg_split('/[:]/', trim($tod[$i]));
+				$newString = trim($temp[0]).trim($temp[1]);
+				
+				// Early morning class from 00:00 - 10:59
+				if(($newString > 0) and ($newString < 1100))
+				{
+					array_push($this->early, $tod[$i]);
+				}
+				
+				// Mid-day class from 11:00 - 14:00
+				else if(($newString >= 1100) and ($newString <= 1400))
+				{
+					array_push($this->midDay, $tod[$i]);
+				}
+				
+				// Late afternoon class from 14:01 - 17:59
+				else if(($newString > 1400) and ($newString < 1800))
+				{
+					array_push($this->lateAfternoon, $tod[$i]);
+				}
+				
+				// Night class from 18:00 - 24:00
+				else if(($newString >= 1800) and ($newString <= 2400))
+				{
+					array_push($this->night, $tod[$i]);
+				}
+			}
+			
 		}
 		
 		// Getter
@@ -79,7 +121,13 @@
 			echo "CLASS TIMES CLASS OUTPUT:<br>";
 			echo "Minutes: $this->minutes <br>";
 			echo "Days of week: $this->daysOfWeek <br>";
-			echo "Times of day: $this->timesOfDay <br><br>";
+			
+			echo "Early time:  "; print_r($this->early);
+			echo "<br>Mid-day time:  "; print_r($this->midDay);
+			echo "<br>Late Afternoon time:  "; print_r($this->lateAfternoon);
+			echo "<br>Night time:  "; print_r($this->night);
+			echo "<br><br>";
+			
 		}
 	}
 	
@@ -116,7 +164,7 @@
 		
 		function printer()
 		{
-			echo "CLASS TIMES CLASS OUTPUT:<br>";
+			echo "FACULTY OUTPUT:<br>";
 			echo "Username: $this->username <br>";
 			echo "Years of service: $this->yearsOfService <br>";
 			echo "Time of submission: $this->timeOfSubmission <br>";

@@ -119,7 +119,7 @@
 				$facultyResult2 = mysqli_query($link, $facultyQuery2);
 				$row2 = mysqli_fetch_row($facultyResult2);
 				
-									//	username   yos      tos     timePref   minHours   
+									//	 username   yos      tos     timePref   minHours   
 				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
 				$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
@@ -130,7 +130,7 @@
 		elseif($sortByTOS == true)
         {
 			//Retrieve all faculty members that chose this course in their preferences
-			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos ASC";
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY tos ASC";
 			$facultyResult = mysqli_query($link, $facultyQuery);
 			while($row = mysqli_fetch_row($facultyResult))
 			{
@@ -139,7 +139,7 @@
 				$facultyResult2 = mysqli_query($link, $facultyQuery2);
 				$row2 = mysqli_fetch_row($facultyResult2);
 				
-									//	username   yos      tos     timePref   minHours   
+									//	 username   yos      tos     timePref   minHours   
 				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
 				$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
@@ -159,45 +159,66 @@
             $nightSectionsRemaining = $nightSections;
             $scheduledSections = 0;
             $currentSectionNumber = 1;
-			/*
+			
 			while ((count($facultyPQ) != 0) and ($scheduledSections < $daySections + $nightSections))
             {
                 //Check front of priority queue
                 $facultyMember = $facultyPQ[0];
 				
                 //Check their time preference (verify with correct array early[], midday[], afternoon[], night[])    
-                 $arrayOfTimes = array();
-                 $arrayOfTimesIndex = 0;
-                     
-                 switch($facultyMember.$timePref)
-                 {
-                     case  "early":  $arrayOfTimes = $classTimes[$classTimesIndex].$early;
-                                          $dayType = true;
-                                          break;
-                        
-                     case "midday": $arrayOfTimes =  $classTimes[$classTimesIndex].$midday;
-                                          $dayType = true;
-                                          break;
-                        
-                     case "late after": $arrayOfTimes =  $classTimes[$classTimesIndex].$lateAfter;
-                                          $dayType = true;
-                                          break;
-                        
-                     case "night":  $arrayOfTimes = $classTimes[$classTimesIndex].$night;
-                                          $nighType = true;
-                                          break;
-                     }
-                
+				$arrayOfTimes = array();
+				$arrayOfTimesIndex = 0;
+				
+				$dayType = false;
+				$nightType = false;
+				
+				switch($facultyMember->timePref)
+				{
+					case  "early": $arrayOfTimes = $classTimes[$classTimesIndex]->early;
+									$dayType = true;
+									break;
+
+					case "midDay": $arrayOfTimes = $classTimes[$classTimesIndex]->midDay;
+									$dayType = true;
+									break;
+
+					case "lateAfternoon": $arrayOfTimes = $classTimes[$classTimesIndex]->lateAfternoon;
+										$dayType = true;
+										break;
+
+					case "night": $arrayOfTimes = $classTimes[$classTimesIndex]->night;
+									$nightType = true;
+									break;
+                }
+				
+				if($dayType == true)
+				{
+					echo "<br>DAY-TYPE FOUND <br>";
+					print_r($arrayOfTimes);
+					echo "<br>";
+				}
+				else if($nightType == true)
+				{
+					echo "<br>NIGHT-TYPE FOUND<br>";
+					print_r($arrayOfTimes);
+					echo "<br>";
+				}
+				
                 if(($dayType== true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
                 {
                     //add course and section number (currentSectionNumber) to listOfUnscheduledCourses 
                         //we were removing the faculty member from the queue here, but we don't need
                         //to do that HERE because we're popping them off at the end of this if/else
                         //down on line 254
+					array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
                         
-                    "No more sections available for preferred time chosen";
+                    //"No more sections available for preferred time chosen";
                     $currentSectionNumber++;
                 }
+				
+				$scheduledSections++;	// <- TAKE THIS OUT WHEN YOU MOVE ON
+				
+				/*
                 else
                 {
                     while($arrayOfTimesIndex < count($arrayOfTimes))
@@ -331,8 +352,8 @@
                         $currentSectionNumber++;
                     }
                 }
+				*/
             }//endwhile
-			*/
         }//endelse
 		
         $ctsIndex++;
@@ -342,7 +363,6 @@
 
 	echo "Unscheduled Courses: <br>";
 	print_r($unscheduledCourses);
-
 
 
 
