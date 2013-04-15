@@ -13,6 +13,7 @@
 			<th>Remove</th>
 	</tr>
 	<?php
+		global $host, $user, $pass, $db, $port;
 		$link = mysqli_connect($host, $user, $pass, $db, $port);
 			
 		$predefRoomTypes = array();
