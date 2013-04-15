@@ -1,19 +1,18 @@
-<?php include("includes/header.php"); ?>
+<?php include("includes/facultyHeader.php"); ?>
   
-<?php
-  global $deptAbbrev, $deptName, $userName, $userTitle;
-  echo("<h1>".$deptName."</h1>");
-  echo("<h2>".$userName."</h2>");
-  echo("<h3>".$userTitle."</h3>");
+<?php	
+	echo("<h1>".$deptName."</h1>");
+	echo("<h2>".$_SESSION['username']."</h2>");
+	echo("<h3> Faculty </h3>");
 ?>
 
 <div class="homeLinks">
   <h4>Links!</h4>
   <ul>
-    <li><a href="index.php" id="home">Home</a></li>
+    <li><a href="facultyHome.php" id="home">Home</a></li>
     <li><a href="viewschedule.php" id="timeSlots">View Schedules</a> </li>
     <li><a href="Pickcourses.php" id="building">Pick Courses</a></li>
-    <li><a href="help.php" id="help">Help</a></li>
+    <li><a href="facultyHelp.php" id="help">Help</a></li>
   </ul>
 </div>
 <div id="homeSchedule">
