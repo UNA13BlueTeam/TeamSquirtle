@@ -102,13 +102,13 @@
         if ($row[0] != $courseNamer)
 		{			
             $conflictFileExists = false;
-			$conTimes = $row[1];
-			$conflictTimes = preg_split('/\s+/', trim($conTimes));
 			//echo "<br>No conflict found <br>";
         }
         else
         {
             $conflictFileExists = true;
+			$conTimes = $row[1];
+			$conflictTimes = preg_split('/\s+/', trim($conTimes));
 			//echo "<br>Conflict found <br>";
         }
         
@@ -258,11 +258,14 @@
                             do
                             {
                                 $conflictExists = false;
+								$tempArrayOfTimes = $classTimes[$classTimesIndex]->daysOfWeek."/".$arrayOfTimes[$arrayOfTimesIndex];
+								echo "<br><h3>TEMP OF TIMES = $tempArrayOfTimes</h3><br>";
+								print_r($conflictTimes);
                                 
-                                if (in_array($arrayOfTimes[$arrayOfTimesIndex], $conflictTimes))
+                                if (in_array(trim($tempArrayOfTimes), $conflictTimes))
                                 {
                                     $conflictExists = true;
-									echo "<br>Conflict Exists Increment <br>";
+									echo "<br><h2>Conflict Exists Increment</h2> <br>";
                                     $arrayOfTimesIndex++;
                                 }
                             }while(($conflictExists == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
