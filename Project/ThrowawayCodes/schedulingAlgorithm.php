@@ -40,14 +40,16 @@
 	include ("classes.php");
 	
 	//Varaible declarations
-	$sortByYOS = true;
-	$sortByTOS = false;
+	$sortByYOS = false;
+	$sortByTOS = true;
 	$ctsIndex = 0;    // Courses to schedule index
 	$classTimesIndex = 0;   
 	$missingConflictFile = false;
 	$conflictExists = false;
 	$scheduledSections = 0;
 	$foundRoom = false;
+	$scheduledSections = 0;
+    $currentSectionNumber = 1;
 	
 	//put if stmt to check for missing conflict file.
 	//Create array of unscheduled courses (listOfUnscheduledCourses)
@@ -116,6 +118,7 @@
         
         $daySections = $coursesToSchedule[$ctsIndex]->daySections; 
         $nightSections= $coursesToSchedule[$ctsIndex]->nightSections;
+		$scheduledSections = 0;
 		
 		$facultyPQ = array();
 		$facultyPQIndex = 0;
@@ -146,7 +149,7 @@
 		elseif($sortByTOS == true)
         {
 			//Retrieve all faculty members that chose this course in their preferences
-			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY tos ASC";
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY CAST(tos AS SIGNED) ASC";
 			$facultyResult = mysqli_query($link, $facultyQuery);
 			while($row = mysqli_fetch_row($facultyResult))
 			{
@@ -165,8 +168,14 @@
         if (count($facultyPQ) == 0)
         {
 			// Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
-			echo "<br>EMPTY PQ <br>";
-			array_push($unscheduledCourses, $courseNamer);
+			echo "<br>EMPTY PQ   $currentSectionNumber<br>";
+			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
+			{
+				array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
+				$scheduledSections++;
+				$currentSectionNumber++;
+			}
+			
         }
         else //(declare variables for number of day and night sections left)
         {
@@ -235,6 +244,7 @@
                         //down on line 254
 						
 					echo "<br><h2> ENTERED BAD STATEMENT </h2><br>";
+					$currentSectionNumber++;
 					array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
                         
                     //"No more sections available for preferred time chosen";
@@ -415,35 +425,41 @@
                     //$currentSectionNumber++;
                     //$scheduledSections++;
                 }
-				/*
-                else
-                {
-                    //We reach this block because the priority queue is empty
-                    //scheduledSections can still be less than daySections + nightSections
-                    //So at this point we probably need to repopulate our priority queue in
-                    //order to continue scheduling the rest of the sections
-                    
-                    //Or we could allow each faculty member to select the number of
-                    //sections of a course they want to teach, which would put them on
-                    //the priority queue for the course multiple times. Then if the priority
-                    //queue is empty with sections remaining, they just go unscheduled due
-                    //to no professor selecting to teach them
-                    
-                    while($scheduledSections < $daySections + $nightSections)
-                    {
-						$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
-                        array_push($unscheduledCourses, $courseToPush);
-                        $scheduledSections++;
-                        $currentSectionNumber++;
-                    }
-                }
-				*/
+				
+               
+				
             }//endwhile
 			
 			echo "<br><h3> EXITED WITH Scheduled Sections = $scheduledSections </h3><br>";
 			echo "<br><h3> EXITED WITH Faculty queue index = $facultyPQIndex </h3><br>";
 			echo "<br><h3> EXITED WITH Class Times index = $classTimesIndex </h3><br>";
+			
+			
         }//endelse
+		
+		if(($facultyPQIndex < count($facultyPQ)) and ($foundRoom == false))
+			{
+				//We reach this block because the priority queue is empty
+				//scheduledSections can still be less than daySections + nightSections
+				//So at this point we probably need to repopulate our priority queue in
+				//order to continue scheduling the rest of the sections
+				
+				//Or we could allow each faculty member to select the number of
+				//sections of a course they want to teach, which would put them on
+				//the priority queue for the course multiple times. Then if the priority
+				//queue is empty with sections remaining, they just go unscheduled due
+				//to no professor selecting to teach them
+				
+				while($currentSectionNumber < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
+				{
+					echo "<br><h3> ENTERED TEST LOOP </h3><br>";
+					$currentSectionNumber++;
+					$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
+					array_push($unscheduledCourses, $courseToPush);
+					$scheduledSections++;
+				}
+			}
+			$currentSectionNumber = 1;
 			$ctsIndex++;
         //schedule next course
     }//end while
