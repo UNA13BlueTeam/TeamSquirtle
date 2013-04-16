@@ -57,7 +57,8 @@
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
 						</nav>
 				');
-				//include("logout.php");
+				echo("Session expired...");
+				// include("logout.php");
 			}
 		?>
 		<?php 

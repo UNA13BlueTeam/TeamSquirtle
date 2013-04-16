@@ -13,16 +13,20 @@
 	{
 		if($_SESSION['loggedIn']===true)
 		{
+			// echo("loggedIn = true <br>");
+			
 			$un = $_SESSION["username"];
 			$infoQuery = "SELECT * FROM users WHERE username = '$un'";
-			echo($un);
-			echo($infoQuery);
 			$infoResults = mysqli_query($link, $infoQuery);
 			$userInfo = mysqli_fetch_assoc($infoResults);
-			echo($userInfo['lastName']);
 			$deptName 	= "Computer Science and Information Blah";
 			$deptAbbrev = "CSIS";
-			echo($userName);
+		}else
+		{
+			// echo("LoggedIn = false <br>");
 		}
+	}else
+	{
+		// echo("loggedIn unset. <br>");
 	}
 ?>

@@ -2,9 +2,10 @@ To-Do
 ======
 Patrick To-Do
 -------------
-- Finish integrating scanners
-- Prettify scanners
-- Encrypt passwords
+- #Schedule output
+- #First Log On
+- ##Fix Home Links
+- ###Fix sessions
 
 Patrick Done
 -------------

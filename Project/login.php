@@ -1,6 +1,6 @@
 <div class="nav">
     <a href="index.php">University of North Alabama</a>
-    <?php 
+    <?php
         global $host, $user, $pass, $db, $port;
         // $test = mysqli_connect($host, $user, $pass, $db, $port);
         // if($test){

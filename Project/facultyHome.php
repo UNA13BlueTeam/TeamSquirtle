@@ -2,7 +2,7 @@
   
 <?php	
 	echo("<h1>".$deptName."</h1>");
-	echo("<h2>".$_SESSION['username']."</h2>");
+	echo("<h2>".$_SESSION['firstName']." ".$_SESSION['lastName']."</h2>");
 	echo("<h3> Faculty </h3>");
 ?>
 
@@ -28,6 +28,7 @@
 		{
 			echo"<th></th>";
 		}
+    echo("</tr>");
  
 		for($tr=2;$tr<=$rows;$tr++)
 		{ 
