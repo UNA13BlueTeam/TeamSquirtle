@@ -47,6 +47,7 @@
 	$missingConflictFile = false;
 	$conflictExists = false;
 	$scheduledSections = 0;
+	$foundRoom = false;
 	
 	//put if stmt to check for missing conflict file.
 	//Create array of unscheduled courses (listOfUnscheduledCourses)
@@ -103,12 +104,12 @@
             $conflictFileExists = false;
 			$conTimes = $row[1];
 			$conflictTimes = preg_split('/\s+/', trim($conTimes));
-			echo "<br>No conflict found <br>";
+			//echo "<br>No conflict found <br>";
         }
         else
         {
             $conflictFileExists = true;
-			echo "<br>Conflict found <br>";
+			//echo "<br>Conflict found <br>";
         }
         
         //Get day and night sections from course (as constants)
@@ -176,8 +177,8 @@
 			
 			while (($facultyPQIndex < count($facultyPQ)) and ($scheduledSections < $daySections + $nightSections) and ($classTimesIndex < count($classTimes)))
             {
-				echo "<br><h3>ENTERING LONG LOOP</h3><br>";
-				echo "Class Timess Array: ".count($classTimes)."<br>";
+				echo "Class Times Array: ".count($classTimes)."    Index: $classTimesIndex<br>";
+				
                 //Check front of priority queue
                 $facultyMember = $facultyPQ[$facultyPQIndex];
 				
@@ -237,13 +238,10 @@
                 }
                 else
                 {
-					echo "<br><h2> ENTERED GOOD STATEMENT </h2><br>";
-					echo "<br><h2>".count($arrayOfTimes)."</h2><br>";
 					$foundRoom = false;
 					$arrayOfTimesIndex = 0;
-                    while($arrayOfTimesIndex < count($arrayOfTimes))
+                    while($arrayOfTimesIndex < count($arrayOfTimes) and ($foundRoom == false))
                     {
-						echo "<br><h3>ENTERING while($arrayOfTimesIndex < count($arrayOfTimes)) LOOP</h3><br>";
 						$foundRoom = false;
                         $conflictExists = false;
 						$alreadyTeaching = false;
@@ -282,7 +280,9 @@
 								$timeTemp = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
 								$timeTemp = $timeTemp.$arrayOfTimes[$arrayOfTimesIndex];
 								
-                                if($row[0] == NULL)
+								echo "<br><h3>$timeTemp</h3><br>";
+								
+                                if($row[0] != $timeTemp)
                                 {
                                     $alreadyTeaching = false;
                                 }
@@ -308,26 +308,22 @@
                                 $aorIndex = 0;
 								//To find a room for the selected time slot (Scheduled Courses Table)
                                 while(($aorIndex < count($arrayOfRooms)) and ($foundRoom == false))
-                                {
-									
-									echo "Class - class type: ".$coursesToSchedule[$ctsIndex]->classType."<br>";
-									echo "Class - class size: ".$coursesToSchedule[$ctsIndex]->classSize."<br>";
-									echo "Room - room type: ".$arrayOfRooms[$aorIndex]->roomType."<br>";
-									echo "Room - room size: ".$arrayOfRooms[$aorIndex]->roomSize."<br>";
-									echo "Room - room name: ".$arrayOfRooms[$aorIndex]->roomName."<br>";
-									
-									
+                                {									
                                     //check if room type is ok
                                     if (($coursesToSchedule[$ctsIndex]->classType == $arrayOfRooms[$aorIndex]->roomType) and ($coursesToSchedule[$ctsIndex]->classSize <= $arrayOfRooms[$aorIndex]->roomSize))
                                     {            
 										
                                         $unanvailableTimesArray = $arrayOfRooms[$aorIndex]->unavailableTimes;
                                         
-										echo "Room name: ".$arrayOfRooms[$aorIndex]->roomName."<br>";
+										echo "<br>Room name: ".$arrayOfRooms[$aorIndex]->roomName."<br>";
 										echo "UnavailableTimesArray:    ";
 										print_r($arrayOfRooms[$aorIndex]->unavailableTimes);
+										echo "<br>";
 										
-                                        if(!in_array($arrayOfTimes[$arrayOfTimesIndex], $unanvailableTimesArray))
+										$tempTime = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
+										$tempTime = $tempTime.$arrayOfTimes[$arrayOfTimesIndex];
+										
+                                        if(!in_array($tempTime, $unanvailableTimesArray))
                                         {
                                             $roomAvailable = true;
                                         }
@@ -351,8 +347,6 @@
 											
 											// Temporaries for insertion
 											$tempCourse = $coursesToSchedule[$ctsIndex]->name;
-											$tempTime = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
-											$tempTime = $tempTime.$arrayOfTimes[$arrayOfTimesIndex];
 											$tempFaculty = $facultyPQ[$facultyPQIndex]->userName;
 											$tempRoom = $arrayOfRooms[$aorIndex]->roomName;
 											
@@ -370,6 +364,14 @@
 												echo "<br> insertion failed... <br>";
 											}
 											
+											if($dayType == true)
+											{
+												$daySectionsRemaining--;
+											}
+											else
+											{
+												$nightSectionsRemaining--;												
+											}
 											
                                             $scheduledSections++;
                                             //append time slot to arrayofRooms[aorIndex].unavailableTimes
@@ -377,10 +379,11 @@
                                         }
                                     }//endif
 									$aorIndex++;
-                                }//end while
+                                }//end rooms while
                                 if($foundRoom == true)
                                 {
 									echo "Found a room and moving on!<br>";
+									$facultyPQIndex++;
                                     $currentSectionNumber++;
                                     $scheduledSections++;
                                 }
@@ -390,14 +393,14 @@
                                 }
                             }//end if 
                         }//end if 
-                    }//end while
-                    if($foundRoom == false)
-                    {
+                    }//end times while
+					if($foundRoom == false)
+					{
                         //"Unable to find an available room for courseName-currentSectionNumber during selected time preference"
                         //Put course-sectionNumber on list of unscheduled courses
                         $classTimesIndex++;
 						//$scheduledSections++;	// TEMPORARY
-                    }
+					}
                 }//endelse
                 if(($facultyPQIndex < count($facultyPQ)) and ($foundRoom == true))
                 {
