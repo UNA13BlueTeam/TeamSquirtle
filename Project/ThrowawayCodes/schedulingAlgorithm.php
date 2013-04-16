@@ -40,8 +40,8 @@
 	include ("classes.php");
 	
 	//Varaible declarations
-	$sortByYOS = false;
-	$sortByTOS = true;
+	$sortByYOS = true;
+	$sortByTOS = false;
 	$ctsIndex = 0;    // Courses to schedule index
 	$classTimesIndex = 0;   
 	$missingConflictFile = false;
@@ -51,15 +51,12 @@
 	$scheduledSections = 0;
     $currentSectionNumber = 1;
 	
-	//put if stmt to check for missing conflict file. This could be a simple test case to see
-	//if there exists a table called conflict times.
-	
-	//Create array of unscheduled courses 
+	//put if stmt to check for missing conflict file.
+	//Create array of unscheduled courses (listOfUnscheduledCourses)
 	$unscheduledCourses = array();
 	 
-	//Create array of courses to schedule
+	//Create array of courses (coursesToSchedule)
 	$coursesToSchedule = array();
-	// ??? might need to add totalsections to the query
 	$predefQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses";
 	$predefResult = mysqli_query($link, $predefQuery);
 	while($row = mysqli_fetch_row($predefResult))
@@ -195,6 +192,7 @@
             {
 				echo "Class Times Array: ".count($classTimes)."    Index: $classTimesIndex<br>";
 				echo "<br><h3> Scheduled Sections = $scheduledSections </h3><br>";
+				echo "<br><h3> Faculty Queue Index = $facultyPQIndex </h3><br>";
 				
                 //Check front of priority queue
                 $facultyMember = $facultyPQ[$facultyPQIndex];
@@ -251,9 +249,9 @@
                         //down on line 254
 						
 					echo "<br><h2> ENTERED BAD STATEMENT </h2><br>";
-					$currentSectionNumber++;
+					
 					array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
-                        
+                    $currentSectionNumber++;
                     //"No more sections available for preferred time chosen";
                     //$currentSectionNumber++;
                 }
@@ -306,7 +304,7 @@
 								
 								echo "<br><h3>$timeTemp</h3><br>";
 								
-                                if($row[0] != $timeTemp)
+                                if(($row[0] != $timeTemp) and (count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0))
                                 {
                                     $alreadyTeaching = false;
                                 }
@@ -337,7 +335,7 @@
                                     if (($coursesToSchedule[$ctsIndex]->classType == $arrayOfRooms[$aorIndex]->roomType) and ($coursesToSchedule[$ctsIndex]->classSize <= $arrayOfRooms[$aorIndex]->roomSize))
                                     {            
 										
-                                        $unanvailableTimesArray = $arrayOfRooms[$aorIndex]->unavailableTimes;
+                                        $unavailableTimesArray = $arrayOfRooms[$aorIndex]->unavailableTimes;
                                         
 										echo "<br>Room name: ".$arrayOfRooms[$aorIndex]->roomName."<br>";
 										echo "UnavailableTimesArray:    ";
@@ -347,9 +345,18 @@
 										$tempTime = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
 										$tempTime = $tempTime.$arrayOfTimes[$arrayOfTimesIndex];
 										
-                                        if(!in_array($tempTime, $unanvailableTimesArray))
+                                        if(!in_array($tempTime, $unavailableTimesArray))
                                         {
-                                            $roomAvailable = true;
+											$roomAvailable = true;
+											/*
+											for($i = 0; $i < count($unavailableTimesArray); $i++)
+											{
+												if(count(array_intersect(str_split($unavailableTimesArray[$i]), str_split($classTimes[$classTimesIndex]->daysOfWeek)) == 0))
+												{
+													$roomAvailable = true;
+												}
+											}
+											*/
                                         }
                                         else
                                         {
@@ -392,7 +399,7 @@
 											{
 												$daySectionsRemaining--;
 											}
-											else
+											else if($nightType == true)
 											{
 												$nightSectionsRemaining--;												
 											}
@@ -426,13 +433,15 @@
 						//$scheduledSections++;	// TEMPORARY
 					}
                 }//endelse
+				
                 if(($facultyPQIndex < count($facultyPQ)) and (($foundRoom == true) OR ($noPreferenceFlag == true)))
                 {
                     $facultyPQIndex++;
-                    //$currentSectionNumber++;
-                    //$scheduledSections++;
                 }
-				
+				else if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
+				{
+					$facultyPQIndex++;
+				}		
                
 				
             }//endwhile
@@ -444,7 +453,7 @@
 			
         }//endelse
 		
-		if(($facultyPQIndex < count($facultyPQ)) and ($foundRoom == false))
+		if(($facultyPQIndex >= count($facultyPQ)) and ($foundRoom == false))
 			{
 				//We reach this block because the priority queue is empty
 				//scheduledSections can still be less than daySections + nightSections
