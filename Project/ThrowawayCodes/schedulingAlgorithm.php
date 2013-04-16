@@ -119,13 +119,13 @@
 		
 		$facultyPQ = array();
 		$facultyPQIndex = 0;
-		$classTimesIndex = 0;
+		
 		
 		// Sort preferences table by years of service
 		if($sortByYOS == true)
         {
 			//Retrieve all faculty members that chose this course in their preferences
-			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos DESC";
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos ASC";
 			$facultyResult = mysqli_query($link, $facultyQuery);
 			
 			while($row = mysqli_fetch_row($facultyResult))
@@ -137,7 +137,7 @@
 				
 									//	 username   yos      tos     timePref   minHours   
 				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
-				//$addFaculty->printer();
+				$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
 			}
 		   
@@ -175,14 +175,18 @@
             $scheduledSections = 0;
             $currentSectionNumber = 1;
 			
+			$classTimesIndex = 0;
+			
+			echo "<br><h3> $daySections + $nightSections </h3><br>";
+			
 			while (($facultyPQIndex < count($facultyPQ)) and ($scheduledSections < $daySections + $nightSections) and ($classTimesIndex < count($classTimes)))
             {
 				echo "Class Times Array: ".count($classTimes)."    Index: $classTimesIndex<br>";
+				echo "<br><h3> Scheduled Sections = $scheduledSections </h3><br>";
 				
                 //Check front of priority queue
                 $facultyMember = $facultyPQ[$facultyPQIndex];
 				
-				$facultyMember->printer();
 				
                 //Check their time preference (verify with correct array early[], midday[], afternoon[], night[])    
 				$arrayOfTimes = array();
@@ -234,7 +238,7 @@
 					array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
                         
                     //"No more sections available for preferred time chosen";
-                    $currentSectionNumber++;
+                    //$currentSectionNumber++;
                 }
                 else
                 {
@@ -372,8 +376,8 @@
 											{
 												$nightSectionsRemaining--;												
 											}
-											
-                                            $scheduledSections++;
+											$scheduledSections++;
+											$currentSectionNumber++;
                                             //append time slot to arrayofRooms[aorIndex].unavailableTimes
 											$arrayOfRooms[$aorIndex]->addUnavailableTimes($tempTime);
                                         }
@@ -383,9 +387,9 @@
                                 if($foundRoom == true)
                                 {
 									echo "Found a room and moving on!<br>";
-									$facultyPQIndex++;
-                                    $currentSectionNumber++;
-                                    $scheduledSections++;
+									//$facultyPQIndex++;
+                                    //$currentSectionNumber++;
+                                    //$scheduledSections++;
                                 }
                                 else
                                 {
@@ -405,8 +409,8 @@
                 if(($facultyPQIndex < count($facultyPQ)) and ($foundRoom == true))
                 {
                     $facultyPQIndex++;
-                    $currentSectionNumber++;
-                    $scheduledSections++;
+                    //$currentSectionNumber++;
+                    //$scheduledSections++;
                 }
 				/*
                 else
@@ -430,9 +434,12 @@
                     }
                 }*/
             }//endwhile
+			
+			echo "<br><h3> EXITED WITH Scheduled Sections = $scheduledSections </h3><br>";
+			echo "<br><h3> EXITED WITH Faculty queue index = $facultyPQIndex </h3><br>";
+			echo "<br><h3> EXITED WITH Class Times index = $classTimesIndex </h3><br>";
         }//endelse
-		
-        $ctsIndex++;
+			$ctsIndex++;
         //schedule next course
     }//end while
 

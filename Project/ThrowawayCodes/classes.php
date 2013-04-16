@@ -143,7 +143,7 @@
 		
 		function __construct($user, $yos, $tos, $pref, $minHours)
 		{
-			echo "In Faculty constructor. <br>";
+			//echo "In Faculty constructor. <br>";
 			$this->userName = $user;
 			$this->yearsOfService = $yos;
 			$this->timeOfSubmission = $tos;
