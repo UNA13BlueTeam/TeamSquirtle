@@ -172,22 +172,55 @@
 			echo "Required minimum hours: $this->requiredMinHours <br><br>";
 		}
 	}
-	/*
+	
 	class Room
 	{
-		private static $building;	//string
-		private static $roomNumber; //string
+		private static $roomType;	//string
 		private static $roomSize;	//int
+		private static $roomName;	//string
 		private static $unavailableTimes;	//array of strings of format MWF/00:00, initially empty
 		
-		function __construct()
+		function __construct($type, $size, $name)
 		{
-			echo "In Room constructor. <br>";
-			self::$roomSize = 0;
-			self::$unavailableTimes = array();
+			//echo "In Rooms constructor. <br>";
+			$this->roomType = $type;
+			$this->roomSize = $size;
+			$this->roomName = $name;
+			$this->unavailableTimes = array();
+		}
+		
+		// Getter
+		public function __get($property) 
+		{
+			return $this->$property;
+		}
+		// Setter
+		public function __set($property, $value) 
+		{
+			$this->$property = $value;
+		}
+		
+		function addUnavailableTimes($time)
+		{
+			array_push($this->unavailableTimes, $time);
+			echo "Unavailable Times in class:   ";
+			print_r($this->unavailableTimes);
+		}
+		
+		function printer()
+		{
+			echo "ROOMS OUTPUT:<br>";
+			echo "Type: $this->roomType <br>";
+			echo "Size: $this->roomSize <br>";
+			echo "Name: $this->roomName <br>";
+			echo "Unavailable Times: ";
+			for($i = 0; $i < count($this->unavailableTimes); $i++)
+			{
+				echo $this->unavailableTimes[$i]."<br>";
+			}
 		}
 	}
-	
+	/*
 	class ScheduledCourse
 	{
 		private static $courseName;	//string
@@ -220,13 +253,5 @@
 			echo "In facultyPreferences constructor. <br>";
 			self::$priority = -1;
 		}		
-	}
-	
-	$course = new Course;
-	$faculty = new Faculty;
-	$classTime = new ClassTime;
-	$room = new Room;
-	$scheduledCourse = new ScheduledCourse;
-	
-	*/
+	} */
 ?>

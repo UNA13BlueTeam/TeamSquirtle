@@ -76,6 +76,18 @@
 		array_push($classTimes, $addTimeSlot);
 	}
 	
+	//Create an array of rooms
+	$arrayOfRooms = array();
+	$roomsQuery = "SELECT roomType, size, roomName FROM rooms";
+	$result = mysqli_query($link, $roomsQuery);
+	while($row = mysqli_fetch_row($result))
+	{
+		$addRooms = new Room($row[0], $row[1], $row[2]);
+		// Uncomment below to print out array of courses
+		//$addRooms->printer();
+		array_push($arrayOfRooms, $addRooms);
+	}
+	
 	
 	while ($ctsIndex < count($coursesToSchedule))
     {
@@ -104,7 +116,6 @@
         $daySections = $coursesToSchedule[$ctsIndex]->daySections; 
         $nightSections= $coursesToSchedule[$ctsIndex]->nightSections;
 		
-		
 		$facultyPQ = array();
 		$facultyPQIndex = 0;
 		$classTimesIndex = 0;
@@ -125,7 +136,7 @@
 				
 									//	 username   yos      tos     timePref   minHours   
 				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
-				$addFaculty->printer();
+				//$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
 			}
 		   
@@ -150,11 +161,10 @@
 			}
         }
 		
-		
-		
         if (count($facultyPQ) == 0)
         {
 			// Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
+			echo "<br>EMPTY PQ <br>";
 			array_push($unscheduledCourses, $courseNamer);
         }
         else //(declare variables for number of day and night sections left)
@@ -166,8 +176,12 @@
 			
 			while (($facultyPQIndex < count($facultyPQ)) and ($scheduledSections < $daySections + $nightSections) and ($classTimesIndex < count($classTimes)))
             {
+				echo "<br><h3>ENTERING LONG LOOP</h3><br>";
+				echo "Class Timess Array: ".count($classTimes)."<br>";
                 //Check front of priority queue
-                $facultyMember = $facultyPQ[0];
+                $facultyMember = $facultyPQ[$facultyPQIndex];
+				
+				$facultyMember->printer();
 				
                 //Check their time preference (verify with correct array early[], midday[], afternoon[], night[])    
 				$arrayOfTimes = array();
@@ -208,26 +222,31 @@
 					echo "<br>";
 				}
 				*/
-                if(($dayType== true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
+                if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
                 {
                     //add course and section number (currentSectionNumber) to listOfUnscheduledCourses 
                         //we were removing the faculty member from the queue here, but we don't need
                         //to do that HERE because we're popping them off at the end of this if/else
                         //down on line 254
+						
+					echo "<br><h2> ENTERED BAD STATEMENT </h2><br>";
 					array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
                         
                     //"No more sections available for preferred time chosen";
                     $currentSectionNumber++;
                 }
-				
-				//$scheduledSections++;	//		<- TAKE THIS OUT WHEN YOU MOVE ON
-				
-				
                 else
                 {
+					echo "<br><h2> ENTERED GOOD STATEMENT </h2><br>";
+					echo "<br><h2>".count($arrayOfTimes)."</h2><br>";
+					$foundRoom = false;
+					$arrayOfTimesIndex = 0;
                     while($arrayOfTimesIndex < count($arrayOfTimes))
                     {
+						echo "<br><h3>ENTERING while($arrayOfTimesIndex < count($arrayOfTimes)) LOOP</h3><br>";
+						$foundRoom = false;
                         $conflictExists = false;
+						$alreadyTeaching = false;
 						
 						// For debugging purposes!
 						echo "<br>Array of Times: ".$arrayOfTimes[$arrayOfTimesIndex]."<br>";
@@ -241,6 +260,7 @@
                                 if (in_array($arrayOfTimes[$arrayOfTimesIndex], $conflictTimes))
                                 {
                                     $conflictExists = true;
+									echo "<br>Conflict Exists Increment <br>";
                                     $arrayOfTimesIndex++;
                                 }
                             }while(($conflictExists == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
@@ -259,6 +279,9 @@
 								$queryResult = mysqli_query($link, $query);
 								$row = mysqli_fetch_row($queryResult);
 								
+								$timeTemp = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
+								$timeTemp = $timeTemp.$arrayOfTimes[$arrayOfTimesIndex];
+								
                                 if($row[0] == NULL)
                                 {
                                     $alreadyTeaching = false;
@@ -271,28 +294,39 @@
 									$arrayOfTimesIndex++;
                                 }
                             }while(($alreadyTeaching == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
-							
-							
+							/*
+							echo "already teaching flag = ".$alreadyTeaching."<br>";
+							echo "conflicts flag = ".$conflictExists."<br>";
+							echo "<br>".count($arrayOfRooms)."<br>";
+							*/
                             if(($alreadyTeaching == false) and ($conflictExists == false)) //we found a time slot that does not conflict with that particular 
 																							//faculty member 
                             {
-                                //Find room
-                                $arrayOfRooms = array();
-								echo "<br>SCHEDULED TEACHER:  ".$facultyPQ[$facultyPQIndex]->userName.":  ".$coursesToSchedule[$ctsIndex]->name."-$currentSectionNumber<br>";
-								$facultyPQIndex++;
-								$currentSectionNumber++;
-                                //(SELECT DISTINCT FROM Rooms)
-								// Create a Rooms object for each row returned from above statement
-                                /*
+                                //echo "<br>SCHEDULED TEACHER:  ".$facultyPQ[$facultyPQIndex]->userName.":  ".$coursesToSchedule[$ctsIndex]->name."-$currentSectionNumber<br>";
+								//$facultyPQIndex++;
+								//$currentSectionNumber++;
+                                $aorIndex = 0;
 								//To find a room for the selected time slot (Scheduled Courses Table)
-                                for ($aorIndex = 0; $aorIndex < count($arrayOfRooms) and ($foundRoom = false); $aorIndex++)
+                                while(($aorIndex < count($arrayOfRooms)) and ($foundRoom == false))
                                 {
+									
+									echo "Class - class type: ".$coursesToSchedule[$ctsIndex]->classType."<br>";
+									echo "Class - class size: ".$coursesToSchedule[$ctsIndex]->classSize."<br>";
+									echo "Room - room type: ".$arrayOfRooms[$aorIndex]->roomType."<br>";
+									echo "Room - room size: ".$arrayOfRooms[$aorIndex]->roomSize."<br>";
+									echo "Room - room name: ".$arrayOfRooms[$aorIndex]->roomName."<br>";
+									
+									
                                     //check if room type is ok
-                                    if ($coursesToSchedule[$ctsIndex].$classType == $arrayOfRooms[$aorIndex].$roomType) and 
-                                       ($coursesToSchedule[$ctsIndex].$classSize <= $arrayOfRooms[$aorIndex].$roomSize)
-                                    {                                                                                
-                                        //$unanvailableTimesArray = split arrayofRooms[aorIndex].unavailableTimes into an array of times // preg_split function
+                                    if (($coursesToSchedule[$ctsIndex]->classType == $arrayOfRooms[$aorIndex]->roomType) and ($coursesToSchedule[$ctsIndex]->classSize <= $arrayOfRooms[$aorIndex]->roomSize))
+                                    {            
+										
+                                        $unanvailableTimesArray = $arrayOfRooms[$aorIndex]->unavailableTimes;
                                         
+										echo "Room name: ".$arrayOfRooms[$aorIndex]->roomName."<br>";
+										echo "UnavailableTimesArray:    ";
+										print_r($arrayOfRooms[$aorIndex]->unavailableTimes);
+										
                                         if(!in_array($arrayOfTimes[$arrayOfTimesIndex], $unanvailableTimesArray))
                                         {
                                             $roomAvailable = true;
@@ -313,19 +347,42 @@
                                                 classTime
                                                 room
                                                 time slot
-                                            *  
-                                            $scheduledSections++
-                                            //append time slot to arrayofRooms[aorIndex].unavailableTimes     
-                                            break; //exit for loop                                                                                          
+                                            */
+											
+											// Temporaries for insertion
+											$tempCourse = $coursesToSchedule[$ctsIndex]->name;
+											$tempTime = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
+											$tempTime = $tempTime.$arrayOfTimes[$arrayOfTimesIndex];
+											$tempFaculty = $facultyPQ[$facultyPQIndex]->userName;
+											$tempRoom = $arrayOfRooms[$aorIndex]->roomName;
+											
+											$scheduleQuery1 = "INSERT INTO scheduledCourses (course, section, timeSlot, facultyUser, roomName) VALUES (";
+											$scheduleQuery2 = "'$tempCourse', '$currentSectionNumber', '$tempTime', '$tempFaculty', '$tempRoom')";
+											$scheduleQuery = $scheduleQuery1.$scheduleQuery2;
+											
+											$scheduleResult = mysqli_query($link, $scheduleQuery);
+											if($scheduleResult)
+											{
+												echo "<br> Insertion Succeeded!!!!!!!!!!!!!!!! <br>";
+											}
+											else
+											{
+												echo "<br> insertion failed... <br>";
+											}
+											
+											
+                                            $scheduledSections++;
+                                            //append time slot to arrayofRooms[aorIndex].unavailableTimes
+											$arrayOfRooms[$aorIndex]->addUnavailableTimes($tempTime);
                                         }
                                     }//endif
-                                }//endfor */
-								
-								$foundRoom = false;
+									$aorIndex++;
+                                }//end while
                                 if($foundRoom == true)
                                 {
+									echo "Found a room and moving on!<br>";
                                     $currentSectionNumber++;
-                                    $scheduledSection++;
+                                    $scheduledSections++;
                                 }
                                 else
                                 {
@@ -339,17 +396,16 @@
                         //"Unable to find an available room for courseName-currentSectionNumber during selected time preference"
                         //Put course-sectionNumber on list of unscheduled courses
                         $classTimesIndex++;
-						$scheduledSections++;	// TEMPORARY
+						//$scheduledSections++;	// TEMPORARY
                     }
                 }//endelse
-				/*
                 if(($facultyPQIndex < count($facultyPQ)) and ($foundRoom == true))
                 {
-                    //pop off top faculty member
-                    //$temp= $facultyPQ.extract();
+                    $facultyPQIndex++;
                     $currentSectionNumber++;
-                    $scheduledSection++;
+                    $scheduledSections++;
                 }
+				/*
                 else
                 {
                     //We reach this block because the priority queue is empty
@@ -363,10 +419,10 @@
                     //queue is empty with sections remaining, they just go unscheduled due
                     //to no professor selecting to teach them
                     
-                    while($scheduledSections < $day + $night)
+                    while($scheduledSections < $daySections + $nightSections)
                     {
                         //put courseName-currentSectionNumber on list of unscheduled courses
-                        $scheduledSection++;
+                        $scheduledSections++;
                         $currentSectionNumber++;
                     }
                 }*/
@@ -391,10 +447,4 @@
 
 
 
-
-
-
-
-
 ?>
- 

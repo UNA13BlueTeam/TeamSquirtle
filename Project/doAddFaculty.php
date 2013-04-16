@@ -178,7 +178,9 @@ include("includes/footer.php");
 				$last = ucfirst(strtolower($last));
 				$email = strtolower($email);
 				
-				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName, lastName) VALUES ('$email', '2', 'password', '$first', '$last')";
+				//$password = crypt('password');
+				$password = 'password';
+				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName, lastName) VALUES ('$email', '2', '$password', '$first', '$last')";
 				echo "$insertQuery <br>";
 				$insertion = mysqli_query($link, $insertQuery);
 				
