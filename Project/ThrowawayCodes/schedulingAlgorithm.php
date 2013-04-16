@@ -206,6 +206,7 @@
 				
 				$dayType = false;
 				$nightType = false;
+				$noPreferenceFlag = false;
 				
 				switch($facultyMember->timePref)
 				{
@@ -224,6 +225,9 @@
 					case "night": $arrayOfTimes = $classTimes[$classTimesIndex]->night;
 									$nightType = true;
 									break;
+									
+					case "noPreference": $noPreferenceFlag = true;
+										break;
                 }
 				/*
 				if($dayType == true)
@@ -239,7 +243,7 @@
 					echo "<br>";
 				}
 				*/
-                if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
+                if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0) OR ($noPreferenceFlag == true))
                 {
                     //add course and section number (currentSectionNumber) to listOfUnscheduledCourses 
                         //we were removing the faculty member from the queue here, but we don't need
@@ -422,7 +426,7 @@
 						//$scheduledSections++;	// TEMPORARY
 					}
                 }//endelse
-                if(($facultyPQIndex < count($facultyPQ)) and ($foundRoom == true))
+                if(($facultyPQIndex < count($facultyPQ)) and (($foundRoom == true) OR ($noPreferenceFlag == true)))
                 {
                     $facultyPQIndex++;
                     //$currentSectionNumber++;
