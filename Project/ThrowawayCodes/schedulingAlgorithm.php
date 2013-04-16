@@ -51,12 +51,15 @@
 	$scheduledSections = 0;
     $currentSectionNumber = 1;
 	
-	//put if stmt to check for missing conflict file.
-	//Create array of unscheduled courses (listOfUnscheduledCourses)
+	//put if stmt to check for missing conflict file. This could be a simple test case to see
+	//if there exists a table called conflict times.
+	
+	//Create array of unscheduled courses 
 	$unscheduledCourses = array();
 	 
-	//Create array of courses (coursesToSchedule)
+	//Create array of courses to schedule
 	$coursesToSchedule = array();
+	// ??? might need to add totalsections to the query
 	$predefQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses";
 	$predefResult = mysqli_query($link, $predefQuery);
 	while($row = mysqli_fetch_row($predefResult))
