@@ -125,7 +125,7 @@
 		if($sortByYOS == true)
         {
 			//Retrieve all faculty members that chose this course in their preferences
-			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos ASC";
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos DESC";
 			$facultyResult = mysqli_query($link, $facultyQuery);
 			
 			while($row = mysqli_fetch_row($facultyResult))
@@ -431,11 +431,13 @@
                     
                     while($scheduledSections < $daySections + $nightSections)
                     {
-                        //put courseName-currentSectionNumber on list of unscheduled courses
+						$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
+                        array_push($unscheduledCourses, $courseToPush);
                         $scheduledSections++;
                         $currentSectionNumber++;
                     }
-                }*/
+                }
+				*/
             }//endwhile
 			
 			echo "<br><h3> EXITED WITH Scheduled Sections = $scheduledSections </h3><br>";
