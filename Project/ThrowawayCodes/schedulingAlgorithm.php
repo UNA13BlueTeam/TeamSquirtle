@@ -1,14 +1,28 @@
 <?php 
 /*-----------------------------------------------------------------------------------------------
  ********************** Scheduling Algorithm Function Prologue  ********************
- * Preconditions: 
+ * Preconditions: A prepopulated database with the following tables: faculty, courses, preferences
+ *				  prerequisitites, available rooms, an course times. Additionally the database may 
+ *				  also contain a table called conflicts, but this table does not have to present to
+ *				  run the scheduling algorithm. The information in each table includes: 
+ *				1.faculty: faculty name, years-of-service(YOS), email, and minimum hours to teach.
+ *				2.courses: course name, # of day-sections,# of night-sections, # of internet sections
+ *							class size, room type, and the credit hours.
+ *				3.preferences: faculty user name,time preference, years-of-service(YOS),course name
+ *				4.prerequisties: course name, and up to three prerequisite course names.
+ *				5.available rooms: room type, room size, and room name.
+ *				6.course times: minutes, days-of-week,times-per-day.
+ *				7.scheduled courses: course name, section number, time-slot,faculty user name, room name
+ *			  (8).conflicts: course name and the days-of-week followed by the times that course cannot be
+ *								scheduled.
+ * Postconditions: Courses that were successfully scheduled will appear in the scheduled courses table in
+ *					the database.Courses that were not scheduled will be logged to a file called unschedul-
+ *					ed courses. This log will contain the faculty name, the course name, and a reason to why
+ *                  the course was not scheduled.
+ * Function Purpose: To schedule the minimum hours for an existing listing of faculty members. 
  *
- * Postconditions: 
- *                  
- * Function Purpose: 
- *
- * Input Expected: 
- *
+ * Input Expected: No input is expected from the user in this algorithm. All input expected is only
+ *					from the database (see preconditions).	
  * Exceptions/Errors Thrown: 
  * Files Accessed: 
  *
@@ -23,7 +37,7 @@
  ** Modifications by:
  * Modified By (Name and Date): Michael Debs April 17, 1:27am
  * Modifications Description:	Now prints out a list of faculty members that didn't meet their 
-								minimum required hours at the end of the algorithm
+ *								minimum required hours at the end of the algorithm
  *
  * Modified By (Name and Date):
  * Modifications Description:
@@ -315,6 +329,10 @@
                             {
                                 //Check to see if arrayOfTimes[arrayOfTimesIndex] is in database in “Scheduled Courses Table” WHERE facultyName = facultyMember.name   (alreadyTeaching == result)
 								
+								//To solve the problem pointed out in my email, we need to concatenate the ending time of each scheduled course to the string time-slot
+								// so we can do the original check that we are already doing( if arrayOfTimes[arrayOfTimesIndex] == facultyName already teaching time.)
+								// the next check would be to see if the new start time in arrayOfTimes[arrayOfTimesIndex] is less than the ending time of any class that
+								//faculty is already teaching.(This may be problematic for reasons I will explain to you guys on Thursday
 								$facultyMember = $facultyPQ[$facultyPQIndex];
 								$facultyName = $facultyMember->userName;
 								
