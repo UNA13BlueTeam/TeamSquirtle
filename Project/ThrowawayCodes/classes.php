@@ -131,9 +131,42 @@
 		}
 	}
 	
+	class FacultyMin
+	{
+		private static $userName;
+		private static $requiredMinHours;
+		private static $currentHours;
+		
+		function __construct($name, $hours)
+		{
+			$this->userName = $name;
+			$this->requiredMinHours = $hours;
+			$this->currentHours = 0;
+		}
+		
+		// Getter
+		public function __get($property) 
+		{
+			return $this->$property;
+		}
+		// Setter
+		public function __set($property, $value) 
+		{
+			$this->$property = $value;
+		}
+		
+		function printer()
+		{
+			echo "<br>FACULTY MIN OUTPUT:<br>";
+			echo "Username: $this->userName <br>";
+			echo "Required minimum hours: $this->requiredMinHours <br>";
+			echo "Current Hours: $this->currentHours <br><br>";
+		}		
+	}
 	
 	
-	class Faculty
+	
+	class FacultyPref
 	{
 		private static $userName;		//string
 		private static $yearsOfService;	//int
@@ -164,7 +197,7 @@
 		
 		function printer()
 		{
-			echo "FACULTY OUTPUT:<br>";
+			echo "<br>FACULTY PREF OUTPUT:<br>";
 			echo "Username: $this->userName <br>";
 			echo "Years of service: $this->yearsOfService <br>";
 			echo "Time of submission: $this->timeOfSubmission <br>";

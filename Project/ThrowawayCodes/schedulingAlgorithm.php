@@ -21,8 +21,9 @@
  * Tested by SQA Member (NAME and DATE): 
  * 
  ** Modifications by:
- * Modified By (Name and Date):
- * Modifications Description:
+ * Modified By (Name and Date): Michael Debs April 17, 1:27am
+ * Modifications Description:	Now prints out a list of faculty members that didn't meet their 
+								minimum required hours at the end of the algorithm
  *
  * Modified By (Name and Date):
  * Modifications Description:
@@ -55,6 +56,7 @@
 	//put if stmt to check for missing conflict file.
 	//Create array of unscheduled courses (listOfUnscheduledCourses)
 	$unscheduledCourses = array();
+	$unscheduledCourses2 = array();
 	 
 	//Create array of courses (coursesToSchedule)
 	$coursesToSchedule = array();
@@ -94,6 +96,18 @@
 	// NEED TO ALSO CREATE AN ARRAY OF FACULTY MEMBERS
 	//THIS ARRAY WILL BE USED TO DETERMINE WHICH FACULTY NEEDS ADDITIONAL COURSES TO SATISFY THEIR MIN. HOURS TO TEACH.
 	//DETAILS FOR PSEUDOCODE IS AT THE END OF THE ALGORITHM
+	//Create an array of rooms
+	$arrayOfFaculty = array();
+	$factQuery = "SELECT email, minHours FROM faculty";
+	$factResult = mysqli_query($link, $factQuery);
+	while($row = mysqli_fetch_row($factResult))
+	{
+		$addFaculty = new FacultyMin($row[0], $row[1]);
+		// Uncomment below to print out array of courses
+		//$addRooms->printer();
+		array_push($arrayOfFaculty, $addFaculty);
+	}
+	
 	
 	//Main loop to iterate through array of courses to schedule
 	while ($ctsIndex < count($coursesToSchedule))
@@ -143,7 +157,7 @@
 				$row2 = mysqli_fetch_row($facultyResult2);
 				
 									//	 username   yos      tos     timePref   minHours   
-				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
+				$addFaculty = new FacultyPref($row[0], $row[1], $row[2], $row[3], $row2[0]);
 				$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
 			}
@@ -163,7 +177,7 @@
 				$row2 = mysqli_fetch_row($facultyResult2);
 				
 									//	 username   yos      tos     timePref   minHours   
-				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
+				$addFaculty = new FacultyPref($row[0], $row[1], $row[2], $row[3], $row2[0]);
 				$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
 			}
@@ -175,7 +189,7 @@
 			echo "<br>EMPTY PQ   $currentSectionNumber<br>";
 			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
 			{
-				array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
+				array_push($unscheduledCourses2, $courseNamer."-".$currentSectionNumber);
 				$scheduledSections++;
 				$currentSectionNumber++;
 			}
@@ -311,6 +325,7 @@
 								$timeTemp = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
 								$timeTemp = $timeTemp.$arrayOfTimes[$arrayOfTimesIndex];
 								
+								
 								echo "<br><h3>$timeTemp</h3><br>";
 								
                                 if(($row[0] != $timeTemp) and (count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0))
@@ -415,6 +430,16 @@
 											{
 												$nightSectionsRemaining--;												
 											}
+											
+											// Add teaching hours to current teaching hours for faculty member
+											for($i = 0; $i < count($arrayOfFaculty); $i++)
+											{
+												if(strtolower($arrayOfFaculty[$i]->userName) == $facultyPQ[$facultyPQIndex]->userName)
+												{
+													$arrayOfFaculty[$i]->currentHours = trim($arrayOfFaculty[$i]->currentHours) + trim($coursesToSchedule[$ctsIndex]->creditHours);
+												}
+											}
+											
 											$scheduledSections++;
 											$currentSectionNumber++;
                                             //append time slot to arrayofRooms[aorIndex].unavailableTimes
@@ -448,6 +473,11 @@
 				
                 if(($facultyPQIndex < count($facultyPQ)) and (($foundRoom == true) OR ($noPreferenceFlag == true)))
                 {
+					if($noPreferenceFlag == true)
+					{
+						$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber."  -  FACULTY MEMBER DIDN'T CHOOSE A PREFERENCE";
+						array_push($unscheduledCourses, $courseToPush);
+					}
                     $facultyPQIndex++;
                 }
 				else if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
@@ -483,7 +513,7 @@
 			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
 			{
 				echo "<br><h3> ENTERED TEST LOOP </h3><br>";
-				$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
+				$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;//."  -  NOT ENOUGH FACULTY MEMBERS CHOSE THIS COURSE";
 				array_push($unscheduledCourses, $courseToPush);
 				$currentSectionNumber++;
 				$scheduledSections++;
@@ -498,7 +528,27 @@
 
 	echo "Unscheduled Courses: <br>";
 	print_r($unscheduledCourses);
-
+	for($i = 0; $i < count($unscheduledCourses); $i++)
+	{
+		echo "<br>".$unscheduledCourses[$i]."<br>";
+	}
+	echo "Unscheduled2 Courses: <br>";
+	print_r($unscheduledCourses2);
+	for($i = 0; $i < count($unscheduledCourses2); $i++)
+	{
+		echo "<br>".$unscheduledCourses2[$i]."<br>";
+	}
+	
+	
+	for($i = 0; $i < count($arrayOfFaculty); $i++)
+	{
+		if($arrayOfFaculty[$i]->currentHours < $arrayOfFaculty[$i]->requiredMinHours)
+		{
+			echo "<br>".$arrayOfFaculty[$i]->userName." didn't meet their minimum hours of ".$arrayOfFaculty[$i]->requiredMinHours."<br>";
+			echo "Currently at: ".$arrayOfFaculty[$i]->currentHours."<br>";
+		}
+	}
+	
 
 
 
