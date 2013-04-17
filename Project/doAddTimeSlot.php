@@ -262,35 +262,40 @@
 			if($errorOnLine == false)
 			{
 				//submit query
-				echo  "$lineNumber: $printLine" . "<br>";
 				
-				
-				$minutesDOW = $retrievedNumber . $retrievedDOW;
-				echo "$minutesDOW <br>";
-				if(in_array($minutesDOW, $predef))
-				{
-					echo("<h2>Class times already defined for $retrievedNumber minutes on $retrievedDOW in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
-					$delete = "DELETE FROM $db.timeSlots WHERE minutes = '$retrievedNumber' AND daysOfWeek = '$retrievedDOW'";
-					echo("<h1>DELETING</h1><h2>$delete</h2>");
+				if(strlen(trim($printLine)) != 0)
+				{				
+					$minutesDOW = $retrievedNumber . $retrievedDOW;
+					echo "$minutesDOW <br>";
+					if(in_array($minutesDOW, $predef))
+					{
+						echo("<h2>Class times already defined for $retrievedNumber minutes on $retrievedDOW in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
+						$delete = "DELETE FROM $db.timeSlots WHERE minutes = '$retrievedNumber' AND daysOfWeek = '$retrievedDOW'";
+						echo("<h1>DELETING</h1><h2>$delete</h2>");
+						
+						mysqli_query($link, $delete);
+					}
 					
-					mysqli_query($link, $delete);
-				}
-				
-				$listOfTimes = implode(" ", $listOfTimes);
-				echo "$listOfTimes";
-				
-				$insertQuery = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay) VALUES ('$retrievedNumber', '$retrievedDOW', '$listOfTimes')";
-				echo "$insertQuery";
-				$insertion = mysqli_query($link, $insertQuery);
-				
-				if($insertion)
-				{
-					echo("insertion succeeded<br>");
+					$listOfTimes = implode(" ", $listOfTimes);
+					echo "$listOfTimes";
+					
+					$insertQuery = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay) VALUES ('$retrievedNumber', '$retrievedDOW', '$listOfTimes')";
+					echo "$insertQuery";
+					$insertion = mysqli_query($link, $insertQuery);
+					
+					if($insertion)
+					{
+						echo("insertion succeeded<br>");
+					}
+					else
+					{
+						echo("insertion failed<br>");
+						echo($insertQuery."<br>");
+					}
 				}
 				else
-				{
-					echo("insertion failed<br>");
-					echo($insertQuery."<br>");
+				{				
+					echo  "$lineNumber: $printLine" . "<br>";
 				}
 			}
 			else

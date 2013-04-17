@@ -9,6 +9,7 @@
 		private static $classSize;			//int
 		private static $classType;			//char  C or L
 		private static $creditHours;		//int
+		private static $inSession;			//array of Class Times
 		
 		// Course constructor
 		function __construct($courseName, $dsect, $nsect, $isect, $size, $type, $hours)
@@ -22,6 +23,7 @@
 			$this->classSize = $size;
 			$this->classType = $type;
 			$this->creditHours = $hours;
+			$this->inSession = array();
 		}
 		
 		// Getter
@@ -35,6 +37,13 @@
 			$this->$property = $value;
 		}
 		
+		function addInSessionTimes($time)
+		{
+			array_push($this->inSession, $time);
+			echo "Times $this->name are already in session: ";
+			print_r($this->inSession);
+			echo "<br>";
+		}
 		
 		function printer()
 		{
@@ -236,8 +245,9 @@
 		function addUnavailableTimes($time)
 		{
 			array_push($this->unavailableTimes, $time);
-			echo "Unavailable Times in class:   ";
+			echo "Times $this->roomName is being used:";
 			print_r($this->unavailableTimes);
+			echo "<br>";
 		}
 		
 		function printer()

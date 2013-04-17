@@ -1,28 +1,14 @@
 <?php 
 /*-----------------------------------------------------------------------------------------------
  ********************** Scheduling Algorithm Function Prologue  ********************
- * Preconditions: A prepopulated database with the following tables: faculty, courses, preferences
- *				  prerequisitites, available rooms, an course times. Additionally the database may 
- *				  also contain a table called conflicts, but this table does not have to present to
- *				  run the scheduling algorithm. The information in each table includes: 
- *				1.faculty: faculty name, years-of-service(YOS), email, and minimum hours to teach.
- *				2.courses: course name, # of day-sections,# of night-sections, # of internet sections
- *							class size, room type, and the credit hours.
- *				3.preferences: faculty user name,time preference, years-of-service(YOS),course name
- *				4.prerequisties: course name, and up to three prerequisite course names.
- *				5.available rooms: room type, room size, and room name.
- *				6.course times: minutes, days-of-week,times-per-day.
- *				7.scheduled courses: course name, section number, time-slot,faculty user name, room name
- *			  (8).conflicts: course name and the days-of-week followed by the times that course cannot be
- *								scheduled.
- * Postconditions: Courses that were successfully scheduled will appear in the scheduled courses table in
- *					the database.Courses that were not scheduled will be logged to a file called unschedul-
- *					ed courses. This log will contain the faculty name, the course name, and a reason to why
- *                  the course was not scheduled.
- * Function Purpose: To schedule the minimum hours for an existing listing of faculty members. 
+ * Preconditions: 
  *
- * Input Expected: No input is expected from the user in this algorithm. All input expected is only
- *					from the database (see preconditions).	
+ * Postconditions: 
+ *                  
+ * Function Purpose: 
+ *
+ * Input Expected: 
+ *
  * Exceptions/Errors Thrown: 
  * Files Accessed: 
  *
@@ -35,21 +21,11 @@
  * Tested by SQA Member (NAME and DATE): 
  * 
  ** Modifications by:
- * Modified By (Name and Date): Michael Debs April 17, 1:27am
- * Modifications Description:	Now prints out a list of faculty members that didn't meet their 
- *								minimum required hours at the end of the algorithm
+ * Modified By (Name and Date):
+ * Modifications Description:
  *
- * Modified By (Name and Date): Jared Cox, Michael Debs  April 17, 4:59pm 
- * Modifications Description:	Selected course with no preference now correctly goes on
- *								unscheduled courses list
- *								Sections of the same course are not scheduled at the same time
- *								with a different professor and room.  They are now scheduled apart
- *								Order priority further by time of submission if years of service
- *								are the same, and vice versa
- *								Class times do not overlap when assigning to a professor or a room
- *									(e.g. a class will not be scheduled at 10:00 am in ROOM 12 if
- *									 there is class scheduled in ROOM 12 at 9:00 am for 75 minutes.)
- *								
+ * Modified By (Name and Date):
+ * Modifications Description:
  -------------------------------------------------------------------------------------------------*/
  
  
@@ -79,7 +55,6 @@
 	//put if stmt to check for missing conflict file.
 	//Create array of unscheduled courses (listOfUnscheduledCourses)
 	$unscheduledCourses = array();
-	$unscheduledCourses2 = array();
 	 
 	//Create array of courses (coursesToSchedule)
 	$coursesToSchedule = array();
@@ -119,18 +94,6 @@
 	// NEED TO ALSO CREATE AN ARRAY OF FACULTY MEMBERS
 	//THIS ARRAY WILL BE USED TO DETERMINE WHICH FACULTY NEEDS ADDITIONAL COURSES TO SATISFY THEIR MIN. HOURS TO TEACH.
 	//DETAILS FOR PSEUDOCODE IS AT THE END OF THE ALGORITHM
-	//Create an array of rooms
-	$arrayOfFaculty = array();
-	$factQuery = "SELECT email, minHours FROM faculty";
-	$factResult = mysqli_query($link, $factQuery);
-	while($row = mysqli_fetch_row($factResult))
-	{
-		$addFaculty = new FacultyMin($row[0], $row[1]);
-		// Uncomment below to print out array of courses
-		//$addRooms->printer();
-		array_push($arrayOfFaculty, $addFaculty);
-	}
-	
 	
 	//Main loop to iterate through array of courses to schedule
 	while ($ctsIndex < count($coursesToSchedule))
@@ -169,7 +132,7 @@
 		if($sortByYOS == true)
         {
 			//Retrieve all faculty members that chose this course in their preferences
-			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos DESC, CAST(tos AS SIGNED) ASC";
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY yos DESC";
 			$facultyResult = mysqli_query($link, $facultyQuery);
 			
 			while($row = mysqli_fetch_row($facultyResult))
@@ -180,7 +143,7 @@
 				$row2 = mysqli_fetch_row($facultyResult2);
 				
 									//	 username   yos      tos     timePref   minHours   
-				$addFaculty = new FacultyPref($row[0], $row[1], $row[2], $row[3], $row2[0]);
+				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
 				$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
 			}
@@ -190,7 +153,7 @@
 		elseif($sortByTOS == true)
         {
 			//Retrieve all faculty members that chose this course in their preferences
-			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY CAST(tos AS SIGNED) ASC, yos DESC";
+			$facultyQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY CAST(tos AS SIGNED) ASC";
 			$facultyResult = mysqli_query($link, $facultyQuery);
 			while($row = mysqli_fetch_row($facultyResult))
 			{
@@ -200,7 +163,7 @@
 				$row2 = mysqli_fetch_row($facultyResult2);
 				
 									//	 username   yos      tos     timePref   minHours   
-				$addFaculty = new FacultyPref($row[0], $row[1], $row[2], $row[3], $row2[0]);
+				$addFaculty = new Faculty($row[0], $row[1], $row[2], $row[3], $row2[0]);
 				$addFaculty->printer();
 				array_push($facultyPQ, $addFaculty);
 			}
@@ -212,7 +175,7 @@
 			echo "<br>EMPTY PQ   $currentSectionNumber<br>";
 			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
 			{
-				array_push($unscheduledCourses2, $courseNamer."-".$currentSectionNumber);
+				array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
 				$scheduledSections++;
 				$currentSectionNumber++;
 			}
@@ -309,32 +272,10 @@
                     {
 						$foundRoom = false;
                         $conflictExists = false;
-						$alreadyTeaching = false;		
-						$alreadyInSession = false;
+						$alreadyTeaching = false;
 						
 						// For debugging purposes!
 						echo "<br>Array of Times: ".$arrayOfTimes[$arrayOfTimesIndex]."<br>";
-						
-						do
-						{
-							$alreadyInSession = false;
-							$inSessionCheck = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
-							$inSessionCheck = $inSessionCheck.$arrayOfTimes[$arrayOfTimesIndex];
-							
-							
-							
-							if(!in_array($inSessionCheck, $coursesToSchedule[$ctsIndex]->inSession))// or ((count(array_intersect(str_split($inSessionCheck), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0)))
-							{
-								$alreadyInSession = false;
-							}
-							else
-							{
-								$alreadyInSession = true;
-								echo "<br>Class already in session at this time increment<br>";
-								$arrayOfTimesIndex++;
-							}
-							
-						}while(($alreadyInSession == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
 						
                         if ($conflictFileExists == true)
                         {
@@ -369,52 +310,27 @@
 								
 								$timeTemp = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
 								$timeTemp = $timeTemp.$arrayOfTimes[$arrayOfTimesIndex];
-								//$row[0] and $timeTemp are the two times to check so we need the specific time (e.g. 10:00) from each string
-								
-								$timeToScheduleFaculty = preg_split('/[\s+\/]/', $timeTemp);
-								$alreadyTeachingFaculty = preg_split('/[\s+\/]/', $row[0]);
-								
-								if($row)
-								{
-									print_r($timeToScheduleFaculty);
-									print_r($alreadyTeachingFaculty);
-									$difference = round(abs(strtotime($timeToScheduleFaculty[2]) - strtotime($alreadyTeachingFaculty[2])) / 60,2);
-									if($difference > $alreadyTeachingFaculty[0])
-									{
-										$noTimeOverlapFaculty = true;
-									}
-									else
-									{
-										$noTimeOverlapFaculty = false;
-									}
-									
-								}
-								else
-								{
-								 	$noTimeOverlapFaculty = true;								
-								}
 								
 								echo "<br><h3>$timeTemp</h3><br>";
 								
-                                if(($row[0] != $timeTemp) and ((count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0) 
-										or ($noTimeOverlapFaculty == true)))
+                                if(($row[0] != $timeTemp) and (count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0))
                                 {
-                                    $alreadyTeachingFlag = false;
+                                    $alreadyTeaching = false;
                                 }
                                 else
                                 {
-                                    $alreadyTeachingFlag = true;
+                                    $alreadyTeaching = true;
 									$conflictExist = true;
 									echo "<br>Already Teaching increment<br>";
 									$arrayOfTimesIndex++;
                                 }
-                            }while(($alreadyTeachingFlag == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
+                            }while(($alreadyTeaching == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
 							/*
 							echo "already teaching flag = ".$alreadyTeaching."<br>";
 							echo "conflicts flag = ".$conflictExists."<br>";
 							echo "<br>".count($arrayOfRooms)."<br>";
 							*/
-                            if(($alreadyTeachingFlag == false) and ($conflictExists == false)) //we found a time slot that does not conflict with that particular 
+                            if(($alreadyTeaching == false) and ($conflictExists == false)) //we found a time slot that does not conflict with that particular 
 																							//faculty member 
                             {
                                 //echo "<br>SCHEDULED TEACHER:  ".$facultyPQ[$facultyPQIndex]->userName.":  ".$coursesToSchedule[$ctsIndex]->name."-$currentSectionNumber<br>";
@@ -438,43 +354,19 @@
 										$tempTime = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
 										$tempTime = $tempTime.$arrayOfTimes[$arrayOfTimesIndex];
 										
-										
                                         if(!in_array($tempTime, $unavailableTimesArray))
-                                        {    
+                                        {
 											$roomAvailable = true;
-											$noTimeOverlapRoom = true;
 											for($i = 0; $i < count($unavailableTimesArray); $i++)
 											{
-												
-												$timeToScheduleRoom = preg_split('/[\s+\/]/', $tempTime);
-												$alreadyTeachingRoom = preg_split('/[\s+\/]/', $unavailableTimesArray[$i]);
-												
-													print_r($timeToScheduleRoom);
-													print_r($alreadyTeachingRoom);
-													$difference = round(abs(strtotime($timeToScheduleRoom[2]) - strtotime($alreadyTeachingRoom[2])) / 60,2);
-													echo "alreadyTeachingRoom[0] is $alreadyTeachingRoom[0]<br>";
-													if($difference > $alreadyTeachingRoom[0])
-													{
-														$noTimeOverlapRoom = true;
-													}
-													else
-													{
-														$noTimeOverlapRoom = false;
-													}
-													echo "Difference of $timeToScheduleRoom[2] and $alreadyTeachingRoom[2] is: $difference<br>";
-													
 												echo "<br> ENTERED FOR LOOP :   ".$unavailableTimesArray[$i]."<br>";
-												echo(count(array_intersect(str_split($unavailableTimesArray[$i]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))));
-												if((count(array_intersect(str_split($unavailableTimesArray[$i]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0)
-													or ($noTimeOverlapRoom == true))
+												if((count(array_intersect(str_split($unavailableTimesArray[$i]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek))))) == 0)
 												{
 													$roomAvailable = true;
-													
 												}
 												else
 												{
 													$roomAvailable = false;
-													$i = count($unavailableTimesArray);
 												}
 											}
                                         }
@@ -523,21 +415,10 @@
 											{
 												$nightSectionsRemaining--;												
 											}
-											
-											// Add teaching hours to current teaching hours for faculty member
-											for($i = 0; $i < count($arrayOfFaculty); $i++)
-											{
-												if(strtolower($arrayOfFaculty[$i]->userName) == $facultyPQ[$facultyPQIndex]->userName)
-												{
-													$arrayOfFaculty[$i]->currentHours = trim($arrayOfFaculty[$i]->currentHours) + trim($coursesToSchedule[$ctsIndex]->creditHours);
-												}
-											}
-											
 											$scheduledSections++;
 											$currentSectionNumber++;
                                             //append time slot to arrayofRooms[aorIndex].unavailableTimes
 											$arrayOfRooms[$aorIndex]->addUnavailableTimes($tempTime);
-											$coursesToSchedule[$ctsIndex]->addInSessionTimes($tempTime);
                                         }
                                     }//endif
 									$aorIndex++;
@@ -567,14 +448,7 @@
 				
                 if(($facultyPQIndex < count($facultyPQ)) and (($foundRoom == true) OR ($noPreferenceFlag == true)))
                 {
-					if($noPreferenceFlag == true)
-					{
-						$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber."  -  FACULTY MEMBER DIDN'T CHOOSE A PREFERENCE";
-						array_push($unscheduledCourses, $courseToPush);
-						$currentSectionNumber++;
-						$scheduledSections++;
-					}
-                    $facultyPQIndex++;	
+                    $facultyPQIndex++;
                 }
 				else if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
 				{
@@ -598,6 +472,11 @@
 			//So at this point we probably need to repopulate our priority queue in
 			//order to continue scheduling the rest of the sections
 			
+			//Or we could allow each faculty member to select the number of
+			//sections of a course they want to teach, which would put them on
+			//the priority queue for the course multiple times. Then if the priority
+			//queue is empty with sections remaining, they just go unscheduled due
+			//to no professor selecting to teach them
 			$outputTest = $daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections;
 			echo "<br><h3> OUTPUT TEST = $outputTest   $currentSectionNumber    $scheduledSections</h3><br>";
 			
@@ -619,27 +498,15 @@
 
 	echo "Unscheduled Courses: <br>";
 	print_r($unscheduledCourses);
-	for($i = 0; $i < count($unscheduledCourses); $i++)
-	{
-		echo "<br>".$unscheduledCourses[$i]."<br>";
-	}
-	echo "Unscheduled2 Courses: <br>";
-	print_r($unscheduledCourses2);
-	for($i = 0; $i < count($unscheduledCourses2); $i++)
-	{
-		echo "<br>".$unscheduledCourses2[$i]."<br>";
-	}
-	
-	
-	for($i = 0; $i < count($arrayOfFaculty); $i++)
-	{
-		if($arrayOfFaculty[$i]->currentHours < $arrayOfFaculty[$i]->requiredMinHours)
-		{
-			echo "<br>".$arrayOfFaculty[$i]->userName." didn't meet their minimum hours of ".$arrayOfFaculty[$i]->requiredMinHours."<br>";
-			echo "Currently at: ".$arrayOfFaculty[$i]->currentHours."<br>";
-		}
-	}
-	
+
+
+
+
+
+
+
+
+
 
 
 ?>
