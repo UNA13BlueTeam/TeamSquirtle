@@ -91,18 +91,21 @@
 		//$addRooms->printer();
 		array_push($arrayOfRooms, $addRooms);
 	}
+	// NEED TO ALSO CREATE AN ARRAY OF FACULTY MEMBERS
+	//THIS ARRAY WILL BE USED TO DETERMINE WHICH FACULTY NEEDS ADDITIONAL COURSES TO SATISFY THEIR MIN. HOURS TO TEACH.
+	//DETAILS FOR PSEUDOCODE IS AT THE END OF THE ALGORITHM
 	
-	
+	//Main loop to iterate through array of courses to schedule
 	while ($ctsIndex < count($coursesToSchedule))
     {
 		// Check if a conflict exists for this course
-		$courseNamer = $coursesToSchedule[$ctsIndex]->name;
+		$courseNamer = $coursesToSchedule[$ctsIndex]->name; //courseNamer should be courseName
 		echo "$courseNamer  ";
 		$conflictQuery = "SELECT course, times FROM conflicts WHERE course = '$courseNamer'";
 		$missingConflict = mysqli_query($link, $conflictQuery);
 		$row = mysqli_fetch_row($missingConflict);
 		
-        if ($row[0] != $courseNamer)
+        if ($row[0] != $courseNamer) //since we are doing a specific query for courseNamer,can we just check if query returns empty? if yes, no conflicts otherwise we have conflicts.
 		{			
             $conflictFileExists = false;
 			//echo "<br>No conflict found <br>";
@@ -111,7 +114,7 @@
         {
             $conflictFileExists = true;
 			$conTimes = $row[1];
-			$conflictTimes = preg_split('/\s+/', trim($conTimes));
+			$conflictTimes = preg_split('/\s+/', trim($conTimes)); //creates an array of conflict times from a single string
 			//echo "<br>Conflict found <br>";
         }
         
@@ -178,8 +181,9 @@
 			}
 			
         }
-        else //(declare variables for number of day and night sections left)
+        else // we have a priority queue of faulcty member who wish to teach the current course
         {
+		     //(declare variables for number of day and night sections left)
             $daySectionsRemaining = $daySections;
             $nightSectionsRemaining = $nightSections;
             $scheduledSections = 0;
@@ -189,6 +193,7 @@
 			
 			echo "<br><h3> $daySections + $nightSections </h3><br>";
 			
+			//Iterate through the priority queue and begin the process of scheduling.
 			while (($facultyPQIndex < count($facultyPQ)) and ($scheduledSections < $daySections + $nightSections) and ($classTimesIndex < count($classTimes)))
             {
 				echo "Class Times Array: ".count($classTimes)."    Index: $classTimesIndex<br>";
@@ -207,6 +212,7 @@
 				$nightType = false;
 				$noPreferenceFlag = false;
 				
+				//Puts the avialable times for the current faculty member's time preference into arrayOfTimes
 				switch($facultyMember->timePref)
 				{
 					case  "early": $arrayOfTimes = $classTimes[$classTimesIndex]->early;
@@ -242,6 +248,7 @@
 					echo "<br>";
 				}
 				*/
+				//The following if statement checks to see if a faculty member's current preference is schedulable or if they even made a preference
                 if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0) OR ($noPreferenceFlag == true))
                 {
                     //add course and section number (currentSectionNumber) to listOfUnscheduledCourses 
@@ -260,6 +267,7 @@
                 {
 					$foundRoom = false;
 					$arrayOfTimesIndex = 0;
+					//Iterating through the list of times associated with the current faculty member's block of time preference (early, mid-day, afternoon, or night)
                     while($arrayOfTimesIndex < count($arrayOfTimes) and ($foundRoom == false))
                     {
 						$foundRoom = false;
@@ -271,7 +279,7 @@
 						
                         if ($conflictFileExists == true)
                         {
-                            do
+                            do//needs documenting not sure what it is doing exactly. 
                             {
                                 $conflictExists = false;
 								$tempArrayOfTimes = $classTimes[$classTimesIndex]->daysOfWeek."/".$arrayOfTimes[$arrayOfTimesIndex];
