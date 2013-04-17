@@ -342,11 +342,35 @@
 								
 								$timeTemp = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
 								$timeTemp = $timeTemp.$arrayOfTimes[$arrayOfTimesIndex];
+								//$row[0] and $timeTemp are the two times to check so we need the specific time (e.g. 10:00) from each string
 								
+								$timeToSchedule = preg_split('/[\s+\/]/', $timeTemp);
+								$alreadyTeaching = preg_split('/[\s+\/]/', $row[0]);
+								
+								if($row)
+								{
+									print_r($timeToSchedule);
+									print_r($alreadyTeaching);
+									$difference = round(abs(strtotime($timeToSchedule[2]) - strtotime($alreadyTeaching[2])) / 60,2);
+									if($difference > $alreadyTeaching[0])
+									{
+										$safeToSchedule = true;
+									}
+									else
+									{
+										$safeToSchedule = false;
+									}
+									
+								}
+								else
+								{
+								 	$safeToSchedule = true;								
+								}
 								
 								echo "<br><h3>$timeTemp</h3><br>";
 								
-                                if(($row[0] != $timeTemp) and (count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0))
+                                if(($row[0] != $timeTemp) and (count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0) 
+										and ($safeToSchedule == true))
                                 {
                                     $alreadyTeaching = false;
                                 }
