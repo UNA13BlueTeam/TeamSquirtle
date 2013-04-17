@@ -36,6 +36,7 @@
 	$port = 45000;
 	  
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
+	mysqli_query($link, "TRUNCATE TABLE scheduledCourses");
 
 	include ("classes.php");
 	
@@ -250,8 +251,8 @@
 						
 					echo "<br><h2> ENTERED BAD STATEMENT </h2><br>";
 					
-					array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
-                    $currentSectionNumber++;
+					//array_push($unscheduledCourses, $courseNamer."-".$currentSectionNumber);
+                    //$currentSectionNumber++;
                     //"No more sections available for preferred time chosen";
                     //$currentSectionNumber++;
                 }
@@ -348,15 +349,18 @@
                                         if(!in_array($tempTime, $unavailableTimesArray))
                                         {
 											$roomAvailable = true;
-											/*
 											for($i = 0; $i < count($unavailableTimesArray); $i++)
 											{
-												if(count(array_intersect(str_split($unavailableTimesArray[$i]), str_split($classTimes[$classTimesIndex]->daysOfWeek)) == 0))
+												echo "<br> ENTERED FOR LOOP :   ".$unavailableTimesArray[$i]."<br>";
+												if((count(array_intersect(str_split($unavailableTimesArray[$i]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek))))) == 0)
 												{
 													$roomAvailable = true;
 												}
+												else
+												{
+													$roomAvailable = false;
+												}
 											}
-											*/
                                         }
                                         else
                                         {
@@ -453,30 +457,33 @@
 			
         }//endelse
 		
-		if(($facultyPQIndex >= count($facultyPQ)) and ($foundRoom == false))
+		if(($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections)))
+		{
+			//We reach this block because the priority queue is empty
+			//scheduledSections can still be less than daySections + nightSections
+			//So at this point we probably need to repopulate our priority queue in
+			//order to continue scheduling the rest of the sections
+			
+			//Or we could allow each faculty member to select the number of
+			//sections of a course they want to teach, which would put them on
+			//the priority queue for the course multiple times. Then if the priority
+			//queue is empty with sections remaining, they just go unscheduled due
+			//to no professor selecting to teach them
+			$outputTest = $daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections;
+			echo "<br><h3> OUTPUT TEST = $outputTest   $currentSectionNumber    $scheduledSections</h3><br>";
+			
+			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
 			{
-				//We reach this block because the priority queue is empty
-				//scheduledSections can still be less than daySections + nightSections
-				//So at this point we probably need to repopulate our priority queue in
-				//order to continue scheduling the rest of the sections
-				
-				//Or we could allow each faculty member to select the number of
-				//sections of a course they want to teach, which would put them on
-				//the priority queue for the course multiple times. Then if the priority
-				//queue is empty with sections remaining, they just go unscheduled due
-				//to no professor selecting to teach them
-				
-				while($currentSectionNumber < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
-				{
-					echo "<br><h3> ENTERED TEST LOOP </h3><br>";
-					$currentSectionNumber++;
-					$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
-					array_push($unscheduledCourses, $courseToPush);
-					$scheduledSections++;
-				}
+				echo "<br><h3> ENTERED TEST LOOP </h3><br>";
+				$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
+				array_push($unscheduledCourses, $courseToPush);
+				$currentSectionNumber++;
+				$scheduledSections++;
 			}
-			$currentSectionNumber = 1;
-			$ctsIndex++;
+		}
+		// Done and moving on to the next course
+		$currentSectionNumber = 1;
+		$ctsIndex++;
         //schedule next course
     }//end while
 
