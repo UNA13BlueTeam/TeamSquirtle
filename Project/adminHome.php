@@ -4,11 +4,18 @@
 ?>
 
 <?php
-	global $deptAbbrev, $deptName, $userName, $userTitle, $userInfo;
-	echo("<h1>".$deptName."</h1>");
-	//echo("<h2>".$userInfo['firstName']." ".$userInfo['lastName']."</h2>");
+	global $host, $user, $pass, $db, $port;
+ 	$link = mysqli_connect($host, $user, $pass, $db, $port);
+	
+	// Gets the department name and semester name from the database
+	$query = "SELECT deptName, semesterName FROM users WHERE username = 'admin'";
+	$result = mysqli_query($link, $query);
+	$fetchInfo = mysqli_fetch_row($result);
+	
+	echo("<h1>".$fetchInfo[0]."</h1>");
 	echo ("<h2>".$_SESSION['firstname']." ".$_SESSION['lastname']."</h2>");
 	echo("<h3> Admin </h3>");
+	echo "<h3>".$fetchInfo[1]."</h3>";
 ?>
 <div class="homeLinks">
 	<h4>Links!</h4>
@@ -25,14 +32,9 @@
 <div id="homeSchedule">
 	<h4>Schedule</h4>
 	<?php
- 		
- 		global $host, $user, $pass, $db, $port;
- 		$link = mysqli_connect($host, $user, $pass, $db, $port);
- 		$scheduledQuery = "SELECT * FROM scheduledCourses";
+ 		$scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC";
  		$results = mysqli_query($link, $scheduledQuery);
  		$scheduled = array();
- 		$cols = 4;
-		// $rows = count($scheduled); // define number of rows
 
 		echo('<table class="schedule">
             <tr>
@@ -51,10 +53,16 @@
 					<td>".$row['course']."-".$row['section']."</td>
 					<td>".$row['timeSlot']."</td>
 					<td>".$row['roomName']."</td>
-					<td>".$row['facultyUser']."</td>
+					");
+				$adminUser = $row['facultyUser'];
+				$getName = "SELECT lastName, firstName FROM users WHERE username = '$adminUser'";
+				$resultGetName = mysqli_query($link, $getName);
+				$name = mysqli_fetch_assoc($resultGetName);
+					
+				echo("
+					<td>".$name['firstName']." ".$name['lastName']."</td>
 				</tr>
 				");
-				// $row = mysqli_fetch_row($results, MYSQLI_BOTH);
 			}
 	    ?>
 		</table>
