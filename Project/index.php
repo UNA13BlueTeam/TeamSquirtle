@@ -27,6 +27,8 @@
             $temp = mysqli_fetch_assoc($result);
             $auth = $temp['permission'];
             $setup = $temp['firstLogOn'];
+            $firstname = $temp['firstName'];
+            $lastname = $temp['lastName'];
             echo($setup);
             // while($row = mysqli_fetch_row($result))
             // {
@@ -42,6 +44,8 @@
                 $_SESSION['permission'] = "admin";
                 $permission = $_SESSION['permission'];
                 $_SESSION['username'] = $username;
+    	        $_SESSION['firstname'] = $firstname;
+                $_SESSION['lastname'] = $lastname;
                 if($setup==1)
                 {
                     header("Location: setup.php");
@@ -55,6 +59,8 @@
                 $_SESSION['permission'] = "faculty";
                 $permission = $_SESSION['permission'];
                 $_SESSION['username'] = $username;
+    	        $_SESSION['firstname'] = $firstname;
+                $_SESSION['lastname'] = $lastname;
                 if($setup==1)
                 {
                     header("Location: setup.php");
