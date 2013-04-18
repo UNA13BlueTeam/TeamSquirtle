@@ -2,7 +2,7 @@
   
 <?php	
 	echo("<h1>".$deptName."</h1>");
-	echo("<h2>".$_SESSION['firstName']." ".$_SESSION['lastName']."</h2>");
+	echo("<h2>".$_SESSION['firstname']." ".$_SESSION['lastname']."</h2>");
 	echo("<h3> Faculty </h3>");
 ?>
 
