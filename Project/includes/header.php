@@ -1,7 +1,10 @@
-<?php // include_once("php_error.php"); ?> 
-<?php include_once("db.php"); ?>
-<?php include_once("global.php"); ?>
-<?php error_reporting(E_ERROR); ?>
+<?php 
+	session_start();
+	// include_once("php_error.php"); 
+ 	include_once("db.php");
+	include_once("global.php");
+	error_reporting(E_ERROR);
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

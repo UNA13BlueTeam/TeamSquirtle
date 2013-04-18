@@ -1,4 +1,7 @@
-<?php include("includes/facultyHeader.php"); ?>
+<?php 
+	// session_start();
+	include("includes/header.php");
+?>
   
 <?php	
 	echo("<h1>".$deptName."</h1>");
