@@ -28,9 +28,9 @@
         <div class="purpleBox" id="adminsetup">
             <h2>Start a New Semester</h2>
             <hr>
-            <form action="doSetup.php" method="post">
-                <label for="departmentname">Department Name: <input type="text" name="departmentname" autofocus></label> <br>
-                <label for="semestername">Semester Name: <input type="text" name="semestername"></label> <br>
+            <form action="doAdminSetup.php" method="post">
+                <label for="departmentName">Department Name: <input type="text" name="departmentName" autofocus></label> <br>
+                <label for="semesterName">Semester Name: <input type="text" name="semesterName"></label> <br>
                 <input type="submit" value="Submit" />
                 <input type="reset" value="Reset" />
             </form>

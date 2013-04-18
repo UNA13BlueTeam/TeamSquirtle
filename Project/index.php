@@ -41,14 +41,12 @@
             if($auth==1)
             {
                 $_SESSION['loggedIn'] = true;
-                $_SESSION['permission'] = "admin";
-                $permission = $_SESSION['permission'];
                 $_SESSION['username'] = $username;
     	        $_SESSION['firstname'] = $firstname;
                 $_SESSION['lastname'] = $lastname;
                 if($setup==1)
                 {
-                    header("Location: setup.php");
+                    header("Location: adminSetUp.php");
                 }else
                 {
                     header("Location: adminHome.php");
@@ -56,14 +54,12 @@
             }elseif($auth==2)
             {
                 $_SESSION['loggedIn'] = true;
-                $_SESSION['permission'] = "faculty";
-                $permission = $_SESSION['permission'];
                 $_SESSION['username'] = $username;
     	        $_SESSION['firstname'] = $firstname;
                 $_SESSION['lastname'] = $lastname;
                 if($setup==1)
                 {
-                    header("Location: setup.php");
+                    header("Location: facultySetUp.php");
                 }else
                 {
                     header("Location: facultyHome.php");

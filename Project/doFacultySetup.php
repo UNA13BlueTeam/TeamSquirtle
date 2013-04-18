@@ -3,9 +3,11 @@
 	include("includes/db.php");
 	global $host, $user, $pass, $db, $port;
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
+		
 	$password = $_POST['pass1'];
 	$passCheck = $_POST['pass2'];
 	$user = $_SESSION['username'];
+	
 	if(($password === $passCheck) and (verifyPassword($password) == true))
 	{
 		// $password = crypt($password);
@@ -18,6 +20,9 @@
 		$_POST['invalid'] = true;
 		header("Location: setup.php");
 	}
+	
+	
+	
 
 	
 /*-----------------------------------------------------------------------------------------------

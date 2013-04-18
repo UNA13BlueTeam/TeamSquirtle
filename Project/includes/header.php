@@ -14,7 +14,8 @@
 	</head>
 	<body>
 		<?php global $deptAbbrev;
-			if($_SESSION['permission']==="admin")
+			$auth = $_SESSION['permission'];
+			if($auth == 1)
 			{
 				echo('
 					<div class="nav">
@@ -30,7 +31,7 @@
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
 						</nav>
 				');
-			}elseif($_SESSION['permission']==="faculty")
+			}elseif($auth == 2)
 			{
 				echo('
 					<div class="nav">

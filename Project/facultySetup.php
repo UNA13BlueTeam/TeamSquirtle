@@ -29,7 +29,7 @@
         <div class="purpleBox" id="setup">
             <h2>Change Your Password</h2>
             <hr>
-            <form action="doSetup.php" method="post">
+            <form action="doFacultySetup.php" method="post">
                 <label for="pass1">New Password: <input type="password" name="pass1" autofocus></label> <br>
                 <label for="pass2">Retype Password: <input type="password" name="pass2"></label> <br>
                 <input type="submit" value="Submit" />
