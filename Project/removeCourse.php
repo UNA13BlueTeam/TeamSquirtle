@@ -31,7 +31,7 @@
 			$predefRoomType = array();
 			$predefHours = array();
 			
-			$predefQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses";
+			$predefQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses ORDER BY courseName ASC";
 			$predefResult = mysqli_query($link, $predefQuery);
 			while($row = mysqli_fetch_row($predefResult))
 			{

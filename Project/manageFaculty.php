@@ -17,36 +17,24 @@
 		<?php
 			$link = mysqli_connect($host, $user, $pass, $db, $port);
 			
+			// Declare arrays
 			$predefNames = array();
-			$predefQuery = "SELECT facultyName FROM faculty";
+			$predefYOS = array();
+			$predefEmail = array();
+			$predefHours = array();
+			
+			// Grabs all the faculty information in alphabetical order
+			$predefQuery = "SELECT facultyName, yos, email, minHours FROM faculty ORDER BY facultyName ASC";
 			$predefResult = mysqli_query($link, $predefQuery);
 			while($row = mysqli_fetch_row($predefResult))
 			{
 				array_push($predefNames, $row[0]);
+				array_push($predefYOS, $row[1]);
+				array_push($predefEmail, $row[2]);
+				array_push($predefHours, $row[3]);
 			}
 			
-			$predefYOS = array();
-			$predefQuery = "SELECT yos FROM faculty";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefYOS, $row[0]);
-			}
-			$predefEmail = array();
-			$predefQuery = "SELECT email FROM faculty";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefEmail, $row[0]);
-			}
-			$predefHours = array();
-			$predefQuery = "SELECT minHours FROM faculty";
-			$predefResult = mysqli_query($link, $predefQuery);
-			while($row = mysqli_fetch_row($predefResult))
-			{
-				array_push($predefHours, $row[0]);
-			}
-			
+			// Print out the table of faculty in alphabetical order
 			for($i = 0; $i < count($predefNames); $i++)
 			{
 				echo "<tr>";

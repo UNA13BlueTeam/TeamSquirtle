@@ -16,30 +16,22 @@
 		global $host, $user, $pass, $db, $port;
 		$link = mysqli_connect($host, $user, $pass, $db, $port);
 			
+		// Declare arrays
 		$predefRoomTypes = array();
-		$predefQuery = "SELECT roomType FROM rooms";
+		$predefRoomSizes = array();
+		$predefRoomNames = array();
+		
+		// Grabs all the faculty information in alphabetical order
+		$predefQuery = "SELECT roomType, size, roomName FROM rooms ORDER BY roomName ASC";
 		$predefResult = mysqli_query($link, $predefQuery);
 		while($row = mysqli_fetch_row($predefResult))
 		{
 			array_push($predefRoomTypes, $row[0]);
+			array_push($predefRoomSizes, $row[1]);
+			array_push($predefRoomNames, $row[2]);
 		}	
 		
-		$predefRoomSizes = array();
-		$predefQuery = "SELECT size FROM rooms";
-		$predefResult = mysqli_query($link, $predefQuery);
-		while($row = mysqli_fetch_row($predefResult))
-		{
-			array_push($predefRoomSizes, $row[0]);
-		}			
-			
-		$predefRoomNames = array();
-		$predefQuery = "SELECT roomName FROM rooms";
-		$predefResult = mysqli_query($link, $predefQuery);
-		while($row = mysqli_fetch_row($predefResult))
-		{
-			array_push($predefRoomNames, $row[0]);
-		}
-		
+		// Print out the table of faculty in alphabetical order
 		for($i = 0; $i < count($predefRoomNames); $i++)
 		{
 			echo "<tr>";
