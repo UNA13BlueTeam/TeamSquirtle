@@ -38,7 +38,7 @@
             	<th>Course</th>
             	<th>Time</th>
             	<th>Location</th>
-            	<th>Professor</th>
+            	<th>Instructor</th>
             </tr>
 			');
 			// $row = mysqli_fetch_row($results, MYSQLI_BOTH);
@@ -48,9 +48,9 @@
 				echo("
 				<tr>
 					<td>".$row['course']."-".$row['section']."</td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td>".$row['timeSlot']."</td>
+					<td>".$row['roomName']."</td>
+					<td>".$row['facultyUser']."</td>
 				</tr>
 				");
 				// $row = mysqli_fetch_row($results, MYSQLI_BOTH);
