@@ -1,9 +1,12 @@
-<?php include("includes/header.php"); ?>
+<?php session_start();
+	include("includes/header.php"); 
+?>
 
 <?php
 	global $deptAbbrev, $deptName, $userName, $userTitle, $userInfo;
 	echo("<h1>".$deptName."</h1>");
 	echo("<h2>".$userInfo['firstName']." ".$userInfo['lastName']."</h2>");
+	echo ("<h2>".$_SESSION['lastname']." . ".$_SESSION['firstname']."</h2>");
 	echo("<h3> Admin </h3>");
 ?>
 <div class="homeLinks">
