@@ -233,7 +233,7 @@
 	$selectRoomsQuery = "SELECT roomType, size, roomName FROM rooms";
 	$selectRoomsResult = mysqli_query($link, $selectRoomsQuery);
 	
-	while($row = mysqli_fetch_row($selectRoomsesult))
+	while($row = mysqli_fetch_row($selectRoomsResult))
 	{//add each room retrieved from database to arrayOfRooms array
 	
 							//room type	//size  //building#
@@ -502,7 +502,7 @@
 								$facultyName = $facultyMember->userName;
 								
                                 $selectFacultyTeachingQuery = "SELECT timeSlot FROM scheduledCourses WHERE facultyUser = '$facultyName'";
-								$selectFacultyTeachingResult = mysqli_query($link, $query);
+								$selectFacultyTeachingResult = mysqli_query($link, $selectFacultyTeachingQuery);
 								$row = mysqli_fetch_row($selectFacultyTeachingResult);
 								
 								$overlapCheckFaculty = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
