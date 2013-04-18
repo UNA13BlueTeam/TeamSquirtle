@@ -65,14 +65,19 @@
 	include ("classes.php");
 	
 	//flags
-	$sortByYOS = true;		//flag to sort by years of service
-	$sortByTOS = false;		//flag to sort by time of submission
-		//one of these must be true
+	#############################
+	//ONE OF THESE MUST BE TRUE//
+		$sortByYOS = true;		//flag to sort by years of service
+		$sortByTOS = false;		//flag to sort by time of submission
+	//ONE OF THESE MUST BE TRUE//
+	#############################
+	
 		
 	$conflictExists = false;	/*flag noting if conflict exists for specific class time
 									we are trying to schedule */
 	$conflictFileExists = false; // flag noting if there is any conflicts at all for a course
 	$foundRoom = false;			//flag noting if a room has been found to schedule a course in
+	$roomAvailable = false;		//true if the room is available to be scheduled in at the specific time
 	$dayType = false;			//flag noting if a preference belongs to a day time
 	$nightType = false;			//flag noting if a preference belongs to a night time
 	$noPreferenceFlag = false;	//a faculty member selected no preference for a course they want to teach
@@ -81,6 +86,11 @@
 									to schedule for that faculty member */
 	$alreadyInSession = false;	/*flag noting if a course is already being taught in a room during a time
 									we are trying to schedule a class for */
+	$noTimeOverlapFaculty = false; /*flag noting if a class time to schedule overlaps with a class
+									 time already scheduled to a faculty member*/
+	$noTimeOverlapRoom = false; /*flag noting if a class time to schedule overlaps with a class
+									 time already scheduled to a specific room*/
+	
 	//Variable declarations
 	$ctsIndex = 0;    // Courses to schedule index for 
 	$classTimesIndex = 0;   //index for classTimes array
@@ -95,16 +105,37 @@
 	$unscheduledCourses;	//array of courses that weren't scheduled for various reasons, defined later
 	$unscheduledCourses2;	/*courses that weren't scheduled because no faculty
 						     member selected it when choosing preferences, defined later */
+	$courseToPush;			//course to be put on array of unscheduledCourses
 	$addTimeSlot;			//holds a class time object to be added to classTimes array
 	$classTimes;			//array of class times, defined later
 	$classTimesIndex = 0;	//index for classTimes array
 	$addRooms;				//holds a room object to be added to arrayOfRooms
 	$arrayOfRooms;			//array of rooms to schedule classes in, defined later
+	$aorIndex = 0;			//index for arrayOfRooms
+	$unavailableTimesArray; //array of times that a room is unavailable to teach in, defined later
+	$overlapCheckRoom;		/*temporary variable storing a specific class time that is used
+							  to check if it's length overlaps with a course being taught in
+							  the room already*/
 	$addFaculty;			//holds a faculty object to be added to arrayOfFaculty
 	$arrayOfFaculty;		//array of faculty members to teach courses, defined later
 	$conTimes;				//string of all conflict times that gets broken into an array later
 	$conflictTimes;			/*array of conflict times that further determine when a course
 							  can be scheduled, defined later */
+	$conflictCheck;		    /*temporary variable storing a specific class time that is used
+							  to check for conflicts at this time for a specific course*/
+	$overlapCheckFaculty;	/*temporary variable storing a specific class time that is used
+							  to check if it's length overlaps with a coruse being taught after it */
+	$timeToScheduleFaculty; /*array containing a broken up class time to be scheduled:  
+								[0] is minutes  [1] is days of week  [2] is time of day in HH:MM */
+	$alreadyTeachingFaculty; /*array containing a broken up class time already scheduled to a
+								faculty member. [0] is minutes  [1] is days of week  
+												[2] is time of day in HH:MM */
+	$timeToScheduleRoom; 	/*array containing a broken up class time to be scheduled:  
+								[0] is minutes  [1] is days of week  [2] is time of day in HH:MM */
+	$alreadyTeachingRoom;	 /*array containing a broken up class time already scheduled to a
+								room. [0] is minutes  [1] is days of week  
+									  [2] is time of day in HH:MM */
+	$difference;			//difference in minutes of timeToScheduleFaculty[2] and alreadyTeachingFaculty[2]
 	$facultyPQ;				//array of faculty member preferences treated as a priority queue for scheduling
 	$facultyPQIndex = 0;	//index for facultyPQ array
 	$facultyMember;			//object used to store current facultyPQ index for quick access
@@ -131,7 +162,16 @@
 	$selectFacultyPreferenceResult; //success or failure of selectFacultyPreferenceQuery
 	$facultyQuery2;					//used in conjunction with selectFacultyPreferenceQuery
 	$facultyResult2;				//success or failure of facultyQuery2
-	
+	$selectFacultyTeachingQuery;  	// Query to get the timeslot where a faculty member is already teaching
+	$selectFacultyTeachingResult; 	//success or failure of selectFacultyTeachingQuery
+	$tempCourse;
+	$tempFaculty;
+	$tempRoom;						//temporary variables used for 	SQL statements
+	$scheduleQuery1;
+	$scheduleQuery2;				/*query to insert scheduled courses to database.  we have 2 because
+										the statement is lengthy, and we break it up to make it more readable*/
+	$scheduleQuery;					//concatenation of scheduleQuery1 and 2 for readability
+	$scheduleResult;				//success or failure of scheduleQuery
 	
 	
 	
@@ -438,12 +478,13 @@
                             do//needs documenting not sure what it is doing exactly. 
                             {
                                 $conflictExists = false;
-								$tempArrayOfTimes = $classTimes[$classTimesIndex]->daysOfWeek."/".$arrayOfTimes[$arrayOfTimesIndex];
-								echo "<br><h3>TEMP OF TIMES = $tempArrayOfTimes</h3><br>";
+								$conflictCheck = $classTimes[$classTimesIndex]->daysOfWeek."/".$arrayOfTimes[$arrayOfTimesIndex];
+								echo "<br><h3>TEMP OF TIMES = $conflictCheck</h3><br>";
 								print_r($conflictTimes);
                                 
-                                if (in_array(trim($tempArrayOfTimes), $conflictTimes))
-                                {
+                                if (in_array(trim($conflictCheck), $conflictTimes))
+                                {/*if conflictCheck exists in conflict times, we try the next
+								   time in arrayOfTimes*/
                                     $conflictExists = true;
 									echo "<br><h2>Conflict Exists Increment</h2> <br>";
                                     $arrayOfTimesIndex++;
@@ -459,22 +500,20 @@
                             {								
 								$facultyMember = $facultyPQ[$facultyPQIndex];
 								$facultyName = $facultyMember->userName;
-#######################################################################################################								
-								// Query to get the timeslot where a faculty member is already teaching
-                                $query = "SELECT timeSlot FROM scheduledCourses WHERE facultyUser = '$facultyName'";
-								$queryResult = mysqli_query($link, $query);
-								$row = mysqli_fetch_row($queryResult);
 								
+                                $selectFacultyTeachingQuery = "SELECT timeSlot FROM scheduledCourses WHERE facultyUser = '$facultyName'";
+								$selectFacultyTeachingResult = mysqli_query($link, $query);
+								$row = mysqli_fetch_row($selectFacultyTeachingResult);
 								
-								//$row[0] and $timeTemp are the two times to check so we need the specific time (e.g. 10:00) from each string
-								$timeTemp = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
-								$timeTemp = $timeTemp.$arrayOfTimes[$arrayOfTimesIndex];
+								$overlapCheckFaculty = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
+								$overlapCheckFaculty = $overlapCheckFaculty.$arrayOfTimes[$arrayOfTimesIndex];
 								
 								// Splits the times into arrays
-								$timeToScheduleFaculty = preg_split('/[\s+\/]/', $timeTemp);
+								//$row[0] and $overlapCheckFaculty are the two times to check so we need the specific time (e.g. 10:00) from each string
+								$timeToScheduleFaculty = preg_split('/[\s+\/]/', $overlapCheckFaculty);
 								$alreadyTeachingFaculty = preg_split('/[\s+\/]/', $row[0]);
 								
-								// Check to make sure a faculty is already teaching at a time
+								// Check to make sure a faculty is not already teaching at a time
 								if($row)
 								{
 									print_r($timeToScheduleFaculty);
@@ -499,10 +538,10 @@
 								 	$noTimeOverlapFaculty = true;								
 								}
 								
-								echo "<br><h3>$timeTemp</h3><br>";
+								echo "<br><h3>$overlapCheckFaculty</h3><br>";
 								
 								// Checks to make sure the faculty member isn't already teaching at the same time on the same day
-                                if(($row[0] != $timeTemp) and ((count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0) 
+                                if(($row[0] != $overlapCheckFaculty) and ((count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0) 
 										or ($noTimeOverlapFaculty == true)))
                                 {
                                     $alreadyTeachingFlag = false;
@@ -538,11 +577,11 @@
 										echo "<br>";
 										
 										// Creates a temporary time variable of the current class time 
-										$tempTime = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
-										$tempTime = $tempTime.$arrayOfTimes[$arrayOfTimesIndex];
+										$overlapCheckRoom = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
+										$overlapCheckRoom = $overlapCheckRoom.$arrayOfTimes[$arrayOfTimesIndex];
 										
 										// Check to make sure the room is available at the current time
-                                        if(!in_array($tempTime, $unavailableTimesArray))
+                                        if(!in_array($overlapCheckRoom, $unavailableTimesArray))
                                         {    
 											$roomAvailable = true;
 											$noTimeOverlapRoom = true;
@@ -550,7 +589,7 @@
 											for($i = 0; $i < count($unavailableTimesArray); $i++)
 											{
 												// Splits the times into arrays
-												$timeToScheduleRoom = preg_split('/[\s+\/]/', $tempTime);
+												$timeToScheduleRoom = preg_split('/[\s+\/]/', $overlapCheckRoom);
 												$alreadyTeachingRoom = preg_split('/[\s+\/]/', $unavailableTimesArray[$i]);
 												
 												// Debugging statements
@@ -580,7 +619,7 @@
 												{
 													$roomAvailable = true;	// This must happen for every time in the list of unavailable times array
 												}
-												else	// Falls here if a the current time is unschedulable for this room and kicks out of the loop
+												else	// Falls here if the current time is unschedulable for this room and kicks out of the loop
 												{
 													$roomAvailable = false;
 													$i = count($unavailableTimesArray);
@@ -593,7 +632,7 @@
                                         }
                                             
                                         if($roomAvailable == true)
-                                        {
+                                        {//this block can also go in place of line 612
                                             $foundRoom = true;
 											
 											// Temporaries for insertion
@@ -603,7 +642,7 @@
 											
 											// Insert the scheduled course into the database 
 											$scheduleQuery1 = "INSERT INTO scheduledCourses (course, section, timeSlot, facultyUser, roomName) VALUES (";
-											$scheduleQuery2 = "'$tempCourse', '$currentSectionNumber', '$tempTime', '$tempFaculty', '$tempRoom')";
+											$scheduleQuery2 = "'$tempCourse', '$currentSectionNumber', '$overlapCheckRoom', '$tempFaculty', '$tempRoom')";
 											$scheduleQuery = $scheduleQuery1.$scheduleQuery2;
 											$scheduleResult = mysqli_query($link, $scheduleQuery);
 											
@@ -636,8 +675,8 @@
 												}
 											}
 											// Append time slot to list of unavailable time for the current room and course
-											$arrayOfRooms[$aorIndex]->addUnavailableTimes($tempTime);
-											$coursesToSchedule[$ctsIndex]->addInSessionTimes($tempTime);
+											$arrayOfRooms[$aorIndex]->addUnavailableTimes($overlapCheckRoom);
+											$coursesToSchedule[$ctsIndex]->addInSessionTimes($overlapCheckRoom);
 											
 											// Increments the section number and number of scheduled sections
 											$scheduledSections++;
