@@ -43,7 +43,7 @@
 			');
 			// $row = mysqli_fetch_row($results, MYSQLI_BOTH);
 		echo("<tr></tr>");
-			while($row = mysqli_fetch_row($results, MYSQLI_BOTH))
+			while($row = mysqli_fetch_assoc($results))
 			{
 				echo("
 				<tr>
