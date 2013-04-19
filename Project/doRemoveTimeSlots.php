@@ -33,12 +33,15 @@
 			$timeRemoved = str_replace($newValue[2], "", $times);
 			echo "$timeRemoved <br>";
 			
-			$delete = "DELETE FROM $db.timeSlots WHERE minutes = '$newValue[0]' AND daysOfWeek = '$newValue[1]'";
-			mysqli_query($link, $delete);
 			if(strlen(trim($timeRemoved)) != 0)
 			{
-				$query = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay) VALUES ('$newValue[0]', '$newValue[1]', '$timeRemoved')";
+				$query = "UPDATE timeSlots SET timesOfDay = '$timeRemoved' WHERE minutes = '$newValue[0]' AND daysOfWeek = '$newValue[1]'";
 				mysqli_query($link, $query);
+			}
+			else
+			{
+				$delete = "DELETE FROM $db.timeSlots WHERE minutes = '$newValue[0]' AND daysOfWeek = '$newValue[1]'";
+				mysqli_query($link, $delete);
 			}
 		}
 	}
