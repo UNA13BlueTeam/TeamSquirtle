@@ -18,7 +18,7 @@
 	else
 	{
 		$_POST['invalid'] = true;
-		header("Location: setup.php");
+		header("Location: facultySetUp.php");
 	}
 	
 	

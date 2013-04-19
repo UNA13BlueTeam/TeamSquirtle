@@ -1,6 +1,5 @@
 <?php include("includes/facultyHeader.php");
 	include("includes/db.php");
-	session_start();
 	
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
     if(!$link)
