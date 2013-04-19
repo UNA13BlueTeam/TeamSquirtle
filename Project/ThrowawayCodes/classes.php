@@ -66,6 +66,7 @@
 		private static $midDay;	//array of strings of format 00:00 listing all available mid-day teaching times for matching daysOfWeek
 		private static $lateAfternoon;	//array of strings of format 00:00 listing all available late afternoon teaching times for matching daysOfWeek
 		private static $night;	//array of strings of format 00:00 listing all available night teaching times for matching daysOfWeek
+		private static $noPref; // array of all class times since no preference of time was selected
 		
 		function __construct($min, $dow, $tod)
 		{
@@ -76,6 +77,7 @@
 			$this->midDay = array();
 			$this->lateAfternoon = array();
 			$this->night = array();
+			$this->noPref = array();
 			
 			// Split times of day into an array
 			$tod = preg_split('/\s+/', trim($tod));
@@ -84,29 +86,31 @@
 			for($i = 0; $i < count($tod); $i++)
 			{
 				// Splits the string by the ':', then puts it back together without it.
-				$temp = preg_split('/[:]/', trim($tod[$i]));
-				$newString = trim($temp[0]).trim($temp[1]);
+				$splitTime = preg_split('/[:]/', trim($tod[$i]));
+				$intTime = trim($splitTime[0]).trim($splitTime[1]);
+				
+				array_push($this->noPref, $tod[$i]);
 				
 				// Early morning class from 00:00 - 10:59
-				if(($newString > 0) and ($newString < 1100))
+				if(($intTime > 0) and ($intTime < 1100))
 				{
 					array_push($this->early, $tod[$i]);
 				}
 				
 				// Mid-day class from 11:00 - 14:00
-				else if(($newString >= 1100) and ($newString <= 1400))
+				else if(($intTime >= 1100) and ($intTime <= 1400))
 				{
 					array_push($this->midDay, $tod[$i]);
 				}
 				
 				// Late afternoon class from 14:01 - 17:59
-				else if(($newString > 1400) and ($newString < 1800))
+				else if(($intTime > 1400) and ($intTime < 1800))
 				{
 					array_push($this->lateAfternoon, $tod[$i]);
 				}
 				
 				// Night class from 18:00 - 24:00
-				else if(($newString >= 1800) and ($newString <= 2400))
+				else if(($intTime >= 1800) and ($intTime <= 2400))
 				{
 					array_push($this->night, $tod[$i]);
 				}

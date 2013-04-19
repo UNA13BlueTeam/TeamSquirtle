@@ -175,14 +175,7 @@
 	
 	
 	
-	
-	
-	
-	
-		
-	
-	
-	
+
 	
 	
 ##################### BEGIN SCHEDULING #################################
@@ -230,7 +223,7 @@
 	$arrayOfRooms = array();
 	
 	
-	$selectRoomsQuery = "SELECT roomType, size, roomName FROM rooms";
+	$selectRoomsQuery = "SELECT roomType, size, roomName FROM rooms ORDER BY size ASC";
 	$selectRoomsResult = mysqli_query($link, $selectRoomsQuery);
 	
 	while($row = mysqli_fetch_row($selectRoomsResult))
@@ -239,7 +232,7 @@
 							//room type	//size  //building#
 		$addRooms = new Room($row[0], $row[1], $row[2]);
 		// Uncomment below to print out array of courses
-		//$addRooms->printer();
+		$addRooms->printer();
 		array_push($arrayOfRooms, $addRooms);
 	}
 	// NEED TO ALSO CREATE AN ARRAY OF FACULTY MEMBERS
@@ -405,25 +398,13 @@
 									$nightType = true;
 									break;
 									
-					case "noPreference": $noPreferenceFlag = true;
+					case "noPreference": $arrayOfTimes = $classTimes[$classTimesIndex]->noPref;
+										$noPreferenceFlag = true;
 										break;
                 }
-				/*
-				if($dayType == true)
-				{
-					echo "<br>DAY-TYPE FOUND <br>";
-					print_r($arrayOfTimes);
-					echo "<br>";
-				}
-				else if($nightType == true)
-				{
-					echo "<br>NIGHT-TYPE FOUND<br>";
-					print_r($arrayOfTimes);
-					echo "<br>";
-				}
-				*/
+				
 				//The following if statement checks to see if a faculty member's current preference is schedulable or if they even made a preference
-                if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0) OR ($noPreferenceFlag == true))
+                if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
                 {
                     //add course and section number (currentSectionNumber) to listOfUnscheduledCourses 
                         //we were removing the faculty member from the queue here, but we don't need
@@ -665,6 +646,21 @@
 											{
 												$nightSectionsRemaining--;												
 											}
+											else if($noPreferenceFlag == true)
+											{
+												$splitTime = preg_split('/[:]/', trim($tod[$i]));
+												$intTime = trim($splitTime[0]).trim($splitTime[1]);
+												
+												if(($intTime > 0) and ($intTime < 1800))
+												{
+													$daySectionsRemaining--;
+												}
+												else if(($intTime >= 1800) and ($intTime <= 2400))
+												{
+													$nightSectionsRemaining--;
+												}
+												
+											}
 											
 											// Add teaching hours to current teaching hours for faculty member teaching the course
 											for($i = 0; $i < count($arrayOfFaculty); $i++)
@@ -708,16 +704,8 @@
 				
 				// This is where we increment the faculty member if we found a room and there are more faculty members that selected this course
 				// THIS STATEMENT MIGHT BE ABLE TO BE CHANGED AND MOVED
-                if(($facultyPQIndex < count($facultyPQ)) and (($foundRoom == true) OR ($noPreferenceFlag == true)))
+                if($facultyPQIndex < count($facultyPQ) and ($foundRoom == true))
                 {
-					// If a faculty member chose no preference, then we add them to the list of unscheduled courses here
-					if($noPreferenceFlag == true)
-					{
-						$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber."  -  FACULTY MEMBER DIDN'T CHOOSE A PREFERENCE";
-						array_push($unscheduledCourses, $courseToPush);
-						$currentSectionNumber++;
-						$scheduledSections++;
-					}
                     $facultyPQIndex++;	
                 }
 				// I'm not sure about this statement, might be incorrect or unneccesary

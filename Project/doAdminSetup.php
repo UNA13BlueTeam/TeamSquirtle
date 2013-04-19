@@ -7,8 +7,15 @@
 	$deptName = $_POST['departmentName'];
 	$semestName = $_POST['semesterName'];
 	$user = $_SESSION['username'];
-	
-	$query = "UPDATE users SET deptName = '$deptName', semesterName = '$semestName', firstLogOn = '0' WHERE username = '$user'";
-	$insert = mysqli_query($link, $query);
-	header("Location: adminHome.php");
+	if(strlen($semestName) != 0 and strlen($deptName) != 0)
+	{
+		$query = "UPDATE users SET deptName = '$deptName', semesterName = '$semestName', firstLogOn = '0' WHERE username = '$user'";
+		$insert = mysqli_query($link, $query);
+		header("Location: adminHome.php");
+	}
+	else
+	{
+		$_POST['invalid'] = true;
+		header("Location: adminSetUp.php");
+	}
 ?>
