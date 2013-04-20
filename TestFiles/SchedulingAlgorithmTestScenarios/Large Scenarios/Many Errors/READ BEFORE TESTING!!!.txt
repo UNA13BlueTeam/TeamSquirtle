@@ -1,0 +1,45 @@
+This scenario has one error in each of the 6 upload files:
+
+(Note that preferences.txt in each scenario is just instructions
+	on who should pick what course)
+	
+	courses.txt
+		The following courses are not added to the database:
+			AR200
+			AR222
+			AR311
+			AR347
+			AR385W
+			AR392
+	
+	prereqs.txt
+		The following prereqs are not added to the database:
+			AR347
+			AR392
+			AR465
+	
+	rooms.txt
+		The following rooms are not added to the database:
+			ARBLDG202
+			VISART217 (LINE 12)
+			
+	conflicts.txt
+		The following conflicts are not added to the database:
+			AR404 NONE
+			
+	faculty.txt
+		The following faculty members are not added to the database:
+			CAIN, JASON
+			CHEN, CAROL
+			
+	classtimes.txt
+		The followign class times are not added to the database:
+			165 MW / 08:00 11:00 14:00   (the / is missing from the file
+											on line 3)
+			75 MW/08:00 09:30 11:00 14:00 16:30
+					(14:000 found on line 1)
+	
+			
+			
+		
+			

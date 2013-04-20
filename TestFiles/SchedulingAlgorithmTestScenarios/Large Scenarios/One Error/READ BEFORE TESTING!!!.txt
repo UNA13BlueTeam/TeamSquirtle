@@ -1,0 +1,37 @@
+This scenario has one error in each of the 6 upload files:
+
+(Note that preferences.txt in each scenario is just instructions
+	on who should pick what course)
+
+	courses.txt
+		line 18, no space between AR385W and first section number
+		AR385W IS NOT STORED IN DATABASE AND WILL NOT EXIST IN 
+		THE ALGORITHM
+	
+	faculty.txt
+		line 2, missing @ in email. 
+		CAIN, JASON IS NOT STORED IN DATABASE AND WILL NOT EXIST
+		IN THE ALGORITHM
+		This also means there will be no preference input for him,
+		so his preferences can be ignored in preferences.txt
+		
+	prereqs.txt
+		line 22, AR385W will not exist due to error in courses.txt
+		
+	rooms.txt
+		line 5, no space between building and room number
+		ARBLDG 202 IS NOT STORED IN DATABASE AND WILL NOT EXIST
+		IN THE ALGORITHM
+		This will probably affect the scheduling the most, probably.
+	
+	conflicts.txt
+		line 3, incorrect specification conflict
+		It will be ignored
+		
+	classtimes.txt
+		line 3, missing / between days of week and times of day
+		THIS LINE OF CLASS TIMES IS NOT STORED IN DATABASE AND WILL
+		NOT EXISTS IN THE ALGORITHM
+		This in conjunction with the missing room will affect the 
+		scheduling tremendously.  Imagine the multi error scenarios...
+	
