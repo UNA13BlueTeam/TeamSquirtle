@@ -23,10 +23,10 @@
 			?>
 		</select><br><br><hr>
     <h2 for="time">Time Preference:</h2><br>
-		<input type="radio" name="time" id="time" value="early" />Early: before 11:00 AM<br />
+		<input type="radio" name="time" id="time" value="early" checked/>Early: before 11:00 AM<br />
 		<input type="radio" name="time" id="time"  value="midDay"/>Mid-Day: 11:00 AM - 2:00 PM <br />
 		<input type="radio" name="time" id="time" value="lateAfternoon" />Late Afternoon: after 2:00 PM <br />
-		<input type="radio" name="time" id="time" value="night" />Night: 6:00 PM <br />
+		<input type="radio" name="time" id="time" value="night" />Night: 6:00 PM and later <br />
 		<input type="radio" name="time" id="time" value="noPreference" />No Preferences <br />
     <p style="float:left">
 		<input type="submit" name="submit" value="  submit  " />

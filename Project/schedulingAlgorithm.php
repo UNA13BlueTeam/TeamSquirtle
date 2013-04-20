@@ -49,6 +49,11 @@
  *								Class times do not overlap when assigning to a professor or a room
  *									(e.g. a class will not be scheduled at 10:00 am in ROOM 12 if
  *									 there is class scheduled in ROOM 12 at 9:00 am for 75 minutes.)
+ *
+ ** Modifications by:
+ * Modified By (Name and Date): Michael Debs April 20, 12:39am
+ * Modifications Description:	Integrated with application
+ *								Allows for administrator to choose how to prioritize faculty members
  *								
  -------------------------------------------------------------------------------------------------*/
  
@@ -67,7 +72,7 @@
 	//flags
 	#############################
 	//ONE OF THESE MUST BE TRUE//
-		$sortByYOS = true;		//flag to sort by years of service
+		$sortByYOS = false;		//flag to sort by years of service
 		$sortByTOS = false;		//flag to sort by time of submission
 	//ONE OF THESE MUST BE TRUE//
 	#############################
@@ -179,6 +184,17 @@
 	
 	
 ##################### BEGIN SCHEDULING #################################
+
+	//Set flags for which priority to use for faculty
+	$sorter = $_POST['sort'];
+	if($sorter == "years")
+	{
+		$sortByYOS = true;
+	}
+	else if($sorter == "times")
+	{
+		$sortByTOS = true;
+	}
 
 	//Create array of courses (coursesToSchedule)
 	$coursesToSchedule = array();
@@ -316,12 +332,12 @@
 		   
         }
 		// Sort preference table by time of submission
-		elseif($sortByTOS == true)
+		else if($sortByTOS == true)
         {
 			//Retrieve all faculty members that chose this course in their preferences
 			$selectFacultyPreferenceQuery = "SELECT facultyUser, yos, tos, timePref FROM preferences WHERE courseName = '$courseNamer' ORDER BY CAST(tos AS SIGNED) ASC, yos DESC";
 			$selectFacultyPreferenceResult = mysqli_query($link, $selectFacultyPreferenceQuery);
-			while($row = mysqli_fetch_row($facultyResult))
+			while($row = mysqli_fetch_row($selectFacultyPreferenceResult))
 			{
 				// Call to get minimum hours for faculty
 				$facultyQuery2 = "SELECT minHours FROM faculty WHERE email = '$row[0]'";
@@ -769,6 +785,7 @@
 		}
 	}
 	
-	
+	// Redirects back to the homepage. Comment to see debugging statements
+	header("Location: adminHome.php");
 	// We would start scheduling the faculty members that haven't met their minimum hours requirement here
 ?>
