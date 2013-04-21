@@ -1,0 +1,39 @@
+This scenario has one error in each of the 6 upload files:
+
+(Note that preferences.txt in each scenario is just instructions
+	on who should pick what course)
+
+	courses.txt
+		The following courses will not be added to the database:
+			CIS330 (missing a section count)
+			CIS446 (missing a section count)
+			CIS350 (because of typo making it CIS305)
+			
+	
+	faculty.txt
+		The following faculty members will not be added to the database:
+			line 1, Richard Davis (missing comma)
+			line 3, Ralph Bailey  (missing @ symbol)
+			line 5, Xin Zhang	(years of service too high)
+			
+	prereqs.txt
+		The following prereqs will not be added to the database:
+			CIS486 (too many prereqs)
+			CIS350 (course will not exist)
+			
+		
+	rooms.txt
+		The following rooms will not be added to the database:
+			None of them.  All are written as BUILDING### instead
+			of BUILDING ###  (note the space between BUILDING and ###)
+			
+	
+	conflicts.txt
+		There are no conflicts in this department
+		
+	classtimes.txt
+		The following class times will not be added to the database:
+			line 3, 75 TR/08:00 09:30 ~~~ 15:30   (TR is TRR in file)
+			line 6, 165 W/15:00  (slash is missing)
+		
+	

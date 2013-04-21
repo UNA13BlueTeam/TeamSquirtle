@@ -1,0 +1,26 @@
+This scenario has one error in each of the 6 upload files:
+
+(Note that preferences.txt in each scenario is just instructions
+	on who should pick what course)
+
+	courses.txt
+		line 7, should be CIS350, not CIS305
+	
+	faculty.txt
+		line 5, years of service is 109, probably typo by admin
+		but 109 is over maximum years of service
+		
+	prereqs.txt
+		line 12, more than 3 prereqs listed
+		
+	rooms.txt
+		line 5, wrong room type of 'X'
+	
+	conflicts.txt
+		line 3, incorrect specification conflict
+		It will be ignored
+		
+	classtimes.txt
+		line 6, missing slash
+		
+	
