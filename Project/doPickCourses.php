@@ -1,6 +1,7 @@
-<?php include("includes/facultyHeader.php");
+<?php 
+	include("includes/header.php");
 	include("includes/db.php");
-	session_start();
+	// session_start();
 	
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
     if(!$link)
@@ -9,8 +10,7 @@
     }
 	
 	// Get variables from input form
-	$courseName = $_POST['course'];
-	$timePref = $_POST['time'];
+	$numCourses=$_POST['numCourses'];
 	$tos = date('YmdHi');
 	
 	$facultyUser = $_SESSION['username'];
@@ -23,23 +23,34 @@
 	echo "$facultyUser <br>";
 	echo "$tos <br>";
 	echo "$yos[0] <br>";
-	echo "$courseName <br>";
-	echo "$timePref <br>";
+	echo "$numCourses <br>";
+	// echo "$timePref <br>";
 	
 	// submit to query
-	$insertQuery = "INSERT INTO $db.preferences (facultyUser, timePref, yos, tos, courseName) VALUES ('$facultyUser', '$timePref', '$yos', '$tos', '$courseName')";
-	echo "$insertQuery";
-	$insertion = mysqli_query($link, $insertQuery);
-	
-	if($insertion)
-	{
-		echo("insertion succeeded<br>");
+	for($i=0; $i<$numCourses; $i++){
+		if(isset($_POST['course'.$i]))
+		{
+			echo("looping<br>");
+			$courseName = $_POST['course'.$i];
+			$timePref = $_POST['time'.$i];
+			$insertQuery = "INSERT INTO $db.preferences (facultyUser, timePref, yos, tos, courseName) VALUES ('$facultyUser', '$timePref', '$yos', '$tos', '$courseName')";
+			$insertion = mysqli_query($link, $insertQuery);
+
+			if($insertion)
+			{
+				echo("insertion succeeded<br>");
+			}
+			else
+			{
+				echo("insertion failed<br>");
+				echo($insertQuery."<br>");
+			}
+		
+			echo "$insertQuery";
+		}
 	}
-	else
-	{
-		echo("insertion failed<br>");
-		echo($insertQuery."<br>");
-	}
 	
 	
-include("includes/footer.php"); ?>
+	
+	include("includes/footer.php"); 
+?>
