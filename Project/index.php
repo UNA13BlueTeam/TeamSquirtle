@@ -37,7 +37,7 @@
             //         array_push($_SESSION, $value);
             //     }
             // }
-
+            $_SESSION['permission'] = $auth;
             if($auth==1)
             {
                 $_SESSION['loggedIn'] = true;
