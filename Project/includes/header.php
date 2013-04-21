@@ -1,9 +1,11 @@
 <?php 
 	session_start();
-	// include_once("php_error.php"); 
+	include_once("php_error.php");
+	\php_error\reportErrors();
  	include_once("db.php");
 	include_once("global.php");
-	error_reporting(E_ERROR);
+	// error_reporting(E_ERROR);
+	date_default_timezone_set('America/Chicago');
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
