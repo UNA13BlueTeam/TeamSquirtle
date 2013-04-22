@@ -6,7 +6,7 @@ include("includes/db.php");
 
  $admin = 'Schedule of Department';
 class PDF extends FPDF {
-  function PlantTable($admin) {
+  function ScheduleTable($admin) {
    $this->Cell(40, 10, $admin, 15);
    $this->Ln();
    $this->SetXY(10, 45);
@@ -50,7 +50,7 @@ class PDF extends FPDF {
  $pdf = new PDF();
  $pdf->SetFont('Arial', '', 30);
  $pdf->AddPage();
- $pdf->PlantTable($admin);
+ $pdf->ScheduleTable($admin);
 
  $pdf->Output();
 ?>
