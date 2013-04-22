@@ -76,7 +76,7 @@ include("includes/footer.php");
 	 *
 	 * Date of Original Implementation: April 4, 2013
 	 *
-	 * Tested by SQA Member (NAME and DATE): 
+	 * Tested by SQA Member (NAME and DATE): Alla Salah 4-21-2013
 	 * 
 	 ** Modifications by:
 	 * Modified By (Name and Date):	Michael Debs April 12, 2013
@@ -227,7 +227,7 @@ include("includes/footer.php");
 	*
 	* Date of Original Implementation: April 5, 2013
 	*
-	* Tested by SQA Member (NAME and DATE):
+	* Tested by SQA Member (NAME and DATE): Alla Salah 4-21-2013
 	* 
 	** Modifications by:
 	* Modified By (Name and Date): Michael Debs April 12, 2013
@@ -250,7 +250,7 @@ include("includes/footer.php");
 				printf("Error on line $lineNumber, Last name should have a comma following it <br>");
 				return false;
 			}
-			else if ( ord($line[$lineIndex])>= 97 && ord($line[$lineIndex] <= 122))
+			else if ( ord($line[$lineIndex])>= 97 && ord($line[$lineIndex] <= 122)) //checking for lower-case letters
 			{
 				printf("Error on line $lineNumber, only upper-case characters allowed <br>");
 				return false;
@@ -328,7 +328,7 @@ include("includes/footer.php");
 	*
 	* Date of Original Implementation: April 5, 2013
 	*
-	* Tested by SQA Member (NAME and DATE):
+	* Tested by SQA Member (NAME and DATE): Alla Salah 4-21-2013
 	* 
 	** Modifications by:
 	* Modified By (Name and Date): Michael Debs April 12, 2013
@@ -379,13 +379,13 @@ include("includes/footer.php");
 	*
 	* Files Acessed: None
 	*
-	* Function Pseudocode Author: Michael Debs
+	* Function Pseudocode Author: Michael Debs and Alla Salah
 	*
 	* Function Author: Michael Debs
 	*
 	* Date of Original Implementation: April 5, 2013
 	*
-	* Tested by SQA Member (NAME and DATE):
+	* Tested by SQA Member (NAME and DATE): Alla Salah 4-21-2013
 	* 
 	** Modifications by:
 	* Modified By (Name and Date): Michael Debs April 12, 2013
@@ -453,7 +453,7 @@ include("includes/footer.php");
 	*
 	* Date of Original Implementation: April 5, 2013
 	*
-	* Tested by SQA Member (NAME and DATE):
+	* Tested by SQA Member (NAME and DATE): Alla Salah 4-21-2013
 	* 
 	** Modifications by:
 	* Modified By (Name and Date): Michael Debs April 12, 2013
