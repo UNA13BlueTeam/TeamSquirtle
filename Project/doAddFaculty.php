@@ -83,7 +83,7 @@ include("includes/footer.php");
 	 * Modifications Description: Integrated scanner to sync with database
 	 *
 	 * Modified By (Name and Date):
-	 * Modifications Description:
+	 * Modifications Description: 
 	 -------------------------------------------------------------------------------------------------*/
 
 		echo("<h1>SCANNING FACULTY</h1><br>");
@@ -99,20 +99,21 @@ include("includes/footer.php");
 		
 		$lineNumber = 0; 
 		
+		
 		while(!feof($readFile))
 		{
 			$facultyName = "";
 			$yos = "";
 			$email = "";
 			$minHours = "";	
-		
+			
 			$lineIndex = 0;
 			$line = fgets($readFile);
 			$line = trim($line);	
 			$errorFlag = false;
 			$lineNumber++;
-			
-			
+				
+				
 			if(strlen($line)!= 0)
 			{
 				echo "Line = $line <br>";
@@ -122,27 +123,27 @@ include("includes/footer.php");
 
 				if ($errorFlag == true)
 				{
-				   skipWhiteSpace($line, $lineIndex, $lineNumber);
-				   $errorFlag = getYears($line, $lineIndex, $lineNumber, $yos);
+					  skipWhiteSpace($line, $lineIndex, $lineNumber);
+					  $errorFlag = getYears($line, $lineIndex, $lineNumber, $yos);
 
-				   if($errorFlag == true)
-				   {
-					   skipWhiteSpace($line, $lineIndex);
-					   $errorFlag = getEmail($line, $lineIndex, $lineNumber, $email);
+					  if($errorFlag == true)
+					  {
+						  skipWhiteSpace($line, $lineIndex);
+						  $errorFlag = getEmail($line, $lineIndex, $lineNumber, $email);
 
-					   if($errorFlag == true)
-					   {
+						  if($errorFlag == true)
+						  {
 							skipWhiteSpace($line, $lineIndex);
 							$errorFlag = getMinHours($line, $lineIndex ,$lineNumber, $minHours);
-					   }                           
-				   }          
+						  }                           
+					  }          
 				}
 			}  
-			
+				
 			if($errorFlag == true)
 			{
 				// If faculty already exist, then delete before submitting
-				
+					
 				$predef = array();
 				$predefQuery = "SELECT DISTINCT email FROM faculty";
 				$predefResult = mysqli_query($link, $predefQuery);
@@ -150,14 +151,14 @@ include("includes/footer.php");
 				{
 					array_push($predef, $row[0]);
 				}
-				
+					
 				if(in_array(trim($email), $predef))
 				{
 					echo("<h2>Faculty member already defined in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
 					$delete = "DELETE FROM $db.faculty WHERE email = '$email'";
 					$delete2 = "DELETE FROM $db.users WHERE username = '$email'";
 					echo("<h1>DELETING</h1><h2>$delete</h2>");
-					
+						
 					// Delete from faculty and users table
 					mysqli_query($link, $delete);
 					mysqli_query($link, $delete2);
@@ -166,24 +167,24 @@ include("includes/footer.php");
 				$insertQuery = "INSERT INTO $db.faculty (facultyName, yos, email, minHours) VALUES ('$facultyName', '$yos', '$email', '$minHours')";
 				echo "$insertQuery <br>";
 				$insertion = mysqli_query($link, $insertQuery);
-				
+					
 				// submit to users table
-				
+					
 				$temp = preg_split('/[,]/', $facultyName);
 				$last = $temp[0];
 				$first = trim($temp[1]);
-				
-				
+					
+					
 				$first = ucfirst(strtolower($first));
 				$last = ucfirst(strtolower($last));
 				$email = strtolower($email);
-				
+					
 				//$password = crypt('password');
 				$password = 'password';
 				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName, lastName) VALUES ('$email', '2', '$password', '$first', '$last')";
 				echo "$insertQuery <br>";
 				$insertion = mysqli_query($link, $insertQuery);
-				
+					
 				if($insertion)
 				{
 					echo("insertion succeeded<br>");
@@ -194,14 +195,11 @@ include("includes/footer.php");
 					echo($insertQuery."<br>");
 				}
 			}
-			
+				
 			printf("<br><br>");				
 		}//end while loop  
-	}
-	
-	
-	
-	
+		
+	}//end function
 	
 	/*-----------------------------------------------------------------------------------------------
 	********************** getName ********************
@@ -376,6 +374,8 @@ include("includes/footer.php");
 	*
 	* Exceptions/Errors Thrown: Missing email extension.
 	*							Email Address must between 3 and 10 characters in length.
+	*							Email address cannot include any lower-case characters.
+	*							Email extension cannot include any lower-case characters.
 	*
 	* Files Acessed: None
 	*
@@ -385,18 +385,21 @@ include("includes/footer.php");
 	*
 	* Date of Original Implementation: April 5, 2013
 	*
-	* Tested by SQA Member (NAME and DATE): Alla Salah 4-21-2013
+	* Tested by SQA Member (NAME and DATE): Alla Salah 4-22-2013
 	* 
 	** Modifications by:
 	* Modified By (Name and Date): Michael Debs April 12, 2013
 	* Modifications Description: Integrated to work with application
 	*
-	* Modified By (Name and Date):
-	* Modifications Description:
+	* Modified By (Name and Date): Alla Salah 4-22-2013
+	* Modifications Description: Added code to check if email address and extension contains any lower-
+	*							case characters.
 	-------------------------------------------------------------------------------------------------*/ 
 	function getEmail($line, &$lineIndex, $lineNumber, &$email)
 	{	
 		$ext = "";
+
+		
 		//Gets the email address except for the extension
 		while($line[$lineIndex] != '@' && strlen($email)<=10)
 		{
@@ -415,6 +418,16 @@ include("includes/footer.php");
 			printf("Error on line %d, Email Address must between 3 and 10 characters in length. <br>",$lineNumber);
 			return false;
 		}
+		//Checking if $email contains any lower-case characters a-z. If it does, then return false
+		for( $index=0; $index < strlen($email); $index++) // a= '97' and z='122'
+		{
+			if( ord($email[$index]) >= 97 and ord($email[$index]) <= 122)
+			{
+				echo("Email address cannot include any lower-case characters.");
+				return false;
+			}
+		
+		}//end for
 		
 		//Gets the email extension; for example, @UNA.EDU
 		while(ord($line[$lineIndex]) != 32 && ord($line[$lineIndex]) != 9 )
@@ -426,6 +439,17 @@ include("includes/footer.php");
 				break;
 			}
 		}
+		
+		//Checking if $ext contains any lower-case characters a-z. If it does, then return false
+		for( $i=0; $i < strlen($ext); $i++) // a= '97' and z='122'
+		{
+			if( ord($ext[$i]) >= 97 and ord($ext[$i]) <= 122)
+			{
+				echo("Email extension cannot include any lower-case characters.");
+				return false;
+			}
+		
+		}//end for
 		
 		printf("Email = $email$ext <br>");
 		return true;

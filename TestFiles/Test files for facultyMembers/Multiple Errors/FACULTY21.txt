@@ -1,1 +1,3 @@
-john, DOE 61 jdoe@una.edu 22
+john, DOE 60 JDOE@UNA.EDU 12
+JOHN, doe 1 JDOEE@UNA.EDU 11
+JOHN,DOE 2 JTOM@UNA.EDU 10
