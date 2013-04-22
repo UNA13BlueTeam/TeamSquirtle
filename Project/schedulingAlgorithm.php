@@ -123,6 +123,8 @@
 							  the room already*/
 	$addFaculty;			//holds a faculty object to be added to arrayOfFaculty
 	$arrayOfFaculty;		//array of faculty members to teach courses, defined later
+	$alreadyTeachingTimes;	//array of times a faculty member is already teaching, define later
+	$alreadyTeachingTimesIndex = 0; //index for alreadyTeachingTimes
 	$conTimes;				//string of all conflict times that gets broken into an array later
 	$conflictTimes;			/*array of conflict times that further determine when a course
 							  can be scheduled, defined later */
@@ -443,7 +445,7 @@
                     {
 						$foundRoom = false;
                         $conflictExists = false;
-						$alreadyTeaching = false;		
+						$alreadyTeachingFlag = false;		
 						$alreadyInSession = false;
 						
 						// For debugging purposes!
@@ -492,66 +494,105 @@
                         // Checks to make sure the above loop found a time that wasn't conflicted with the list of conflicts
                         if($conflictExists == false)
                         {
-							// Loops through array of times to find a time slot where the faculty member isn't teaching
-                            do
-                            {								
-								$facultyMember = $facultyPQ[$facultyPQIndex];
-								$facultyName = $facultyMember->userName;
-								
-                                $selectFacultyTeachingQuery = "SELECT timeSlot FROM scheduledCourses WHERE facultyUser = '$facultyName'";
-								$selectFacultyTeachingResult = mysqli_query($link, $selectFacultyTeachingQuery);
-								$row = mysqli_fetch_row($selectFacultyTeachingResult);
-								
-								$overlapCheckFaculty = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
-								$overlapCheckFaculty = $overlapCheckFaculty.$arrayOfTimes[$arrayOfTimesIndex];
-								
-								// Splits the times into arrays
-								//$row[0] and $overlapCheckFaculty are the two times to check so we need the specific time (e.g. 10:00) from each string
-								$timeToScheduleFaculty = preg_split('/[\s+\/]/', $overlapCheckFaculty);
-								$alreadyTeachingFaculty = preg_split('/[\s+\/]/', $row[0]);
-								
-								// Check to make sure a faculty is not already teaching at a time
+							$alreadyTeachingTimes = array();
+							$facultyMember = $facultyPQ[$facultyPQIndex];
+							$facultyName = $facultyMember->userName;
+							$selectFacultyTeachingQuery = "SELECT timeSlot FROM scheduledCourses WHERE facultyUser = '$facultyName'";
+							$selectFacultyTeachingResult = mysqli_query($link, $selectFacultyTeachingQuery);
+							while($row = mysqli_fetch_row($selectFacultyTeachingResult))
+							{
 								if($row)
 								{
+									array_push($alreadyTeachingTimes, $row[0]);
+								}
+							}
+							$alreadyTeachingTimesIndex = 0;
+							// Loops through array of times to find a time slot where the faculty member isn't teaching
+							if($alreadyTeachingTimes)
+							{
+								do
+								{											
+									$overlapCheckFaculty = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
+									$overlapCheckFaculty = $overlapCheckFaculty.$arrayOfTimes[$arrayOfTimesIndex];
+									
+									
+									
+									echo "ALREADY TEACHING ARRAYS BELOW FOR $facultyName: <br>";
 									print_r($timeToScheduleFaculty);
+									echo "<br>";
 									print_r($alreadyTeachingFaculty);
+									echo "<br>";
+									print_r($alreadyTeachingTimes);
+									echo "<br>";
 									
-									// $difference = the amount of minutes between the time in array of times and the time they are already teaching
-									$difference = round(abs(strtotime($timeToScheduleFaculty[2]) - strtotime($alreadyTeachingFaculty[2])) / 60,2);
-									
-									// Check to make sure the minutes don't overlap the time they are currently teaching
-									if($difference > $alreadyTeachingFaculty[0])
-									{
-										$noTimeOverlapFaculty = true;
+									// Check to make sure a faculty is not already teaching at a time
+									if(!in_array($overlapCheckFaculty, $alreadyTeachingTimes))
+									{			
+										for($i = 0; $i < count($alreadyTeachingTimes); $i++)
+										{
+											// Splits the times into arrays
+											//$row[0] and $overlapCheckFaculty are the two times to check so we need the specific time (e.g. 10:00) from each string
+											$timeToScheduleFaculty = preg_split('/[\s+\/]/', $overlapCheckFaculty);
+											$alreadyTeachingFaculty = preg_split('/[\s+\/]/', $alreadyTeachingTimes[$i]);
+										
+											// $difference = the amount of minutes between the time in array of times and the time they are already teaching
+											$difference = round(abs(strtotime($timeToScheduleFaculty[2]) - strtotime($alreadyTeachingFaculty[2])) / 60,2);
+											
+											// Check to make sure the minutes don't overlap the time they are currently teaching
+											if($difference > $alreadyTeachingFaculty[0])
+											{
+												$noTimeOverlapFaculty = true;
+											}
+											else
+											{
+												$noTimeOverlapFaculty = false;
+											}
+																			
+										
+											echo "<br><h3>$overlapCheckFaculty</h3><br>";
+											echo $alreadyTeachingTimes[$alreadyTeachingTimesIndex]."<br>";
+											echo $classTimes[$classTimesIndex]->daysOfWeek."<br>";
+											
+											// Checks to make sure the faculty member isn't already teaching at the same time on the same day
+											if($noTimeOverlapFaculty == true)
+											{
+												$alreadyTeachingFlag = false;
+											}
+											else	// Falls here if a faculty member ran into a conflicting time
+											{
+												if(count(array_intersect(str_split($alreadyTeachingTimes[$i]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0)
+												{
+													$alreadyTeachingFlag = false;
+												}
+												else
+												{
+													$alreadyTeachingFlag = true;
+													$conflictExists = true;
+													echo "<br>Already Teaching increment<br>";
+													$alreadyTeachingTimesIndex++;
+													if($alreadyTeachingTimesIndex >= count($alreadyTeachingTimes))
+													{
+														$arrayOfTimesIndex++;
+														$alreadyTeachingTimesIndex = 0;
+													}
+													$i = count($alreadyTeachingTimes);
+												}
+											}
+										}
 									}
-									else
+									else	// The faculty member wasn't teaching at a time yet
 									{
-										$noTimeOverlapFaculty = false;
+										$alreadyTeachingFlag = true;
+										$conflictExists = true;
+										$alreadyTeachingTimesIndex++;
+										if($alreadyTeachingTimesIndex >= count($alreadyTeachingTimes))
+										{
+											$arrayOfTimesIndex++;
+											$alreadyTeachingTimesIndex = 0;
+										}
 									}
-									
-								}
-								else	// The faculty member wasn't teaching at a time yet
-								{
-								 	$noTimeOverlapFaculty = true;								
-								}
-								
-								echo "<br><h3>$overlapCheckFaculty</h3><br>";
-								
-								// Checks to make sure the faculty member isn't already teaching at the same time on the same day
-                                if(($row[0] != $overlapCheckFaculty) and ((count(array_intersect(str_split($row[0]), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0) 
-										or ($noTimeOverlapFaculty == true)))
-                                {
-                                    $alreadyTeachingFlag = false;
-                                }
-                                else	// Falls here if a faculty member ran into a conflicting time
-                                {
-                                    $alreadyTeachingFlag = true;
-									$conflictExist = true;
-									echo "<br>Already Teaching increment<br>";
-									$arrayOfTimesIndex++;
-                                }
-                            }while(($alreadyTeachingFlag == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
-							
+								}while(($alreadyTeachingFlag == true) and ($arrayOfTimesIndex < count($arrayOfTimes)));
+							}	
 							// Check to make sure we found a time slot that does not conflict with that particular faculty member or a course
 							// is not already in session
                             if(($alreadyTeachingFlag == false) and ($conflictExists == false) and ($alreadyInSession == false)) 
@@ -664,7 +705,7 @@
 											}
 											else if($noPreferenceFlag == true)
 											{
-												$splitTime = preg_split('/[:]/', trim($tod[$i]));
+												$splitTime = preg_split('/[:]/', trim($arrayOfTimes[$arrayOfTimesIndex]));
 												$intTime = trim($splitTime[0]).trim($splitTime[1]);
 												
 												if(($intTime > 0) and ($intTime < 1800))
@@ -786,6 +827,6 @@
 	}
 	
 	// Redirects back to the homepage. Comment to see debugging statements
-	header("Location: adminHome.php");
+	//header("Location: adminHome.php");
 	// We would start scheduling the faculty members that haven't met their minimum hours requirement here
 ?>
