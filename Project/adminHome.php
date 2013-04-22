@@ -25,7 +25,7 @@
 			<li> <a href="manageFaculty.php" id="faculty">Manage Faculty</a> </li>
 			<li> <a href="preSchedulingPage.php" id="schedule">Schedule Courses!</a> </li>
 			<li> <a href="adminHome.php" id="deadline">Change Deadline</a></li>
-                        <li> <a href="viewPDF.php" id="deadline">View and Download Schedule in PDF</a></li>
+            <li> <a href="viewPDF.php" id="pdf">View and Download Schedule in PDF</a></li>
 			<li> <a href="help.php" id="deadline">Help</a></li>
 		</ul>
 </div>

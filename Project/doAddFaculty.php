@@ -401,16 +401,20 @@ include("includes/footer.php");
 
 		
 		//Gets the email address except for the extension
-		while($line[$lineIndex] != '@' && strlen($email)<=10)
+		while($line[$lineIndex] != '@' && strlen($email) <= 10)
 		{
 			$email = $email.$line[$lineIndex];
 			$lineIndex++;
-			if($lineIndex == strlen($line) )
+			if($lineIndex == strlen($line))
 			{
 				printf("Error on line %d, missing email extension. <br>",$lineNumber);
 				return false;
 			}
-			
+			else if ( ord($line[$lineIndex])>= 97 && ord($line[$lineIndex] <= 122)) //checking for lower-case letters
+			{
+				printf("Error on line $lineNumber, only upper-case characters allowed <br>");
+				return false;
+			}
 		}//end while
 		
 		if(strlen($email)> 10 || strlen($email) < 3)

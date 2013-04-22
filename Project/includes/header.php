@@ -20,7 +20,7 @@
 				echo('
 					<div class="nav">
 						<nav>
-							<!-- <a href="adminHome.php">UNA '.$deptAbbrev.'</a> -->
+							<!-- <a href="adminHome.php">UNA</a> -->
 							<a href="adminHome.php" id="home">Home</a>&nbsp;|&nbsp;
 							<a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> &nbsp;|&nbsp;
 							<a href="manageRooms.php" id="building">Manage Rooms</a>&nbsp;|&nbsp;
@@ -37,7 +37,7 @@
 				echo('
 					<div class="nav">
 						<nav>
-							<!-- <a href="facultyHome.php">UNA '.$deptAbbrev.'</a> -->
+							<!-- <a href="facultyHome.php">UNA</a> -->
 							<a href="facultyHome.php" id="home">Home</a>&nbsp;|&nbsp;
 							<a href="viewschedule.php" id="timeSlots">View Schedules</a> &nbsp;|&nbsp;
 							<a href="Pickcourses.php" id="building">Pick Courses</a>&nbsp;|&nbsp;
