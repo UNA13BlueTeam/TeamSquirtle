@@ -39,6 +39,7 @@
 }
 
 body{
+	min-width:1200px;
 	padding: 20px;
 	font-family: Helvetica;
 	background: #eee;

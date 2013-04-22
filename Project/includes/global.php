@@ -19,7 +19,7 @@
 			$infoQuery = "SELECT * FROM users WHERE username = '$un'";
 			$infoResults = mysqli_query($link, $infoQuery);
 			$userInfo = mysqli_fetch_assoc($infoResults);
-			$deptName 	= "Computer Science and Information Blah";
+			$deptName 	= $userInfo['deptName'];
 			$deptAbbrev = "CSIS";
 		}else
 		{
@@ -28,5 +28,40 @@
 	}else
 	{
 		// echo("loggedIn unset. <br>");
+	}
+
+	function clearUsers(){
+		$query = "TRUNCATE FACULTY; DELETE * FROM users WHERE permission != 1;";
+		mysqli_query($link, $query);
+	}
+
+	function clearClasses(){
+		$query = "TRUNCATE courses";
+		mysqli_query($link, $query);
+	}
+
+	function clearClassTimes(){
+		$query = "TRUNCATE timeSlots";
+		mysqli_query($link, $query);
+	}
+
+	function clearRooms(){
+		$query = "TRUNCATE rooms";
+		mysqli_query($link, $query);
+	}
+
+	function clearPrereqs(){
+		$query = "TRUNCATE prereqs";
+		mysqli_query($link, $query);
+	}
+
+	function clearPrefs(){
+		$query = "TRUNCATE preferences";
+		mysqli_query($link, $query);
+	}
+
+	function clearSchedule(){
+		$query = "TRUNCATE scheduledCourses";
+		mysqli_query($link, $query);
 	}
 ?>
