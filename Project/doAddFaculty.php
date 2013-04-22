@@ -410,7 +410,7 @@ include("includes/footer.php");
 				printf("Error on line %d, missing email extension. <br>",$lineNumber);
 				return false;
 			}
-			else if ( ord($line[$lineIndex])>= 97 && ord($line[$lineIndex] <= 122)) //checking for lower-case letters
+			else if (ord($line[$lineIndex])>= 97 && ord($line[$lineIndex] <= 122)) //checking for lower-case letters
 			{
 				printf("Error on line $lineNumber, only upper-case characters allowed <br>");
 				return false;
@@ -422,16 +422,6 @@ include("includes/footer.php");
 			printf("Error on line %d, Email Address must between 3 and 10 characters in length. <br>",$lineNumber);
 			return false;
 		}
-		//Checking if $email contains any lower-case characters a-z. If it does, then return false
-		for( $index=0; $index < strlen($email); $index++) // a= '97' and z='122'
-		{
-			if( ord($email[$index]) >= 97 and ord($email[$index]) <= 122)
-			{
-				echo("Email address cannot include any lower-case characters.");
-				return false;
-			}
-		
-		}//end for
 		
 		//Gets the email extension; for example, @UNA.EDU
 		while(ord($line[$lineIndex]) != 32 && ord($line[$lineIndex]) != 9 )
@@ -442,18 +432,12 @@ include("includes/footer.php");
 			{
 				break;
 			}
-		}
-		
-		//Checking if $ext contains any lower-case characters a-z. If it does, then return false
-		for( $i=0; $i < strlen($ext); $i++) // a= '97' and z='122'
-		{
-			if( ord($ext[$i]) >= 97 and ord($ext[$i]) <= 122)
+			else if (ord($line[$lineIndex])>= 97 && ord($line[$lineIndex] <= 122)) //checking for lower-case letters
 			{
-				echo("Email extension cannot include any lower-case characters.");
+				printf("Error on line $lineNumber, only upper-case characters allowed <br>");
 				return false;
 			}
-		
-		}//end for
+		}
 		
 		printf("Email = $email$ext <br>");
 		return true;
