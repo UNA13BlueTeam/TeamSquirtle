@@ -1,7 +1,7 @@
 <?php 
 	include("includes/header.php");
-	doActions();
 	include("includes/global.php");
+	doActions();
 ?>
 
 <h1>Admin Actions</h1>
@@ -147,6 +147,7 @@
  				}
  			}
  		}
+ 		header("Location: adminActions.php");
  	}
 
 	function printForm()
