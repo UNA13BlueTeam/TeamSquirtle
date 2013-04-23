@@ -36,7 +36,7 @@
  	function doActions()
  	{
 		require("pdf.php");
- 		global $host, $user, $pass, $db, $port, $deptName;
+ 		global $host, $user, $pass, $db, $port, $deptName, $semesterName;
  		$link = mysqli_connect($host, $user, $pass, $db, $port);
  		if(isset($_POST)){
  			if(isset($_POST['department']))
@@ -45,13 +45,8 @@
  				mysqli_query($link, $query);
  			}elseif(isset($_POST['newSemester']))
  			{
- 				$un = $_SESSION["username"];
-				$infoQuery = "SELECT * FROM users WHERE username = '$un'";
-				$infoResults = mysqli_query($link, $infoQuery);
-				$userInfo = mysqli_fetch_assoc($infoResults);
-				$semesterName = $userInfo['semesterName'];
  				$semester = str_replace(' ', '', $semesterName);
- 				$fileName = "generatedFiles/".$semesterName.".pdf";
+ 				$fileName = "generatedFiles/".$semester.".pdf";
  				$title = 'Schedule for Department of '.$deptName;
 
  				$pdf = new PDF();
@@ -75,7 +70,7 @@
  				clearConflicts();
  				clearSchedule();
 
- 				$query = "UPDATE users SET semesterName = ".$_POST['newSemesterName'];
+ 				$query = "UPDATE users SET semesterName = '".$_POST['newSemesterName']."'";
  				mysqli_query($link, $query);
  				header("Location: adminHome.php");
 
@@ -147,7 +142,6 @@
  				}
  			}
  		}
- 		header("Location: adminActions.php");
  	}
 
 	function printForm()

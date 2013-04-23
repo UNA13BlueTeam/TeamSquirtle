@@ -4,7 +4,7 @@
 	$flag = $_POST['flag'];
 
     $link = mysqli_connect ($host, $user, $pass, $db, $port);
-    if(!link){
+    if(!$link){
         die('cannot connect database'. mysqli_error($link));
     }
     //mysqli_query ("INSERT INTO tablename (roomType, size, roomName )
@@ -278,7 +278,7 @@
             echo(", RoomSize= ".$roomSize);
             echo(", RoomName= ".$roomName );
             echo(", RoomNumber= ".$roomNumber);
-            $completeRoomName= $roomName .$roomNumber;
+            $completeRoomName= $roomName." ".$roomNumber;
         	// printf("<br>CompleteRoomName= %s <br>",$CompleteRoomName);
         }
       $completeRoomName= $roomName .$roomNumber;
