@@ -72,29 +72,32 @@
 				{
  					clearSchedule();
  				}
+ 			}else if(isset($_POST['generate']))
+ 			{
 				if(isset($_POST['updateTimes']) and $_POST['updateTimes'])
 				{
- 					updateTimes();
+					echo("<h1>Generating Class Times</h1>");
+ 					generateClassTimes();
  				}
 				if(isset($_POST['updateCourses']) and $_POST['updateCourses'])
 				{
- 					updateCourses();
+ 					generateCourses();
  				}
 				if(isset($_POST['updateRooms']) and $_POST['updateRooms'])
 				{
- 					updateRooms();
+ 					generateRooms();
  				}
 				if(isset($_POST['updateFaculty']) and $_POST['updateFaculty'])
 				{
- 					updateFaculty();
+ 					generateFaculty();
  				}
 				if(isset($_POST['updatePrereqs']) and $_POST['updatePrereqs'])
 				{
- 					updatePrereqs();
+ 					generatePrereqs();
  				}
 				if(isset($_POST['updateConflicts']) and $_POST['updateConflicts'])
 				{
- 					updateConflicts();
+ 					generateConflicts();
  				}
  			}
  		}

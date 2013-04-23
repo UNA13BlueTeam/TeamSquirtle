@@ -1,7 +1,7 @@
 <?php 
 	session_start();
 	include_once("php_error.php"); 
-	// \php_error\reportErrors();
+	\php_error\reportErrors();
  	include_once("db.php");
 	include_once("global.php");
 	// error_reporting(E_ERROR);

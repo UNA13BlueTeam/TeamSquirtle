@@ -1,7 +1,7 @@
 <?php
 define('FPDF_FONTPATH','fpdf17/font/');
 include("includes/db.php");
- require('fpdf17/fpdf.php');
+require('fpdf17/fpdf.php');
  //require('getInfo.php');\
 
  $admin = 'Schedule of Department';

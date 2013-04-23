@@ -89,12 +89,13 @@
 	function generateFaculty()
 	{
 		global $link;
-		$outFile = fopen("generatedFiles/faculty.txt", "w");
+		$outFile = fopen($_SERVER['DOCUMENT_ROOT']."/generatedFiles/faculty.txt", "w");
 		$query = "SELECT * FROM faculty";
 		$results = mysqli_query($link, $query);
 		while($row = mysqli_fetch_assoc($results))
 		{
 			$output = $row['facultyName']." ".$row['yos']." ".$row['email']."@UNA.EDU ".$row['minHours']."\r\n";
+			fwrite($outFile, $output);
 		}
 	}
 
@@ -107,18 +108,21 @@
 		while($row = mysqli_fetch_assoc($results))
 		{
 			$output = $row['courseName']." ".$row['dsection']." ".$row['nsection']." ".$row['isection']." ".$row['classSize']." ".$row['roomType']." ".$row['hours']."\r\n";
+			fwrite($outFile, $output);
 		}
 	}
 
 	function generateClassTimes()
 	{
 		global $link;
-		$outFile = fopen("generatedFiles/classTimes.txt", "w");
+		echo(dirname("."));
+		$outFile = fopen("generatedFiles/classTimes.txt", "w", 1);
 		$query = "SELECT * FROM timeSlots";
 		$results = mysqli_query($link, $query);
 		while($row = mysqli_fetch_assoc($results))
 		{
 			$output = $row['minutes']." ".$row['daysOfWeek']."/".$row['timesOfDay']."\r\n";
+			fwrite($outFile, $output);
 		}
 	}
 
@@ -131,6 +135,7 @@
 		while($row = mysqli_fetch_assoc($results))
 		{
 			$output = $row['roomType']." ".$row['size']." ".$row['roomName']."\r\n";
+			fwrite($outFile, $output);
 		}
 	}
 
@@ -143,6 +148,7 @@
 		while($row = mysqli_fetch_assoc($results))
 		{
 			$output = $row['course']." ".$row['prereq1']." ".$row['prereq2']." ".$row['prereq3']."\r\n";
+			fwrite($outFile, $output);
 		}
 	}
 
@@ -155,6 +161,7 @@
 		while($row = mysqli_fetch_assoc($results))
 		{
 			$output = $row['course']." ".$row['times']."\r\n";
+			fwrite($outFile, $output);
 		}
 	}
 
