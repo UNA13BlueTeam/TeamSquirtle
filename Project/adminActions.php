@@ -1,5 +1,5 @@
 <?php 
-	include("includes/header.php"); 
+	include("includes/header.php");
 	doActions();
 	include("includes/global.php");
 ?>
@@ -35,6 +35,7 @@
 
  	function doActions()
  	{
+		require("pdf.php");
  		global $host, $user, $pass, $db, $port, $deptName, $semesterName;
  		$link = mysqli_connect($host, $user, $pass, $db, $port);
  		if(isset($_POST)){
@@ -44,13 +45,12 @@
  				mysqli_query($link, $query);
  			}elseif(isset($_POST['newSemester']))
  			{
- 				$semester = str_replace(' ', '', $semesterName);
- 				include("fpdf17/fpdf.php");
- 				define('FPDF_FONTPATH','fpdf17/font/');
- 				$title = 'Schedule for Department of '.$deptName;
  				global $link;
- 				\viewPDF\ScheduleTable($title);
+ 				$semester = str_replace(' ', '', $semesterName);
+ 				$title = 'Schedule for Department of '.$deptName;
+
  				$pdf = new PDF();
+ 				$pdf->ScheduleTable($title);
  				$pdf->SetFont('Helvetica', '', 30);
  				$pdf->AddPage();
  				$pdf->ScheduleTable($title);
