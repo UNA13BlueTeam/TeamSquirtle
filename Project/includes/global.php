@@ -31,37 +31,37 @@
 	}
 
 	function clearUsers(){
-		$query = "TRUNCATE FACULTY; DELETE * FROM users WHERE permission != 1;";
+		$query = "TRUNCATE TABLE faculty; DELETE * FROM users WHERE permission != 1;";
 		mysqli_query($link, $query);
 	}
 
 	function clearClasses(){
-		$query = "TRUNCATE courses";
+		$query = "TRUNCATE TABLE courses";
 		mysqli_query($link, $query);
 	}
 
 	function clearClassTimes(){
-		$query = "TRUNCATE timeSlots";
+		$query = "TRUNCATE TABLE timeSlots";
 		mysqli_query($link, $query);
 	}
 
 	function clearRooms(){
-		$query = "TRUNCATE rooms";
+		$query = "TRUNCATE TABLE rooms";
 		mysqli_query($link, $query);
 	}
 
 	function clearPrereqs(){
-		$query = "TRUNCATE prereqs";
+		$query = "TRUNCATE TABLE prereqs";
 		mysqli_query($link, $query);
 	}
 
 	function clearPrefs(){
-		$query = "TRUNCATE preferences";
+		$query = "TRUNCATE TABLE preferences";
 		mysqli_query($link, $query);
 	}
 
 	function clearSchedule(){
-		$query = "TRUNCATE scheduledCourses";
+		$query = "TRUNCATE TABLE scheduledCourses";
 		mysqli_query($link, $query);
 	}
 ?>
