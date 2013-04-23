@@ -28,6 +28,12 @@
  			<input type="submit" value="Start New Semester">
  		</form>
  		<br style="clear:both;">
+ 		<h3>Set Deadline</h3>
+ 		<form action="adminActions.php" method="POST">
+ 			<input type="date" name="deadline" />
+ 			<input type="submit" value="Set Deadline" />
+ 		</form>
+ 		<br style="clear:both;">
  	');
  	printForm();
  	printConflicts();
@@ -73,6 +79,13 @@
  				$query = "UPDATE users SET semesterName = '".$_POST['newSemesterName']."'";
  				mysqli_query($link, $query);
  				header("Location: adminHome.php");
+ 			}elseif(isset($_POST['deadline']))
+ 			{
+ 				$deadline = $_POST['deadline'];
+ 				// $deadline = date('YmdHi');
+
+ 				$query = "UPDATE users SET deadline = ".$deadline;
+ 				mysqli_query($link, $query);
 
  			}elseif(isset($_POST['nameFlag']))
  			{
