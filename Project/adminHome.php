@@ -16,20 +16,7 @@
 	echo("<h3> Admin </h3>");
 	echo "<h3>".$fetchInfo[1]."</h3>";
 ?>
-<div class="homeLinks">
-	<h4>Links!</h4>
-		<ul>
-			<li> <a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> </li>
-			<li> <a href="manageRooms.php" id="building">Manage Rooms</a> </li>
-			<li> <a href="manageClass.php" id="classes">Manage Classes</a> </li>
-			<li> <a href="manageFaculty.php" id="faculty">Manage Faculty</a> </li>
-			<li> <a href="preSchedulingPage.php" id="schedule">Schedule Courses!</a> </li>
-			<li> <a href="adminHome.php" id="deadline">Change Deadline</a></li>
-            <li> <a href="viewPDF.php" id="pdf">View and Download Schedule in PDF</a></li>
-			<li> <a href="help.php" id="deadline">Help</a></li>
-		</ul>
-</div>
-<div id="homeSchedule">
+<div class="homeSchedule">
 	<h4>Schedule</h4>
 	<?php
  		$scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC";
@@ -55,7 +42,7 @@
 					<td>".$row['roomName']."</td>
 					");
 				$adminUser = $row['facultyUser'];
-				$getName = "SELECT lastName, firstName FROM users WHERE username = '$adminUser'";
+				$getName = "SELECT lastName, firstName FROM users WHERE username = '".$adminUser."'";
 				$resultGetName = mysqli_query($link, $getName);
 				$name = mysqli_fetch_assoc($resultGetName);
 					
@@ -66,5 +53,20 @@
 			}
 	    ?>
 		</table>
+		<br>
+		<button href="viewPDF.php">View Schedule as PDF</button> <button href="schedulingAlgorithm.php">Run Scheduling Algorithm</button>
+</div>
+<div class="homeLinks" style="float:left;">
+	<h4>Links!</h4>
+		<ul>
+			<li> <a href="manageTimeSlots.php" id="timeSlots">Manage Class Times</a> </li>
+			<li> <a href="manageRooms.php" id="building">Manage Rooms</a> </li>
+			<li> <a href="manageClass.php" id="classes">Manage Classes</a> </li>
+			<li> <a href="manageFaculty.php" id="faculty">Manage Faculty</a> </li>
+			<li> <a href="preSchedulingPage.php" id="schedule">Schedule Courses!</a> </li>
+			<li> <a href="adminHome.php" id="deadline">Change Deadline</a></li>
+            <li> <a href="viewPDF.php" id="deadline">View and Download Schedule in PDF</a></li>
+			<li> <a href="help.php" id="deadline">Help</a></li>
+		</ul>
 </div>
 <?php include("includes/footer.php"); ?>
