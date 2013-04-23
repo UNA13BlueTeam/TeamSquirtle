@@ -207,7 +207,7 @@
 	$unscheduledCourses2 = array();		
 	 
 	
-	$selectCoursesQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses";
+	$selectCoursesQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses ORDER BY courseName DESC";
 	$selectCoursesResult = mysqli_query($link, $selectCoursesQuery);
 	
 	while($row = mysqli_fetch_row($selectCoursesResult))
