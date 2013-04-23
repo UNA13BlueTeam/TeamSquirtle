@@ -1,4 +1,5 @@
 <?php 
+    echo getcwd()."\n";
     session_start();
     require("includes/global.php");
 ?>
