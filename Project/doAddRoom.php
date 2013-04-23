@@ -299,7 +299,7 @@
         }
 		else if ($invalidSpace == false)
 		{
-			$completeRoomName = $roomName.$roomNumber;
+			$completeRoomName = $roomName." ".$roomNumber;
         	global $link, $db;
 			
 			$predef = array();
