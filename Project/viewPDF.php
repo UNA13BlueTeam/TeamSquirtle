@@ -1,6 +1,7 @@
 <?php
 include("includes/db.php");
 include("includes/global.php");
+include("pdf.php");
 
  //require('getInfo.php');\
 global $host, $user, $pass, $db, $port, $deptName;

@@ -27,7 +27,6 @@
 	// File Submission
 	elseif($_POST['flag']=="file")
 	{
-		echo ("I got files!<br>");
 		
 		$timeSlotFile = $_FILES["timeSlotFile"]["tmp_name"];
 		$timeSlotFileName = $_FILES["timeSlotFile"]["name"];
@@ -98,7 +97,7 @@
 	* Modified By (Name and Date):
 	* Modifications Description:
 	-------------------------------------------------------------------------------------------------*/ 
-		echo("<h1>SCANNING CLASS TIMES</h1><br>");
+		
 			
 		global $link, $db;
 
@@ -109,7 +108,6 @@
 		{
 			array_push($predefMinutes, $row[0]);
 		}
-		print_r($predefMinutes);
 		
 		$predefDOW = array();
 		$predefQuery = "SELECT daysOfWeek FROM timeSlots";
@@ -118,7 +116,6 @@
 		{
 			array_push($predefDOW, $row[0]);
 		}
-		print_r($predefDOW);
 		
 		//We concatenate each element of $predefMinutes with $predefDOW
 		//in order to successfully check for duplicate time slots
@@ -127,12 +124,13 @@
 			{
 				$predef[$i] = $predefMinutes[$i] . $predefDOW[$i];
 			}
-			print_r($predef);
 		
 		
 		echo("<hr>");
 		$readFile = fopen($fileName, "r") or die("Unable to open $fileName");
 		
+		echo("<h1>SCANNING CLASS TIMES</h1><br>");
+		echo("<h3>Checking $prettyName for errors...</h3>");
 		//VARIABLES
 		$lineNumber = 0;	//used in listing errors
 		$printLine = " ";	//line read in from file
@@ -171,9 +169,6 @@
 															//each element will be a contiguous string of characters
 															//all whitespace is ignored on line for this function due to " '/\s+/' "
 			
-			echo "length of line is " . strlen($printLine) . "<br>";
-			echo "length of trimmed line is " . strlen(trim((string)$printLine)) . "<br>";
-			echo "line number $lineNumber and line index $printLineIndex" . "<br>";
 			
 			if((count($readLine)) >= $REQUIREDITEMSONLINE)
 			{ //if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
@@ -181,16 +176,13 @@
 				skipWhitespace($printLine, $printLineIndex);
 				if(getNumber($printLine, $printLineIndex, $lineNumber, $retrievedNumber) == false)
 				{//invalid amount of minutes was encountered on the line
-					echo "getNumber returned false" . "<br>";
 					$errorOnLine = true; $errorInFile = true;
 				}
 				
 				if($errorOnLine == false)
 				{//valid amount of minutes was encountered on the line
-					echo "getNumber returned true" . "<br>";
 					if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
 					{
-						echo "whitespace error 1" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
 					}
 				}
@@ -200,7 +192,6 @@
 					skipWhitespace($printLine, $printLineIndex);
 					if(getDaysOfWeek($printLine, $printLineIndex, $lineNumber, $retrievedDOW) == false)
 					{
-						echo "getDaysOfWeek returned false" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
 					}
 				}
@@ -209,7 +200,6 @@
 				{//add $retrievedDOW to query
 					if(getSlash($printLine, $printLineIndex, $lineNumber, $retrievedSlash) == false)
 					{
-						echo "getSlash returned false" . "<br>";
 						$errorOnLine = true; $errorInFile = true;
 					}
 				}
@@ -218,7 +208,7 @@
 				{//add $retrievedSlash to query
 					if(ctype_digit($printLine[$printLineIndex]) == false)
 					{
-						echo("Error on line $lineNumber at index $printLineIndex.  Time of day should immediately follow '/'" . PHP_EOL);
+						echo("Error on line $lineNumber at index $printLineIndex.  Time of day should immediately follow '/'<br>");
 						$errorOnLine = true; $errorInFile = true;
 					}
 				}
@@ -229,7 +219,6 @@
 					{//$printLineIndex == strlen(trim($printLine) means we are at the end of the current line				
 						if(getTime($printLine, $printLineIndex, $lineNumber, $retrievedTime, $listOfTimes, $listOfTimesIndex) == false)
 						{
-							echo "getTime returned false" . "<br>";
 							$errorOnLine = true; $errorInFile = true;
 						}
 						else
@@ -237,7 +226,6 @@
 							//add $retrievedTime to query
 							if(verifyWhitespace($printLine, $printLineIndex, $lineNumber) == false)
 							{
-								echo "whitespace error between times of day" . "<br>";
 								$errorOnLine = true; $errorInFile = true;
 							}
 							else
@@ -253,7 +241,7 @@
 				if(strlen(trim($printLine)) != 0)
 				{
 					echo("Error on line $lineNumber at index $printLineIndex.  Each line in the file must have at least 2 items:
-									Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay1 MilitaryTimeOfDay2 ... MilitaryTimeOfDayN" . PHP_EOL);
+									Minutes DAYSOFWEEK_ForwardSlash_MilitaryTimeOfDay1 MilitaryTimeOfDay2 ... MilitaryTimeOfDayN<br>");
 					$errorOnLine = true;  $errorInFile = true;
 				}
 				
@@ -266,49 +254,41 @@
 				if(strlen(trim($printLine)) != 0)
 				{				
 					$minutesDOW = $retrievedNumber . $retrievedDOW;
-					echo "$minutesDOW <br>";
 					if(in_array($minutesDOW, $predef))
 					{
-						echo("<h2>Class times already defined for $retrievedNumber minutes on $retrievedDOW in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
 						$delete = "DELETE FROM $db.timeSlots WHERE minutes = '$retrievedNumber' AND daysOfWeek = '$retrievedDOW'";
-						echo("<h1>DELETING</h1><h2>$delete</h2>");
 						
 						mysqli_query($link, $delete);
 					}
 					
 					$listOfTimes = implode(" ", $listOfTimes);
-					echo "$listOfTimes";
 					
 					$insertQuery = "INSERT INTO $db.timeSlots (minutes, daysOfWeek, timesOfDay) VALUES ('$retrievedNumber', '$retrievedDOW', '$listOfTimes')";
-					echo "$insertQuery";
 					$insertion = mysqli_query($link, $insertQuery);
 					
 					if($insertion)
 					{
-						echo("insertion succeeded<br>");
+						//echo("File uploaded successfully!<br>");
 					}
 					else
 					{
-						echo("insertion failed<br>");
-						echo($insertQuery."<br>");
+						echo("<p class=\"warning\">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.</p>");
 					}
-				}
-				else
-				{				
-					echo  "$lineNumber: $printLine" . "<br>";
-				}
+				}			
+				echo  "$lineNumber: $printLine" . "<br>";
+				
 			}
 			else
 			{
 				echo $lineNumber . ": $printLine*" . "<br>";
+				echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
 			}
 		}
 		if($errorInFile == false)
-			echo("No errors detected." . PHP_EOL);
+			echo("No errors detected.<br>");
 		
 		
-		fclose($readFile);	
-		fclose($logFile);
+		fclose($readFile);
 			
 	}
 ##################################################################################################
@@ -363,7 +343,7 @@
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/ 
 	
-	echo "called getTime" . "<br> <br> <br>";
+	
 	//VARIABLES
 		$timeString = array();
 		$timeStringIndex = 0;
@@ -374,7 +354,7 @@
 		//retrieve first digit in time value
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit.<br>");
 			return false;
 		}
 		else
@@ -388,7 +368,7 @@
 			}
 			else
 			{
-				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered.<br>");
 				return false;
 			}			
 		}
@@ -396,14 +376,14 @@
 		//second digit in time
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit.<br>");
 			return false;
 		}
 		else
 		{
 			if(($firstDigit == 2) && ($line[$lineIndex] > 3))
 			{
-				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered.<br>");
 				return false;
 			}
 			else
@@ -418,7 +398,7 @@
 		//check for ":"
 		if($line[$lineIndex] != ':')
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  Expected a ':'." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Expected a ':'.<br>");
 			return false;
 		}
 		else
@@ -432,14 +412,14 @@
 		//third digit in time
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit.<br>");
 			return false;
 		}
 		else
 		{
 			if(($line[$lineIndex] < 0) or ($line[$lineIndex] > 5))
 			{
-				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered.<br>");
 				return false;
 			}
 			else
@@ -454,14 +434,14 @@
 		//fourth digit in time
 		if(ctype_digit($line[$lineIndex]) == false)
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Expected a digit.<br>");
 			return false;
 		}
 		else
 		{
 			if(($line[$lineIndex] < 0) or ($line[$lineIndex] > 9))
 			{
-				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  Invalid time encountered.<br>");
 				return false;
 			}
 			else
@@ -482,7 +462,7 @@
 		}
 		else
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  Duplicate time encountered on line." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Duplicate time encountered on line.<br>");
 			return false;
 		}
 	}
@@ -552,31 +532,31 @@
 					}
 					else
 					{
-						echo("Error on line $lineNumber at index $lineIndex.  Days of week out of order." . PHP_EOL);
+						echo("Error on line $lineNumber at index $lineIndex.  Days of week out of order.<br>");
 						return false;
 					}
 				}
 				else
 				{
-					echo("Error on line $lineNumber at index $lineIndex.  Duplicate found in days of week." . PHP_EOL);
+					echo("Error on line $lineNumber at index $lineIndex.  Duplicate found in days of week.<br>");
 					return false;
 				}
 			}
 			else
 			{
-				echo("Error on line $lineNumber at index $lineIndex.  Character found is not one of MTWRFS." . PHP_EOL);
+				echo("Error on line $lineNumber at index $lineIndex.  Character found is not one of MTWRFS.<br>");
 				return false;
 			}
 		}
 		if(ctype_lower($line[$lineIndex]) == true)
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  All characters must be uppercase." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  All characters must be uppercase.<br>");
 			return false;
 		}
 		$retrievedDOW = implode($daysFound);
 		if(strlen(trim($retrievedDOW)) < 1)
 		{
-			echo("Error on line $lineNumber at index $lineIndex.  Days of week not specified." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex.  Days of week not specified.<br>");
 			return false;
 		}
 		return true;
@@ -690,12 +670,12 @@
 		
 		if(count($numString) == 0)
 		{
-			echo("Error on line $lineNumber. Number expected at start of line." . PHP_EOL);
+			echo("Error on line $lineNumber. Number expected at start of line.<br>");
 			return false;
 		}
 		elseif($numOnLine <= 0)
 			{
-				echo("Error on line $lineNumber.  class cannot be taught for 0 or less minutes." . PHP_EOL);
+				echo("Error on line $lineNumber.  class cannot be taught for 0 or less minutes.<br>");
 				return false;
 			}
 		else
@@ -748,7 +728,7 @@
 	
 		if($charOnLine != '/')
 		{
-			echo("Error on line $lineNumber at index $lineIndex. Expected '/'." . PHP_EOL);
+			echo("Error on line $lineNumber at index $lineIndex. Expected '/'.<br>");
 			return false;
 		}
 		else
@@ -795,7 +775,7 @@
 	 -------------------------------------------------------------------------------------------------*/ 		
 		if(($line[$lineIndex] != " ") and ($line[$lineIndex] != "\r") and ($line[$lineIndex] != "\t"))
 		{
-			echo("Error on line $lineNumber.  Whitespace must separate elements on line." . PHP_EOL);
+			echo("Error on line $lineNumber.  Whitespace must separate elements on line.<br>");
 		}
 		else
 		{

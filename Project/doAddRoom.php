@@ -38,7 +38,7 @@
 	include("includes/footer.php");
 ?>
 
-<?php
+<?php	
     function scanRooms($fileName, $prettyName){
         
         $roomInfo = array ();
@@ -51,6 +51,9 @@
             echo("Error: Cannot open file.");     
         }
         
+		echo("<h1>SCANNING ROOMS</h1><br>");
+		echo("<h3>Checking $prettyName for errors...</h3>");
+		
         //checks for empty file
         if(filesize($fileName)==0)
         {
@@ -266,24 +269,32 @@
         }//end for loop
        if(($invalidRoomType== false) && ($invalidRoomSize==false) && ($invalidRoomName==false) && ($invalidRoomNumber==false) && ($invalidSpace==false) )
         {
-            echo($roomType. " " .$roomSize." " .$roomName." " .$roomNumber. " input accepted.");
+            //echo($roomType. " " .$roomSize." " .$roomName." " .$roomNumber. " input accepted.");
         }
       
         if ($invalidRoomType==true)
         {
               printf("Error on line %d:Missing room type, or room type must be an upper-case character 'C' or 'L' <br>",$lineNumber);
+			  echo $lineNumber . ": $line*" . "<br>";
+			  echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
         }
         else if ($invalidRoomSize==true)
         {
               printf("Error on line %d:Missing room size, or room size must be greater than 1 and less than or equal to 200<br>",$lineNumber);
+			  echo $lineNumber . ": $line*" . "<br>";
+			  echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
         }
         else if ($invalidRoomName==true)
         {
               printf("Error on line %d: Missing room name or, the room name must be six upper-case characters A-Z in length.<br>",$lineNumber);
+			  echo $lineNumber . ": $line*" . "<br>";
+			  echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
         }
         else if ($invalidRoomNumber==true)
         {
               printf ("Error on line %d: Room number must all be digits and followed by nothing.<br>",$lineNumber);
+			  echo $lineNumber . ": $line*" . "<br>";
+			  echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
         }
 		else if ($invalidSpace == false)
 		{
@@ -300,9 +311,7 @@
 			
 			if(in_array(trim($completeRoomName), $predef))
 			{
-				echo("<h2>Room already defined in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
 				$delete = "DELETE FROM $db.rooms WHERE roomName = '$completeRoomName'";
-				echo("<h1>DELETING</h1><h2>$delete</h2>");
 				
 				mysqli_query($link, $delete);
 			}
@@ -310,18 +319,15 @@
         	$insertQuery = "INSERT INTO $db.rooms (roomType, size, roomName) VALUES ('$roomType', '$roomSize', '$completeRoomName')";
         	$success = mysqli_query($link, $insertQuery);
         	if($success)
-        		echo("<h3>Insertion Succeeded</h3>");
+			{
+        		//echo("<h3>File uploaded successfully!</h3>");
+			}
         	else
         	{
-        		echo("<h3>Insertion Failed</h3>");
-        		echo("<h4>$insertQuery</h4>");
+        		echo("<p class=\"warning\">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.</p>");
         	}
+			echo $lineNumber . ":$line" . "<br>";
         }
-		else
-		{
-			echo("<h3>Data from line $lineNumber not uploaded.</h3>");
-		}
-        echo("<hr><br>");
     }//end function    
       
 	         

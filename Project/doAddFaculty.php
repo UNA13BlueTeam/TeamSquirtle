@@ -29,7 +29,6 @@
 	// File Submission
 	elseif($_POST['flag']=="file")
 	{
-		echo ("I got files!<br>");
 		
 		$facultyFile = $_FILES["facultyFile"]["tmp_name"];
 		$facultyFileName = $_FILES["facultyFile"]["name"];
@@ -86,16 +85,15 @@ include("includes/footer.php");
 	 * Modifications Description: 
 	 -------------------------------------------------------------------------------------------------*/
 
-		echo("<h1>SCANNING FACULTY</h1><br>");
+		
 		
 		// get global variables used
 		global $link, $db;
 		
 		$readFile=fopen($fileName,"r") or die("Unable to open $fileName");
-
-		echo("Scanning $prettyName - ".strftime('%c'));
+		echo("<h1>SCANNING FACULTY</h1><br>");
+		echo("<h3>Checking $prettyName for errors...</h3>");
 		
-		echo "<br> <br> <br>" . "Test File: $fileName" . "<br> <br> <br>";
 		
 		$lineNumber = 0; 
 		
@@ -116,7 +114,6 @@ include("includes/footer.php");
 				
 			if(strlen($line)!= 0)
 			{
-				echo "Line = $line <br>";
 				$errorFlag = false;
 				skipWhiteSpace($line, $lineIndex);
 				$errorFlag = getName($line, $lineIndex, $lineNumber, $facultyName);
@@ -154,10 +151,8 @@ include("includes/footer.php");
 					
 				if(in_array(trim($email), $predef))
 				{
-					echo("<h2>Faculty member already defined in database on line $lineNumber.  Attempting to overwrite... </h2><br>");
 					$delete = "DELETE FROM $db.faculty WHERE email = '$email'";
 					$delete2 = "DELETE FROM $db.users WHERE username = '$email'";
-					echo("<h1>DELETING</h1><h2>$delete</h2>");
 						
 					// Delete from faculty and users table
 					mysqli_query($link, $delete);
@@ -165,9 +160,15 @@ include("includes/footer.php");
 				}
 				// submit to faculty table
 				$insertQuery = "INSERT INTO $db.faculty (facultyName, yos, email, minHours) VALUES ('$facultyName', '$yos', '$email', '$minHours')";
-				echo "$insertQuery <br>";
 				$insertion = mysqli_query($link, $insertQuery);
-					
+				if($insertion)
+				{
+					//echo("File uploaded successfully!<br>");
+				}
+				else
+				{
+					echo("<p class=\"warning\">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.</p>");
+				}
 				// submit to users table
 					
 				$temp = preg_split('/[,]/', $facultyName);
@@ -182,21 +183,24 @@ include("includes/footer.php");
 				//$password = crypt('password');
 				$password = 'password';
 				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName, lastName) VALUES ('$email', '2', '$password', '$first', '$last')";
-				echo "$insertQuery <br>";
 				$insertion = mysqli_query($link, $insertQuery);
 					
 				if($insertion)
 				{
-					echo("insertion succeeded<br>");
+					//echo("File uploaded successfully!<br>");
+					
 				}
 				else
 				{
-					echo("insertion failed<br>");
-					echo($insertQuery."<br>");
+					echo("<p class=\"warning\">There was a problem uploading the file, please try again. <br> If the problem persists, please contact your system administrator.</p>");
 				}
+				echo $lineNumber . ": $line" . "<br>";
 			}
-				
-			printf("<br><br>");				
+			else
+			{
+				echo $lineNumber . ": $line*" . "<br>";
+				echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
+			}						
 		}//end while loop  
 		
 	}//end function
@@ -292,7 +296,6 @@ include("includes/footer.php");
 			return false;
 		}
 		
-		printf("Name = $lastName, $firstName <br>");
 		$facultyName = $lastName.", ".$firstName;
 		
 		//To truncate remaining characters
@@ -356,7 +359,6 @@ include("includes/footer.php");
 			return false;
 		}
 	   
-		printf("Years = $years <br>");
 		$yos = $years;
 		return true;
 	}//end function
@@ -439,7 +441,6 @@ include("includes/footer.php");
 			}
 		}
 		
-		printf("Email = $email$ext <br>");
 		return true;
 	}//end function
         
@@ -516,7 +517,6 @@ include("includes/footer.php");
 			return false;
 		}
 		
-		printf("Hours = $minHours <br>");
 		return true;
 
 	}//end function
