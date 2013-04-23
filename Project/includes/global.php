@@ -76,6 +76,13 @@
 		mysqli_query($link, $query);
 	}
 
+	function clearPrefs()
+	{
+		global $link;
+		$query = "TRUNCATE TABLE conflicts";
+		mysqli_query($link, $query);
+	}
+
 	function clearSchedule()
 	{
 		global $link;

@@ -25,7 +25,7 @@ class PDF extends FPDF
         $this->Ln();
         $this->SetFillColor(224, 235, 255);
         $this->SetTextColor(0);
-        $this->SetFont('');
+        $this->SetFont('Helvetica');
         $fill = false;
         global $host, $user, $pass, $db, $port;
         $link = mysqli_connect($host, $user, $pass, $db, $port);

@@ -6,7 +6,7 @@
 
 <h1>Admin Actions</h1>
 <?php
-	global $host, $user, $pass, $db, $port, $deptName;
+	global $host, $user, $pass, $db, $port, $deptName, $semesterName;
  	$link = mysqli_connect($host, $user, $pass, $db, $port);
  	echo("<h3>Department Name</h3>");
  	echo('<form action="adminActions.php" method="POST"><input type="text" name="department" placeholder="'.$deptName.'" size="'.(strlen($deptName)+3).'"><input type="submit" value="Change"></form>');
@@ -23,7 +23,7 @@
  	echo('<br style="clear:both"> <br style="clear:both">');
  	?>
  	<form action="adminActions.php" method="POST">
- 		<input type="text" name="semesterName" placeholder="newSemesterName" >
+ 		<input type="text" name="newSemesterName" placeholder="newSemesterName" >
  		<input type="hidden" name="newSemester" value="true">
  		<input type="submit" value="Start New Semester">
  	</form>
@@ -36,7 +36,7 @@
  	function doActions()
  	{
 		require("pdf.php");
- 		global $host, $user, $pass, $db, $port, $deptName, $semesterName;
+ 		global $host, $user, $pass, $db, $port, $deptName;
  		$link = mysqli_connect($host, $user, $pass, $db, $port);
  		if(isset($_POST)){
  			if(isset($_POST['department']))
@@ -45,16 +45,41 @@
  				mysqli_query($link, $query);
  			}elseif(isset($_POST['newSemester']))
  			{
- 				global $link;
+ 				$un = $_SESSION["username"];
+				$infoQuery = "SELECT * FROM users WHERE username = '$un'";
+				$infoResults = mysqli_query($link, $infoQuery);
+				$userInfo = mysqli_fetch_assoc($infoResults);
+				$semesterName = $userInfo['semesterName'];
  				$semester = str_replace(' ', '', $semesterName);
+ 				$fileName = "generatedFiles/".$semesterName.".pdf";
+ 				echo($semesterName);
+ 				echo($fileName);
  				$title = 'Schedule for Department of '.$deptName;
 
  				$pdf = new PDF();
- 				$pdf->ScheduleTable($title);
  				$pdf->SetFont('Helvetica', '', 30);
  				$pdf->AddPage();
  				$pdf->ScheduleTable($title);
- 				$pdf->Output("generatedFiles/".$semester.".pdf", "F");
+ 				$pdf->Output($fileName, "F");
+
+ 				generateFaculty();
+ 				generateClasses();
+ 				generateClassTimes();
+ 				generateRooms();
+ 				generatePrereqs();
+ 				generateConflicts();
+
+ 				clearClasses();
+ 				clearClassTimes();
+ 				clearRooms();
+ 				clearPrereqs();
+ 				clearPrefs();
+ 				clearConflicts();
+ 				clearSchedule();
+
+ 				$query = "UPDATE users SET semesterName = ".$_POST['newSemesterName'];
+ 				mysqli_query($link, $query);
+ 				header("Location: adminHome.php");
 
  			}elseif(isset($_POST['nameFlag']))
  			{
