@@ -5,7 +5,7 @@
 	$checkedFaculty = $_POST['check'];
 	if(empty($checkedFaculty))
 	{
-		echo("You didn't select any rooms.");
+		echo("You didn't select any faculty members.");
 	}
 	else
 	{
