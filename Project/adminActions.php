@@ -21,19 +21,41 @@
  		  	</form>
  		');
  	echo('<br style="clear:both"> <br style="clear:both">');
+ 	?>
+ 	<form action="adminActions.php" method="POST">
+ 		<input type="text" name="semesterName" placeholder="newSemesterName" >
+ 		<input type="hidden" name="newSemester" value="true">
+ 		<input type="submit" value="Start New Semester">
+ 	</form>
+ 	<br style="clear:both;">
+ 	<?php
  	printForm();
  	printConflicts();
  	printDownloads();
 
  	function doActions()
  	{
- 		global $host, $user, $pass, $db, $port, $deptName;
+ 		global $host, $user, $pass, $db, $port, $deptName, $semesterName;
  		$link = mysqli_connect($host, $user, $pass, $db, $port);
  		if(isset($_POST)){
  			if(isset($_POST['department']))
  			{
  				$query = "UPDATE users SET deptName = '".$_POST['department']."'";
  				mysqli_query($link, $query);
+ 			}elseif(isset($_POST['newSemester']))
+ 			{
+ 				$semester = str_replace(' ', '', $semesterName);
+ 				include("fpdf17/fpdf.php");
+ 				define('FPDF_FONTPATH','fpdf17/font/');
+ 				$title = 'Schedule for Department of '.$deptName;
+ 				global $link;
+ 				\viewPDF\ScheduleTable($title);
+ 				$pdf = new PDF();
+ 				$pdf->SetFont('Helvetica', '', 30);
+ 				$pdf->AddPage();
+ 				$pdf->ScheduleTable($title);
+ 				$pdf->Output("generatedFiles/".$semester.".pdf", "F");
+
  			}elseif(isset($_POST['nameFlag']))
  			{
  				global $un;

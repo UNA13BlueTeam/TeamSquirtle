@@ -20,6 +20,7 @@
 			$infoResults = mysqli_query($link, $infoQuery);
 			$userInfo = mysqli_fetch_assoc($infoResults);
 			$deptName 	= $userInfo['deptName'];
+			$semesterName = $userInfo['semesterName'];
 		}else
 		{
 			// echo("LoggedIn = false <br>");
