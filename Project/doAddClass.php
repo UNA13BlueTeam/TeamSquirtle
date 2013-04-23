@@ -1184,7 +1184,7 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 				
 				$courseNumberInt = intval(implode($courseNumbers));	//converts the integer array to a solid string
 																	//and converts the string value to an integer
-				/*
+				
 				//SPECIFIC TO PREREQSCANNER. REMOVE IF REUSED ELSEWHERE
 					if($firstCourseOnLineFlag == true)
 					{
@@ -1195,8 +1195,6 @@ function getCourse($line, &$lineIndex, $lineNumber, &$currentCourse, $firstCours
 						echo("Error on line $lineNumber at index $lineIndex.  Prerequisite is a higher level course than course requiring prerequisites." . PHP_EOL);
 						return false;
 					} 
-				///////////////////////////////////////////////////////
-				*/
 																	
 				if(($courseNumberInt < $COURSENUMBERMIN) or ($courseNumberInt > $COURSENUMBERMAX))
 				{
