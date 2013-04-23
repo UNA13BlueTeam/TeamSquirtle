@@ -3,7 +3,7 @@
 <h1>Manage Faculty</h1><br />
 <a href="addFaculty.php"><p style = "font-size:30px">Add Faculty</p></a><br />
 <hr /><br />
-<legend style="font-size:30px">Remove Course</legend>
+<legend style="font-size:30px">Remove Faculty</legend>
 <form name="removefacultyForm" method="post" action="doRemoveFaculty.php">
 	<table class="manage" id="manageFaculty">
 		<tr>
