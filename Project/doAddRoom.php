@@ -138,33 +138,27 @@
         $gotRoomSize=false;
         $gotRoomName=false;
         $gotRoomNumber=false;
-        //printf("Size of line= %d <br>",strlen($line));
-       //for($k=0; $k < strlen($line);$k++)
-         // printf("k= %d --%s = %d <br>",$k, $line[$k],ord($line[$k]));
-        
+    
         //Loop to get room type, size, name, and number
         for ($index=0; $index < strlen($line);$index= $index + 1)
         {
-            
-           
+           //Loop until while $line[#index] is not a blank space '32' or a horizontal tab '9' 
            if((ord($line[$index]) != 32) &&  (ord($line[$index]) != 9))
            {    
-              //printf("Inside loop, line[%d]= %s-->%d<br>",$index,$line[$index],ord($line[$index])); 
+              
               //Gets room type information
               if ($gotRoomType == false)
               {
-                 if ( ($line[$index]!= 'L') && ($line[$index]!= 'C')) //'C' = 67 and 'L'=76
+                 if ( ($line[$index]!= 'L') && ($line[$index]!= 'C')) 
                  {
-                     //printf("Room type is not L or C, when index= %d<br>",$index);
                     $invalidRoomType = true;
                     break;
                  }
                  else
                  {
                      $roomType = $line[$index];
-                     //printf("RoomType = %s, when index= %d<br>",$RoomType,$index);
                      $gotRoomType=true;
-                     $result = isWhiteSpace($index+1,$line,$lineNumber);
+                     $result = isWhiteSpace($index + 1 ,$line,$lineNumber);
                         if ($result == false)
                         {
                             $invalidSpace=true;
@@ -175,7 +169,8 @@
               //Gets room size information
               else if (($invalidSpace == false) && ($gotRoomSize == false) && ($gotRoomType == true))
               {
-                if((ord($line[$index]) < 48) || (ord($line[$index]) > 57) )
+				//Checking to see if portion of $line pertaining to room size includes anything besides numeric digits.
+                if((ord($line[$index]) < 48) || (ord($line[$index]) > 57) ) // digit 0= '48' and 9 = '57'
                 {
                     $invalidRoomSize= true;
                     break;
@@ -183,11 +178,9 @@
                 else
                 {
                     $roomSize= $roomSize .$line[$index];
-                    //printf("ord(RoomSize) = %d, when index= %d <br>",ord($RoomSize),$index);
-                    //printf("RoomSize= %s<br>",$roomSize);
-                    
+                  
                     //Check if the next character in the string line is a digit
-                    if ((ord($line[$index+1]) < 48) || (ord($line[$index+1]) > 57))//checking next value     
+                    if ((ord($line[$index+1]) < 48) || (ord($line[$index+1]) > 57))// digit 0= '48' and 9 = '57'   
                     {
                         $gotRoomSize=true;
                         $result = isWhiteSpace($index+1,$line,$lineNumber);
@@ -200,9 +193,7 @@
 
                     if ((intval($roomSize)< 1) || (intval($roomSize) >200))//may need to change the 49 to 48 if room size can be 002, 001,...,etc
                     {
-                        $invalidRoomSize=true;
-                       // printf("intval(roomSize)= %d<br>",intval($roomSize));
-                        //printf("invalidRoomSize= %d <br>",$invalidRoomSize);
+                        $invalidRoomSize=true;                
                         break;
                     }                       
                 }
@@ -211,9 +202,9 @@
               //Gets room name information
               else if (($invalidSpace == false) && ($gotRoomName == false) && ($gotRoomType==true) && ($gotRoomSize==true))       
               {
-                  if ((ord($line[$index]) < 65) || (ord($line[$index]) > 90))
-                  {
-                      //printf("invalid room, index= %d<br>",$index);
+				  //Checking to see if the portion of $line pertaining to the room name included anything besides characters A to Z
+                  if ((ord($line[$index]) < 65) || (ord($line[$index]) > 90)) //'A'= 65 and 'Z'=90
+                  {                   
                       $invalidRoomName=true;                     
                       break;
                   }
@@ -221,29 +212,30 @@
                   {
                       $roomName= $roomName .$line[$index];
                       
-                      if (strlen($roomName)> 6)
+                      if (strlen($roomName)> 6) //checking to see if room name length is greater than six
                       {
                           $invalidRoomName= true;
                           break;
                       }
-                      else if (strlen($roomName)== 6)
+                      else if (strlen($roomName)== 6) //if room name length is already six characters check $line to see if more valid charcters follows
                       {
-                          if ((ord($line[$index+1]) >= 65) && (ord($line[$index+1]) <= 90))
+                          if ((ord($line[$index+1]) >= 65) && (ord($line[$index+1]) <= 90)) //'A'= 65 and 'Z'=90
                           {
+							  //Found a valid room name but its length is greater than six characters. Essentially it becomes invalid.
                               $invalidRoomName=true;
                           }
                           else 
                           {
                               $gotRoomName= true;
                               $result = isWhiteSpace($index+1,$line,$lineNumber);
-                              if ($result == false)
+                              if ($result == false) //checking for valid space delimiter following room name.
                               {
                                  $invalidSpace=true;
                                  break;
                               }
                               
                           }
-                          //printf("RoomName=%s, length of= %d<br>",$RoomName,strlen($RoomName));
+                          
                       }//end else if
                                 
                    }//end else
@@ -252,7 +244,8 @@
              //Gets room number information
              else if (($invalidSpace == false) && ($gotRoomNumber==false) && ($gotRoomType==true) && ($gotRoomSize==true) && ($gotRoomName==true))
              {
-				 if ((ord($line[$index]) < 48) || (ord($line[$index])>57))
+				 //checking to see if the portion of $line contains anything besides numeric digits.
+				 if ((ord($line[$index]) < 48) || (ord($line[$index])>57)) // digit 0= '48' and 9 = '57' 
                  {
 					
                      $invalidRoomNumber=true;
@@ -261,7 +254,7 @@
                  else
                  {
                      $roomNumber = $roomNumber.$line[$index];
-                     if (  ord($line[$index+1]) < 48 || ord($line[$index+1]) > 57 )
+                     if (  ord($line[$index+1]) < 48 || ord($line[$index+1]) > 57 ) // digit 0= '48' and 9 = '57' 
                      {
                             $gotRoomNumber=true;                                                       
                      }                    
@@ -273,12 +266,7 @@
         }//end for loop
        if(($invalidRoomType== false) && ($invalidRoomSize==false) && ($invalidRoomName==false) && ($invalidRoomNumber==false) && ($invalidSpace==false) )
         {
-            echo("RoomType= ".$roomType);
-            echo(", RoomSize= ".$roomSize);
-            echo(", RoomName= ".$roomName );
-            echo(", RoomNumber= ".$roomNumber);
-            $completeRoomName= $roomName." ".$roomNumber;
-        	// printf("<br>CompleteRoomName= %s <br>",$CompleteRoomName);
+            echo($roomType. " " .$roomSize." " .$roomName." " .$roomNumber. " input accepted.");
         }
       
         if ($invalidRoomType==true)
@@ -334,18 +322,10 @@
 			echo("<h3>Data from line $lineNumber not uploaded.</h3>");
 		}
         echo("<hr><br>");
-      }//end function    
+    }//end function    
       
 	         
-	        /*------------------------------------------------------------
-	         Purpose: This function check the index in the buffer line to see
-	                  if it a white space or tab.
-	         Input: buffer with input data called $line
-	                the line number used for logging errors
-	                
-	         Return: true if line[index] is a blank or tab. Otherwise returns
-	                 false.
-	         --------------------------------------------------------------*/
+	     
 	 /*---------------------------------------------------------------------------------------------------
 	 ********************** Function Prologue Comment: isWhiteSpace ********************
 	 * Preconditions: The variable $index contains an index value that is within the bounds of the string.
