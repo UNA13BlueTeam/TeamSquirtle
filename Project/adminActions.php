@@ -52,8 +52,6 @@
 				$semesterName = $userInfo['semesterName'];
  				$semester = str_replace(' ', '', $semesterName);
  				$fileName = "generatedFiles/".$semesterName.".pdf";
- 				echo($semesterName);
- 				echo($fileName);
  				$title = 'Schedule for Department of '.$deptName;
 
  				$pdf = new PDF();
