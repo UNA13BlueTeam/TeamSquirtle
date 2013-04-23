@@ -89,7 +89,7 @@
 	function generateFaculty()
 	{
 		global $link;
-		$outFile = fopen($_SERVER['DOCUMENT_ROOT']."/generatedFiles/faculty.txt", "w");
+		$outFile = fopen("generatedFiles/faculty.txt", "w");
 		$query = "SELECT * FROM faculty";
 		$results = mysqli_query($link, $query);
 		while($row = mysqli_fetch_assoc($results))
@@ -118,7 +118,7 @@
 	{
 		global $link;
 		echo(dirname("."));
-		$outFile = fopen("generatedFiles/classTimes.txt", "w", 1);
+		$outFile = fopen("generatedFiles/classTimes.txt", "w");
 		$query = "SELECT * FROM timeSlots";
 		$results = mysqli_query($link, $query);
 		while($row = mysqli_fetch_assoc($results))
