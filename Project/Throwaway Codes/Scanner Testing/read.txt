@@ -1,3 +1,0 @@
-download the "prereqtests.zip" file from the root of the skydrive and extract to the same directory as the prereqscanner.php in order to perform testing
-
-download the "ctstests.zip" file from root of the skydrive to test "ctsscanner.php" yourself
