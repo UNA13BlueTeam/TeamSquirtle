@@ -29,6 +29,8 @@
             $setup = $temp['firstLogOn'];
             $firstname = $temp['firstName'];
             $lastname = $temp['lastName'];
+            $deptName = $temp['deptName'];
+            $semesterName = $temp['semesterName'];
             echo($setup);
             // while($row = mysqli_fetch_row($result))
             // {
@@ -44,6 +46,8 @@
                 $_SESSION['username'] = $username;
     	        $_SESSION['firstname'] = $firstname;
                 $_SESSION['lastname'] = $lastname;
+                $_SESSION['deptName'] = $deptName;
+                $_SESSION['semesterName'] = $semesterName;
                 if($setup==1)
                 {
                     header("Location: adminSetUp.php");
@@ -57,6 +61,8 @@
                 $_SESSION['username'] = $username;
     	        $_SESSION['firstname'] = $firstname;
                 $_SESSION['lastname'] = $lastname;
+                $_SESSION['deptName'] = $deptName;
+                $_SESSION['semesterName'] = $semesterName;
                 if($setup==1)
                 {
                     header("Location: facultySetUp.php");

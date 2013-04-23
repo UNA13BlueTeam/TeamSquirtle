@@ -9,12 +9,12 @@
 	// Gets the department name and semester name from the database
 	$query = "SELECT deptName, semesterName FROM users WHERE username = 'admin'";
 	$result = mysqli_query($link, $query);
-	$fetchInfo = mysqli_fetch_row($result);
+	$deptInfo = mysqli_fetch_row($result);
 	
-	echo("<h1>".$fetchInfo[0]."</h1>");
+	echo("<h1>".$deptInfo[0]."</h1>");
 	echo ("<h2>".$_SESSION['firstname']." ".$_SESSION['lastname']."</h2>");
 	echo("<h3> Admin </h3>");
-	echo "<h3>".$fetchInfo[1]."</h3>";
+	echo "<h3>".$deptInfo[1]."</h3>";
 ?>
 <div class="homeSchedule">
 	<h4>Schedule</h4>
