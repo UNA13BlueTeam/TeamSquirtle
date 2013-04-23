@@ -76,7 +76,7 @@
 		mysqli_query($link, $query);
 	}
 
-	function clearPrefs()
+	function clearConflicts()
 	{
 		global $link;
 		$query = "TRUNCATE TABLE conflicts";
