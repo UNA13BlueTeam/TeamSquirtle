@@ -147,13 +147,13 @@
         {
             
            
-           if( ord($line[$index]) != 32  &&  ord($line[$index]) != 9)
+           if((ord($line[$index]) != 32) &&  (ord($line[$index]) != 9))
            {    
               //printf("Inside loop, line[%d]= %s-->%d<br>",$index,$line[$index],ord($line[$index])); 
               //Gets room type information
               if ($gotRoomType == false)
               {
-                 if ( $line[$index]!= 'L' && $line[$index]!= 'C') //'C' = 67 and 'L'=76
+                 if ( ($line[$index]!= 'L') && ($line[$index]!= 'C')) //'C' = 67 and 'L'=76
                  {
                      //printf("Room type is not L or C, when index= %d<br>",$index);
                     $invalidRoomType = true;
@@ -173,9 +173,9 @@
                  }
               }
               //Gets room size information
-              else if ($gotRoomSize == false && $gotRoomType == true)
+              else if (($invalidSpace == false) && ($gotRoomSize == false) && ($gotRoomType == true))
               {
-                if(ord($line[$index]) < 48 || ord($line[$index]) > 57 )
+                if((ord($line[$index]) < 48) || (ord($line[$index]) > 57) )
                 {
                     $invalidRoomSize= true;
                     break;
@@ -187,7 +187,7 @@
                     //printf("RoomSize= %s<br>",$roomSize);
                     
                     //Check if the next character in the string line is a digit
-                    if ( ord($line[$index+1]) < 48 || ord($line[$index+1]) > 57)//checking next value     
+                    if ((ord($line[$index+1]) < 48) || (ord($line[$index+1]) > 57))//checking next value     
                     {
                         $gotRoomSize=true;
                         $result = isWhiteSpace($index+1,$line,$lineNumber);
@@ -198,7 +198,7 @@
                         }
                     }
 
-                    if (intval($roomSize)< 1 || intval($roomSize) >200)//may need to change the 49 to 48 if room size can be 002, 001,...,etc
+                    if ((intval($roomSize)< 1) || (intval($roomSize) >200))//may need to change the 49 to 48 if room size can be 002, 001,...,etc
                     {
                         $invalidRoomSize=true;
                        // printf("intval(roomSize)= %d<br>",intval($roomSize));
@@ -209,9 +209,9 @@
               }//end else if
               
               //Gets room name information
-              else if ($gotRoomName == false && $gotRoomType==true && $gotRoomSize==true)       
+              else if (($invalidSpace == false) && ($gotRoomName == false) && ($gotRoomType==true) && ($gotRoomSize==true))       
               {
-                  if (ord($line[$index]) < 65 || ord($line[$index]) > 90)
+                  if ((ord($line[$index]) < 65) || (ord($line[$index]) > 90))
                   {
                       //printf("invalid room, index= %d<br>",$index);
                       $invalidRoomName=true;                     
@@ -228,7 +228,7 @@
                       }
                       else if (strlen($roomName)== 6)
                       {
-                          if (ord($line[$index+1]) >= 65 && ord($line[$index+1]) <= 90)
+                          if ((ord($line[$index+1]) >= 65) && (ord($line[$index+1]) <= 90))
                           {
                               $invalidRoomName=true;
                           }
@@ -250,16 +250,17 @@
              }//end else if
              
              //Gets room number information
-             else if ($gotRoomNumber==false && $gotRoomType==true && $gotRoomSize==true && $gotRoomName==true)
+             else if (($invalidSpace == false) && ($gotRoomNumber==false) && ($gotRoomType==true) && ($gotRoomSize==true) && ($gotRoomName==true))
              {
-                 if (ord($line[$index]) < 48 || ord($line[$index])>57)
+				 if ((ord($line[$index]) < 48) || (ord($line[$index])>57))
                  {
+					
                      $invalidRoomNumber=true;
                      break;               
                  }
                  else
                  {
-                     $roomNumber= $roomNumber .$line[$index];
+                     $roomNumber = $roomNumber.$line[$index];
                      if (  ord($line[$index+1]) < 48 || ord($line[$index+1]) > 57 )
                      {
                             $gotRoomNumber=true;                                                       
@@ -270,9 +271,7 @@
          }//end if( (int)$line[$index] != 32 || (int)$line[$index] != 9)
            
         }//end for loop
-        
-        
-        if($invalidRoomType== false && $invalidRoomSize==false && $invalidRoomName==false && $invalidRoomNumber==false && $invalidSpace==false )
+       if(($invalidRoomType== false) && ($invalidRoomSize==false) && ($invalidRoomName==false) && ($invalidRoomNumber==false) && ($invalidSpace==false) )
         {
             echo("RoomType= ".$roomType);
             echo(", RoomSize= ".$roomSize);
@@ -281,9 +280,7 @@
             $completeRoomName= $roomName." ".$roomNumber;
         	// printf("<br>CompleteRoomName= %s <br>",$CompleteRoomName);
         }
-      $completeRoomName= $roomName .$roomNumber;
-       
-       
+      
         if ($invalidRoomType==true)
         {
               printf("Error on line %d:Missing room type, or room type must be an upper-case character 'C' or 'L' <br>",$lineNumber);
@@ -300,8 +297,9 @@
         {
               printf ("Error on line %d: Room number must all be digits and followed by nothing.<br>",$lineNumber);
         }
-		else
+		else if ($invalidSpace == false)
 		{
+			$completeRoomName = $roomName.$roomNumber;
         	global $link, $db;
 			
 			$predef = array();
@@ -331,6 +329,10 @@
         		echo("<h4>$insertQuery</h4>");
         	}
         }
+		else
+		{
+			echo("<h3>Data from line $lineNumber not uploaded.</h3>");
+		}
         echo("<hr><br>");
       }//end function    
       
