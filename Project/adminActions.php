@@ -81,10 +81,6 @@
  				mysqli_query($link, $query);
  			}elseif(isset($_POST['clear']))
  			{
- 			// 	if($_POST['newSemester'])
-				// {
- 			// 		startNewSemester();
- 			// 	}
  				if(isset($_POST['classes']) and $_POST['classes'])
 				{
  					clearClasses();
@@ -122,7 +118,7 @@
  				}
 				if(isset($_POST['updateCourses']) and $_POST['updateCourses'])
 				{
- 					generateCourses();
+ 					generateClasses();
  				}
 				if(isset($_POST['updateRooms']) and $_POST['updateRooms'])
 				{
