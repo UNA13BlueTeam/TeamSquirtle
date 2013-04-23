@@ -1,7 +1,7 @@
 <?php 
     echo getcwd()."\n";
     session_start();
-    require("includes/global.php");
+    require("/var/www/Project/includes/global.php");
 ?>
 <html>
     <head>
