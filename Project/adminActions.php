@@ -21,14 +21,14 @@
  		  	</form>
  		');
  	echo('<br style="clear:both"> <br style="clear:both">');
- 	?>
- 	<form action="adminActions.php" method="POST">
- 		<input type="text" name="newSemesterName" placeholder="newSemesterName" >
- 		<input type="hidden" name="newSemester" value="true">
- 		<input type="submit" value="Start New Semester">
- 	</form>
- 	<br style="clear:both;">
- 	<?php
+ 	echo('
+ 		<form action="adminActions.php" method="POST">
+ 			<input type="text" name="newSemesterName" placeholder="'.$semesterName.'" >
+ 			<input type="hidden" name="newSemester" value="true">
+ 			<input type="submit" value="Start New Semester">
+ 		</form>
+ 		<br style="clear:both;">
+ 	');
  	printForm();
  	printConflicts();
  	printDownloads();
