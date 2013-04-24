@@ -10,9 +10,9 @@
 	{
     	echo("<p>inserting</p>");
 		// Get variables from input form
-		$name = $_POST['name'];
+		$name = strtoupper($_POST['name']);
 		$yos = $_POST['yos'];
-		$email = $_POST['email'];
+		$email = strtoupper($_POST['email']);
 		$minHours = $_POST['hours'];
 		
 		$outForm = "$name $yos $email $minHours";
