@@ -50,10 +50,20 @@
  *									(e.g. a class will not be scheduled at 10:00 am in ROOM 12 if
  *									 there is class scheduled in ROOM 12 at 9:00 am for 75 minutes.)
  *
- ** Modifications by:
  * Modified By (Name and Date): Michael Debs April 20, 12:39am
  * Modifications Description:	Integrated with application
  *								Allows for administrator to choose how to prioritize faculty members
+ *
+ * Modified By (Name and Date): Michael Debs April 20, 4:37pm
+ * Modifications Description:   Courses faculty chose with no preference given are now scheduled
+ *
+ * Modified By (Name and Date): Michael Debs, Jared Cox April 21, 7:29pm
+ * Modifications Description:   Fixed severe flaw that allowed a teacher to teach two 
+ *								different classes at the same time in two separate rooms
+ *
+ * Modified By (Name and Date): Jared Cox April 23, 8:19pm
+ * Modifications Description:   Unscheduled Courses now push to a table in the database for
+ *								later use
  *								
  -------------------------------------------------------------------------------------------------*/
  
@@ -66,6 +76,7 @@
 	  
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
 	mysqli_query($link, "TRUNCATE TABLE scheduledCourses");
+	mysqli_query($link, "TRUNCATE TABLE unscheduledCourses");
 
 	include ("classes.php");
 	
@@ -132,10 +143,10 @@
 							  to check for conflicts at this time for a specific course*/
 	$overlapCheckFaculty;	/*temporary variable storing a specific class time that is used
 							  to check if it's length overlaps with a coruse being taught after it */
-	$timeToScheduleFaculty; /*array containing a broken up class time to be scheduled:  
-								[0] is minutes  [1] is days of week  [2] is time of day in HH:MM */
-	$alreadyTeachingFaculty; /*array containing a broken up class time already scheduled to a
-								faculty member. [0] is minutes  [1] is days of week  
+	$timeToScheduleFaculty = array(); /*array containing a broken up class time to be scheduled:  
+										[0] is minutes  [1] is days of week  [2] is time of day in HH:MM */
+	$alreadyTeachingFaculty = array(); /*array containing a broken up class time already scheduled to a
+										faculty member. [0] is minutes  [1] is days of week  
 												[2] is time of day in HH:MM */
 	$timeToScheduleRoom; 	/*array containing a broken up class time to be scheduled:  
 								[0] is minutes  [1] is days of week  [2] is time of day in HH:MM */
@@ -179,6 +190,8 @@
 										the statement is lengthy, and we break it up to make it more readable*/
 	$scheduleQuery;					//concatenation of scheduleQuery1 and 2 for readability
 	$scheduleResult;				//success or failure of scheduleQuery
+	$pushUnscheduledQuery;			//query to insert unscheduled courses to database
+	$pushUnscheduledResult;			//success or failure of pushUnscheduledQuery
 	
 	
 	
@@ -207,7 +220,7 @@
 	$unscheduledCourses2 = array();		
 	 
 	
-	$selectCoursesQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses ORDER BY courseName DESC";
+	$selectCoursesQuery = "SELECT courseName, dsection, nsection, isection, classSize, roomType, hours FROM courses";
 	$selectCoursesResult = mysqli_query($link, $selectCoursesQuery);
 	
 	while($row = mysqli_fetch_row($selectCoursesResult))
@@ -361,6 +374,8 @@
 			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
 			{
 				array_push($unscheduledCourses2, $courseNamer."-".$currentSectionNumber);
+				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section) VALUES ('$courseNamer', '$currentSectionNumber')";
+				$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 				$scheduledSections++;
 				$currentSectionNumber++;
 			}
@@ -494,6 +509,7 @@
                         // Checks to make sure the above loop found a time that wasn't conflicted with the list of conflicts
                         if($conflictExists == false)
                         {
+							
 							$alreadyTeachingTimes = array();
 							$facultyMember = $facultyPQ[$facultyPQIndex];
 							$facultyName = $facultyMember->userName;
@@ -791,6 +807,9 @@
 				echo "<br><h3> ENTERED TEST LOOP </h3><br>";
 				$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
 				array_push($unscheduledCourses, $courseToPush);
+				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section) VALUES ('".$coursesToSchedule[$ctsIndex]->name."', '$currentSectionNumber')";
+				$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
+				
 				$currentSectionNumber++;
 				$scheduledSections++;
 			}
