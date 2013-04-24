@@ -17,5 +17,6 @@
 			mysqli_query($link, $delete);
 		}
 	}
+	header("Location: manageRooms.php");
 	
 include("includes/footer.php");?>

@@ -19,5 +19,6 @@
 		  mysqli_query($link, $delete2);
 		}
 	}
+	header("Location: manageFaculty.php");
 	
 include("includes/footer.php");?>

@@ -35,4 +35,6 @@
 		}
 	}
 	
+	header("Location: removeCourses.php");
+	
 include("includes/footer.php");?>

@@ -45,5 +45,6 @@
 			}
 		}
 	}
+	header("Location: manageTimeSlots.php");
 	
 include("includes/footer.php");?>

@@ -21,4 +21,6 @@
 		}
 	}
 	
+	header("Location: manageSchedule.php");
+	
 include("includes/footer.php");?>

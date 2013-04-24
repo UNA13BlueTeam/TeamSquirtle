@@ -132,6 +132,10 @@
 				{
  					clearPrefs();
  				}
+				if(isset($_POST['conflicts']) and $_POST['conflicts'])
+				{
+ 					clearConflicts();
+ 				}
  				if(isset($_POST['schedule']) and $_POST['schedule'])
 				{
  					clearSchedule();

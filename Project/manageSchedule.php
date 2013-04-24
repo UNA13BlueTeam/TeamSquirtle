@@ -76,7 +76,7 @@
 
 <legend style="font-size:30px">Add Internet Course</legend>
 <div class="purpleBox">
-	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddScheduledCourse.php">
+	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddInternetCourse.php">
 		<input type="hidden" name="flag" value="form">
 		<div class="row">
 			<label for="course">Course</label>
