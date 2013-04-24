@@ -1376,8 +1376,9 @@ function skipWhitespace($line, &$lineIndex)
 		if((count($readLine)) >= $REQUIREDITEMSONLINE)
 		{//if there is not at $REQUIREDITEMSONLINE(2) items on the line, something is wrong
 			
+		
 			skipWhitespace($printLine, $printLineIndex);
-			if(getCourse($printLine, $printLineIndex, $lineNumber, $currentCourse) == false)
+			if(getCTS($printLine, $printLineIndex, $lineNumber, $currentCourse) == false)
 			{
 				$errorOnLine = true; $errorInFile = true;
 			}
