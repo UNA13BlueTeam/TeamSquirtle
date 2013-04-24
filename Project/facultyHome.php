@@ -1,6 +1,6 @@
 <?php 
 	// session_start();
-	include("includes/facultyHeader.php");
+	include("includes/header.php");
 ?>
   
 <?php	
@@ -18,16 +18,7 @@
 	echo "<h3>".$fetchInfo[1]."</h3>";
 ?>
 
-<div class="homeLinks">
-  <h4>Links!</h4>
-  <ul>
-    <li><a href="facultyHome.php" id="home">Home</a></li>
-    <li><a href="viewschedule.php" id="timeSlots">View Schedules</a> </li>
-    <li><a href="Pickcourses.php" id="building">Pick Courses</a></li>
-    <li><a href="facultyHelp.php" id="help">Help</a></li>
-  </ul>
-</div>
-<div id="homeSchedule">
+<div class="homeSchedule">
 	<h4>Schedule</h4>
 	<?php
 		$facultyUser = $_SESSION['username'];
@@ -41,7 +32,6 @@
             	<th>Course</th>
             	<th>Time</th>
             	<th>Location</th>
-            	<th>Instructor</th>
             </tr>
 			');
 			// $row = mysqli_fetch_row($results, MYSQLI_BOTH);
@@ -53,18 +43,18 @@
 					<td>".$row['course']."-".$row['section']."</td>
 					<td>".$row['timeSlot']."</td>
 					<td>".$row['roomName']."</td>
-					");
-					
-				$getName = "SELECT lastName, firstName FROM users WHERE username = '$facultyUser'";
-				$resultGetName = mysqli_query($link, $getName);
-				$name = mysqli_fetch_assoc($resultGetName);
-					
-				echo("
-					<td>".$name['firstName']." ".$name['lastName']."</td>
-				</tr>
-				");
+				</tr>");
 			}
 	    ?>
 		</table>
+</div>
+<div class="homeLinks" style="float:left;">
+  <h4>Links!</h4>
+  <ul>
+    <li><a href="facultyHome.php" id="home">Home</a></li>
+    <li><a href="viewschedule.php" id="timeSlots">View Schedules</a> </li>
+    <li><a href="Pickcourses.php" id="building">Pick Courses</a></li>
+    <li><a href="facultyHelp.php" id="help">Help</a></li>
+  </ul>
 </div>
 <?php include ('includes/footer.php');?>

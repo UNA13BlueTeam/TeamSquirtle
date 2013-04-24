@@ -1,7 +1,7 @@
 <?php 
 	session_start();
 	include_once("php_error.php"); 
-	// \php_error\reportErrors();
+	\php_error\reportErrors();
  	include_once("db.php");
 	include_once("global.php");
 	// error_reporting(E_ERROR);
@@ -42,7 +42,7 @@
 						<nav>
 							<!-- <a href="facultyHome.php">UNA</a> -->
 							<a href="facultyHome.php" id="home">Home</a>&nbsp;|&nbsp;
-							<a href="viewschedule.php" id="timeSlots">View Schedules</a> &nbsp;|&nbsp;
+							<a href="viewSchedule.php" id="timeSlots">View Schedules</a> &nbsp;|&nbsp;
 							<a href="Pickcourses.php" id="building">Pick Courses</a>&nbsp;|&nbsp;
 							<a href="facultyHelp.php" id="help">Help</a>&nbsp;|&nbsp;
 							<a href="logout.php" id="logout">Log Out</a>&nbsp;|&nbsp;
