@@ -47,6 +47,8 @@
  	printConflicts();
  	printDownloads();
 
+ 	include("includes/footer.php");
+
  	function doActions()
  	{
 		require("pdf.php");
@@ -235,5 +237,3 @@
 		echo('</ul></div>');
 	}
 ?>
-
-<?php include("includes/footer.php"); ?>

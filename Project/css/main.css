@@ -195,6 +195,10 @@ p.warning{
 	color: orange;
 }
 
+td#section{
+	text-align: right;
+}
+
 .schedule {
     border: solid #472783 2px;
     border-radius: 6px;

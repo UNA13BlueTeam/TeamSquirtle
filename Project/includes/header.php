@@ -43,7 +43,8 @@
 							<!-- <a href="facultyHome.php">UNA</a> -->
 							<a href="facultyHome.php" id="home">Home</a>&nbsp;|&nbsp;
 							<a href="viewSchedule.php" id="timeSlots">View Schedules</a> &nbsp;|&nbsp;
-							<a href="Pickcourses.php" id="building">Pick Courses</a>&nbsp;|&nbsp;
+							<a href="pickCourses.php" id="building">Pick Courses</a>&nbsp;|&nbsp;
+							<a href="facultySetup.php" id="building">Options</a>&nbsp;|&nbsp;
 							<a href="facultyHelp.php" id="help">Help</a>&nbsp;|&nbsp;
 							<a href="logout.php" id="logout">Log Out</a>&nbsp;|&nbsp;
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
