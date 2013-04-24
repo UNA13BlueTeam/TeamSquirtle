@@ -371,15 +371,22 @@
         {
 			// Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
 			echo "<br>EMPTY PQ   $currentSectionNumber<br>";
-			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
+			while($scheduledSections < ($daySections + $nightSections))
 			{
 				array_push($unscheduledCourses2, $courseNamer."-".$currentSectionNumber);
-				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section) VALUES ('$courseNamer', '$currentSectionNumber')";
+				
+				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 0)";
 				$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 				$scheduledSections++;
 				$currentSectionNumber++;
 			}
-			
+			for($i = 0; $i < $coursesToSchedule[$ctsIndex]->internetSections; $i++)
+			{
+				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 1)";
+				$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
+				$scheduledSections++
+				$currentSectionNumber++;
+			}			
         }
         else // we have a priority queue of faculty members who wish to teach the current course
         {
@@ -802,20 +809,28 @@
 		if(($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections)))
 		{
 			// Pushes the sections that haven't been scheduled into the list of unscheduled sections
-			while($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections))
+			while($scheduledSections < ($daySections + $nightSections))
 			{
 				echo "<br><h3> ENTERED TEST LOOP </h3><br>";
 				$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
 				array_push($unscheduledCourses, $courseToPush);
-				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section) VALUES ('".$coursesToSchedule[$ctsIndex]->name."', '$currentSectionNumber')";
-				$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 				
-				$currentSectionNumber++;
+				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 0)";
+				$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 				$scheduledSections++;
+				$currentSectionNumber++;
 			}
+			for($i = 0; $i < $coursesToSchedule[$ctsIndex]->internetSections; $i++)
+			{
+				$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 1)";
+				$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
+				$scheduledSections++
+				$currentSectionNumber++;
+			}			
 		}
 		
 		// Done and moving on to the next course
+		
 		$currentSectionNumber = 1;
 		$ctsIndex++;
         //schedule next course
