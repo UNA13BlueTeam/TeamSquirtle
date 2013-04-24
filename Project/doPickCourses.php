@@ -12,7 +12,7 @@
 	// Get variables from input form
 	$numCourses=$_POST['numCourses'];
 	// $tos = date('YmdHi');
-	$tos = time();
+	$tos = strtotime("now");
 	
 	$facultyUser = $_SESSION['username'];
 	
@@ -27,10 +27,10 @@
 	$deadline = $temp[0];
 
 
-	echo "$facultyUser <br>";
-	echo "$tos <br>";
-	echo "$yos[0] <br>";
-	echo "$numCourses <br>";
+	// echo "$facultyUser <br>";
+	// echo "$tos <br>";
+	// echo "$yos[0] <br>";
+	// echo "$numCourses <br>";
 	// echo "$timePref <br>";
 	
 	if($tos<=$deadline)
@@ -58,6 +58,9 @@
 				echo "$insertQuery";
 			}
 		}
+	}else{
+		echo('<p>Sorry, you have missed the deadline for preference submission. <br>
+				 The deadline was '.strftime("%B %d, %Y", $deadline).'.</p>');
 	}
 	
 	include("includes/footer.php"); 
