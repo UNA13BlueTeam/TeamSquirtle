@@ -54,7 +54,7 @@
 	    ?>
 		</table>
 		<br>
-		<button href="viewPDF.php">View Schedule as PDF</button> <button href="preSchedulingPage.php">Run Scheduling Algorithm</button>
+		<a href="viewPDF.php"><button>View Schedule as PDF</button></a> <a href="preSchedulingPage.php"><button>Run Scheduling Algorithm</button></a>
 </div>
 <div class="homeLinks" style="float:left;">
 	<h4>Links!</h4>

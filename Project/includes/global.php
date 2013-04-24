@@ -21,7 +21,8 @@
 			$userInfo = mysqli_fetch_assoc($infoResults);
 			$deptName 	= $userInfo['deptName'];
 			$semesterName = $userInfo['semesterName'];
-			
+			$deadline = $userInfo['deadline'];
+
 		}else
 		{
 			// echo("LoggedIn = false <br>");
