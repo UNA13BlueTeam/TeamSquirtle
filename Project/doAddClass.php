@@ -1,10 +1,17 @@
 <?php include("includes/header.php");
 	  
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
-    if(!$link){
+	
+	$error1 = false;
+	$error2 = false;
+	$error3 = false;
+	
+    if(!$link)
+	{
         die('cannot connect database'. mysqli_error($link));
     }
-    if($_POST['flag']=="form"){
+    if($_POST['flag']=="form")
+	{
     	echo("<p>inserting</p>");
 		// Get variables from input form
 		$courseName = $_POST['course'];
@@ -24,7 +31,7 @@
 		fwrite($outFile, $outForm);
 		fclose($outFile);
 		
-		scanCTS($outFileName, $outFile);
+		$error1 = scanCTS($outFileName, $outFile);
 		
 		if($prereqs)
 		{
@@ -35,7 +42,7 @@
 			fwrite($outFile, $outForm);
 			fclose($outFile);
 			
-			scanPrereqs($outFileName, $outFile);
+			$error2 = scanPrereqs($outFileName, $outFile);
 		}
 		if($conflicts)
 		{
@@ -46,7 +53,7 @@
 			fwrite($outFile, $outForm);
 			fclose($outFile);
 			
-			scanConflicts($outFileName, $outFile);
+			$error3 = scanConflicts($outFileName, $outFile);
 		}
 		
 	}
@@ -64,18 +71,22 @@
 		
 		if($classFile)
 		{
-			scanCTS($classFile, $classFileName);
+			$error1 = scanCTS($classFile, $classFileName);
 		}
 		if($prereqFile)
 		{
-			scanPrereqs($prereqFile, $prereqFileName);
+			$error2 = scanPrereqs($prereqFile, $prereqFileName);
 		}
 		if($conflictFile)
 		{
-			scanConflicts($conflictFile, $conflictFileName);
+			$error3 = scanConflicts($conflictFile, $conflictFileName);
 		}
 	}
-
+	if(($error1 == false) and ($error2 == false) and ($error3 == false))
+	{
+		header("Location: addClass.php");
+	}
+	
 	mysqli_close($link);
 include("includes/footer.php");
 ?>
@@ -383,7 +394,7 @@ include("includes/footer.php");
 		echo("<hr>");
 			
 		fclose($readFile);	
-		
+		return $errorInFile;		
 	}
 ##################################################################################################
 
@@ -1020,6 +1031,7 @@ function scanPrereqs($fileName, $prettyName)
 		echo("No errors detected." . PHP_EOL);
 		
 	fclose($readFile);	
+	return $errorInFile;
 }
 ##################################################################################################
 	
@@ -1245,7 +1257,7 @@ function skipWhitespace($line, &$lineIndex)
 <!-- --------------------------****************------------------------------- -->
 <?php 
 	function scanConflicts($fileName, $prettyName)
-	{/*-----------------------------------------------------------------------------------------------
+{/*-----------------------------------------------------------------------------------------------
 	 ********************** Function Prologue Comment: scanConflicts ********************
 	 * Preconditions:  None
 	 *
@@ -1527,7 +1539,8 @@ function skipWhitespace($line, &$lineIndex)
 	}
 	
 	fclose($readFile);
-	}
+	return $errorInFile;
+}
 	
 	
 	

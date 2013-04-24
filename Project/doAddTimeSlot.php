@@ -2,6 +2,7 @@
 	  include_once("includes/db.php");
 	  
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
+	$error = false;
     if(!$link)
 	{
         die('cannot connect database'. mysqli_error($link));
@@ -21,7 +22,7 @@
 		fwrite($outFile, $outForm);
 		fclose($outFile);
 		
-		scanClassTimes($outFileName, $outFile);
+		$error = scanClassTimes($outFileName, $outFile);
 	}
 	
 	// File Submission
@@ -34,9 +35,14 @@
 		
 		if($timeSlotFile)
 		{
-			scanClassTimes($timeSlotFile, $timeSlotFileName);
+			$error = scanClassTimes($timeSlotFile, $timeSlotFileName);
 		}
+		
 	} 
+	if($error == false)
+	{
+		header("Location: addTimeSlot.php");
+	}
 ?>
 	
 <!-- ------------------------************************------------------------- -->
@@ -289,7 +295,7 @@
 		
 		
 		fclose($readFile);
-			
+		return $errorInFile;
 	}
 ##################################################################################################
 

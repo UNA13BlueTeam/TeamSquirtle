@@ -4,7 +4,10 @@
 	$flag = $_POST['flag'];
 
     $link = mysqli_connect ($host, $user, $pass, $db, $port);
-    if(!$link){
+	$error = false;
+	
+    if(!$link)
+	{
         die('cannot connect database'. mysqli_error($link));
     }
     //mysqli_query ("INSERT INTO tablename (roomType, size, roomName )
@@ -24,7 +27,7 @@
 		fwrite($outFile, $outForm);
 		fclose($outFile);
 		
-		scanRooms($outFileName, $outFile);
+		$error = scanRooms($outFileName, $outFile);
 		
 		
 	}
@@ -32,7 +35,12 @@
 	{
 		$roomFile = $_FILES["roomFile"]["tmp_name"];
 		$roomFileName = $_FILES["roomFile"]["name"];
-		scanRooms($roomFile, $roomFileName);
+		$error = scanRooms($roomFile, $roomFileName);
+	}
+	
+	if($error == false)
+	{
+		header("Location: addRoom.php");
 	}
 	mysqli_close($link);
 	include("includes/footer.php");
@@ -137,6 +145,7 @@
         $invalidRoomName=false;
         $invalidRoomNumber=false;   
         $invalidSpace=false;
+		$errorInFile = false;
         $gotRoomType=false;
         $gotRoomSize=false;
         $gotRoomName=false;
@@ -155,6 +164,7 @@
                  if ( ($line[$index]!= 'L') && ($line[$index]!= 'C')) 
                  {
                     $invalidRoomType = true;
+					$errorInFile = true;
                     break;
                  }
                  else
@@ -165,6 +175,7 @@
                         if ($result == false)
                         {
                             $invalidSpace=true;
+							$errorInFile = true;
                             break;
                         }
                  }
@@ -176,6 +187,7 @@
                 if((ord($line[$index]) < 48) || (ord($line[$index]) > 57) ) // digit 0= '48' and 9 = '57'
                 {
                     $invalidRoomSize= true;
+					$errorInFile = true;
                     break;
                 }
                 else
@@ -185,18 +197,20 @@
                     //Check if the next character in the string line is a digit
                     if ((ord($line[$index+1]) < 48) || (ord($line[$index+1]) > 57))// digit 0= '48' and 9 = '57'   
                     {
-                        $gotRoomSize=true;
+                        $gotRoomSize=true;						
                         $result = isWhiteSpace($index+1,$line,$lineNumber);
                         if ($result == false)
                         {
                             $invalidSpace=true;
+							$errorInFile = true;
                             break;
                         }
                     }
 
                     if ((intval($roomSize)< 1) || (intval($roomSize) >200))//may need to change the 49 to 48 if room size can be 002, 001,...,etc
                     {
-                        $invalidRoomSize=true;                
+                        $invalidRoomSize=true;  
+						$errorInFile = true;						
                         break;
                     }                       
                 }
@@ -208,7 +222,8 @@
 				  //Checking to see if the portion of $line pertaining to the room name included anything besides characters A to Z
                   if ((ord($line[$index]) < 65) || (ord($line[$index]) > 90)) //'A'= 65 and 'Z'=90
                   {                   
-                      $invalidRoomName=true;                     
+                      $invalidRoomName=true; 
+					  $errorInFile = true;
                       break;
                   }
                   else
@@ -218,6 +233,7 @@
                       if (strlen($roomName)> 6) //checking to see if room name length is greater than six
                       {
                           $invalidRoomName= true;
+						  $errorInFile = true;
                           break;
                       }
                       else if (strlen($roomName)== 6) //if room name length is already six characters check $line to see if more valid charcters follows
@@ -226,6 +242,7 @@
                           {
 							  //Found a valid room name but its length is greater than six characters. Essentially it becomes invalid.
                               $invalidRoomName=true;
+							  $errorInFile = true;
                           }
                           else 
                           {
@@ -234,6 +251,7 @@
                               if ($result == false) //checking for valid space delimiter following room name.
                               {
                                  $invalidSpace=true;
+								 $errorInFile = true;
                                  break;
                               }
                               
@@ -252,6 +270,7 @@
                  {
 					
                      $invalidRoomNumber=true;
+					 $errorInFile = true;
                      break;               
                  }
                  else

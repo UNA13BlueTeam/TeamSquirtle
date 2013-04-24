@@ -1,6 +1,7 @@
 <?php include("includes/header.php");
 	  
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
+	$error = false;
     if(!$link)
 	{
         die('cannot connect database'. mysqli_error($link));
@@ -22,7 +23,7 @@
 		fwrite($outFile, $outForm);
 		fclose($outFile);
 		
-		scanFaculty($outFileName, $outFile);
+		$error = scanFaculty($outFileName, $outFile);
 		
 	}
 	
@@ -36,8 +37,13 @@
 		
 		if($facultyFile)
 		{
-			scanFaculty($facultyFile, $facultyFileName);
+			$error = scanFaculty($facultyFile, $facultyFileName);
 		}
+	}
+	
+	if($error == false)
+	{
+		header("Location: addFaculty.php");
 	}
 	
 	mysqli_close($link);
@@ -109,6 +115,8 @@ include("includes/footer.php");
 			$line = fgets($readFile);
 			$line = trim($line);	
 			$errorFlag = false;
+			$errorInFile = false;
+			
 			$lineNumber++;
 				
 				
@@ -117,21 +125,35 @@ include("includes/footer.php");
 				$errorFlag = false;
 				skipWhiteSpace($line, $lineIndex);
 				$errorFlag = getName($line, $lineIndex, $lineNumber, $facultyName);
+				if($errorFlag == false)
+				{
+					$errorInFile = true;
+				}
 
 				if ($errorFlag == true)
 				{
 					  skipWhiteSpace($line, $lineIndex, $lineNumber);
 					  $errorFlag = getYears($line, $lineIndex, $lineNumber, $yos);
-
+					  if($errorFlag == false)
+					  {
+						$errorInFile = true;
+					  }
 					  if($errorFlag == true)
 					  {
 						  skipWhiteSpace($line, $lineIndex);
 						  $errorFlag = getEmail($line, $lineIndex, $lineNumber, $email);
-
+						  if($errorFlag == false)
+						  {
+						    $errorInFile = true;
+						  }
 						  if($errorFlag == true)
 						  {
 							skipWhiteSpace($line, $lineIndex);
 							$errorFlag = getMinHours($line, $lineIndex ,$lineNumber, $minHours);
+							if($errorFlag == false)
+							{
+								$errorInFile = true;
+							}
 						  }                           
 					  }          
 				}
@@ -202,7 +224,7 @@ include("includes/footer.php");
 				echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
 			}						
 		}//end while loop  
-		
+		return $errorInFile;
 	}//end function
 	
 	/*-----------------------------------------------------------------------------------------------
