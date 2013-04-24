@@ -19,14 +19,12 @@
 }
 .nav a{
 	font-family: helvetica;
-	margin-righ3: 1p5;
 	font-size: 16pt;
 	color: white;
 	text-decoration: none;
 	/*border-right-style: solid;*/
 	border-width: 1px;
 	border-color: white;
-	padding-righ3: 1p5;
 }
 
 .nav #logout{
@@ -35,6 +33,33 @@
 }
 
 .nav a:hover{
+	color: #ddd;
+}
+
+div.row{
+	width: 100%;
+}
+
+div.row img{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+input#login{
+    background:none!important;
+     border:none; 
+     padding:0!important;
+
+    font-family: helvetica;
+	font-size: 16pt;
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+
+	float:right;
+}
+
+input#login:hover{
 	color: #ddd;
 }
 
@@ -137,7 +162,20 @@ div.purpleBox#login{
 }
 div.purpleBox#login div.row{
 	margin: 0px auto;
-	width: auto;
+	width: 100%;
+	clear:both;
+}
+
+div.purpleBox#login div.row input[type="text"], input[type="password"]{
+	float:right;
+}
+
+div.purpleBox#login div.row input[type="submit"]{
+	margin-left:38%;
+}
+
+div.purpleBox#login div.row img{
+	margin: 79px;
 }
 
 div.goldBox{

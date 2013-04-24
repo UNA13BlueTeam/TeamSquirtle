@@ -9,11 +9,35 @@
         <title>Login</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
-    <body> 
+    <body>
+    <div class="nav">
+    <a href="index.php">University of North Alabama</a>
+    <form action="index.php" method="POST">
+        <input type="hidden" name="loggingIn" value="true">
+        <input type="submit" value="Log In" id="login">
+    </form>
+    <?php
+        global $host, $user, $pass, $db, $port;
+        $test = mysqli_connect($host, $user, $pass, $db, $port);
+        if($test){
+            echo ('<div style="font-size:8pt; color:chartreuse;">DB Connected</div>');
+            mysqli_close($test);
+        }else{
+            echo ('<div style="font-size:8pt; color:red;">DB Failed</div>');
+        }
+        if (mysqli_connect_errno())
+        {
+            printf("Connect failed: %s\n", mysqli_connect_error());
+            exit();
+        }
+    ?>
+    </div> 
     <?php 
-        if(!isset($_POST['flag']))
+        if(!isset($_POST['flag']) and !isset($_POST['loggingIn']))
         {
             // $_SESSION['loggedIn'] = false;
+            include("scheduleHome.php");
+        }elseif(!isset($_POST['flag'])){
             include("login.php");
         }else
         {

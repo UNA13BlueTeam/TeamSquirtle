@@ -46,7 +46,7 @@
 							<a href="pickCourses.php" id="building">Pick Courses</a>&nbsp;|&nbsp;
 							<a href="facultySetup.php" id="building">Options</a>&nbsp;|&nbsp;
 							<a href="facultyHelp.php" id="help">Help</a>&nbsp;|&nbsp;
-							<a href="logout.php" id="logout">Log Out</a>&nbsp;|&nbsp;
+							<a href="logout.php" id="logout">Log Out</a>
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
 						</nav>
 				');
