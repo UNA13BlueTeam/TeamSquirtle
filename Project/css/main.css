@@ -61,6 +61,11 @@ footer{
 	
 }
 
+div.floater{
+	float:left;
+	margin-right: 90px;
+}
+
 div.homeSchedule{
 /*	
 	border-style: solid;
@@ -96,9 +101,9 @@ div.homeLinks{
             box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
 
 	height: 400px;
-	/*width: 15%;*/
+	min-width: 325px;
+	width: 15%;
 	float:left;
-	margin-right:10px;
 	padding: 5px;	
 	text-align:middle;
 	float: right;
@@ -118,7 +123,7 @@ div.purpleBox{
        -moz-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.2) inset;
             box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.2) inset;
 
-	height: 400px;
+	min-height: 400px;
 	width: 25%;
 	float:left;
 	margin-right:5%;
@@ -149,7 +154,7 @@ div.goldBox{
        -moz-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
             box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
 
-	height: 400px;
+	min-height: 400px;
 	width: 25%;
 	float:left;
 	margin-right:5%;
