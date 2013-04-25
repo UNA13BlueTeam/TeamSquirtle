@@ -203,7 +203,7 @@ include("includes/footer.php");
 				$email = strtolower($email);
 					
 				//$password = crypt('password');
-				$password = 'password';
+				$password = 'master1!';
 				$insertQuery = "INSERT INTO $db.users (username, permission, password, firstName, lastName) VALUES ('$email', '2', '$password', '$first', '$last')";
 				$insertion = mysqli_query($link, $insertQuery);
 					
