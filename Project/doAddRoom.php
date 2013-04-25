@@ -80,7 +80,7 @@
 	        	}           
 	        	if(strlen($line)!= 2)
 	        	{
-	        	    getInfo($line,$lineNumber,$roomInfo,$i);
+	        	    getInfo($line,$lineNumber,$roomInfo,$i); //process line information to determine if it is in valid form.
 	        	   $lineNumber= $lineNumber + 1;
 	        	}
 	        }//end while loop  
@@ -122,12 +122,15 @@
 	 *
 	 * Date of Original Implementation: 3-30-2013
 	 *
-	 * Tested by SQA Member (NAME and DATE): 3-30-2013 and 4-4-2013
+	 * Tested by SQA Member (NAME and DATE): Alla Salah 3-30-2013 and 4-4-2013
 	 * 
+	 * Tested by SQA Member (NAME and DATE): Alla Salah 4-25-2013
 	 ** Modifications by:
-	 * Modified By (Name and Date):
-	 * Modifications Description:
-	 *
+	 * Modified By (Name and Date): Alla Salah 4-25-2013
+	 * Modifications Description: Scanner was considering anything following the room number as a valid
+	 *								delimiter. Changed it so that the only valid delimiters allowed after
+	 *								room number is a sapce, tab, carriage-return, new-line symbol. Regre-
+	 *								ssion testing on same day.
 	 * Modified By (Name and Date):
 	 * Modifications Description:
 	 -------------------------------------------------------------------------------------------------*/
@@ -276,10 +279,24 @@
                  else
                  {
                      $roomNumber = $roomNumber.$line[$index];
-                     if (  ord($line[$index+1]) < 48 || ord($line[$index+1]) > 57 ) // digit 0= '48' and 9 = '57' 
+					 //checking if the next item in line is a valid delimiter: sapce, tab, newline, or carriage return
+					 //if it is any of the above, then we have reached the end of the line information data.
+					 $temp = ord($line[$index+1]);
+					 
+                     if (  $temp == 9|| $temp == 10 || $temp == 13|| $temp == 32) // tab=9, carriage return=13 space=32 and newline= 10
                      {
-                            $gotRoomNumber=true;                                                       
-                     }                    
+                            $gotRoomNumber=true;         //reached the end of line.                                             
+                     }   
+					 else if ( $temp >= 48 and $temp <=57) // 0='48' and 9='57'
+					 {
+							continue;
+					 }
+					 else //we have an invalid item following room number.
+					 {
+							$invalidRoomNumber=true;
+							$errorInFile=true;
+							break;
+					 }
                  }
              }//end else if
                   
