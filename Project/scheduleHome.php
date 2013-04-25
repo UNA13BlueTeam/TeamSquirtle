@@ -45,7 +45,7 @@
 				$name = mysqli_fetch_assoc($resultGetName);
                                 	
 				echo("
-					".$name['firstName']." ".$name['lastName']."</td>
+					".$name['firstName']." ".$name['lastName']."&nbsp;&nbsp;&nbsp;".$subrow['roomName']."</td>
 				</tr>
 				");
                                 }
