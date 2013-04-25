@@ -1,0 +1,73 @@
+Scheduling Algorithm accounts for:
+	1.	Faculty's preferences, including:
+		a) Coures they want to teach
+		b) Preferred time they want to teach the course
+			or no time preference at all (meaning they will
+			teach the time at the first time slot the 
+			algorithm finds for them)
+			
+	2.	Seniority
+		a) Based on years of service of faculty members OR
+		b) Based on time of submission of preferences
+		c) If sorting by years of service and two years of service
+			are identical, then seniority is further established
+			by time of submission
+	
+	3.	Scheduling courses
+		a)  Multiple sections of the same course are not scheduled
+			at the same time and day as existing sections
+		b)  Will not schedule a course to a faculty member if any
+			of their existing scheduled courses would overlap or
+			intersect with the course being scheduled
+			(e.g. Will not schedule a class for 75 minutes
+					on TR at 12:30 to ProfessorA if ProfessorA
+					is already scheduled a class for 120 minutes
+					on TR at 11:00.
+				  Will not schedule a class for 75 minutes
+					on TR at 12:30 to ProfessorA if ProfessorA
+					is already scheduled a class for 75 minutes
+					on MTWR at 12:30.)
+		c)  Will schedule a course to a room if any courses already
+			scheduled in the specific room would overlap or intersect
+			with the course being scheduled
+			(e.g. Will not schedule a class for 75 minutes
+					on TR at 12:30 in KELLER207 if KELLER207
+					already contains a class for 120 minutes
+					on TR at 11:00.
+				  Will not schedule a class for 75 minutes
+					on TR at 12:30 in KELLER207 if KELLER207
+					is already contains a class for 75 minutes
+					on MTWR at 12:30.) 
+					
+	4.  Unscheduled Courses
+		a)	Internet sections are not scheduled by the algorithm.
+			They are separated from all non-internet courses  by 
+			the algorithm, and the Department Head has a form to manually 
+			assign Internet sections to the faculty member of his/her
+			choice.
+		
+		b)  All unscheduled courses go on a list (separated by internet
+			section and non-internet section) that the Department Head has
+			access to and can manually schedule the course to a faculty
+			member, room, and time slot of his/her choice.
+		
+		c)	Reasons a course is unscheduled by the algorithm:
+				1)	The course section is an internet section
+				2)	No faculty member chose to teach it
+				3)	There is no room available for it due to 
+						i)		the class size being too large for all rooms
+						ii)		there was no time slot open in any room for
+								in any room for the faculty's chosen preference
+						iii)	no room is available at any time
+	
+	5.	Manual Scheduling of Courses
+		a)	Can only interact with unscheduled courses
+		b)	Can not schedule a course if the selected faculty member
+			is already teaching at the selected time, or if the selected
+			room is unavailale at the selected time.
+		c)  There is a separate form for scheduling internet courses.
+		
+		
+					
+				 
+		

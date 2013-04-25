@@ -63,7 +63,8 @@
  *
  * Modified By (Name and Date): Jared Cox April 23, 8:19pm
  * Modifications Description:   Unscheduled Courses now push to a table in the database for
- *								later use
+ *								later use, and internet sections are separated from non-
+ *								internet sections.
  *								
  -------------------------------------------------------------------------------------------------*/
  
@@ -106,6 +107,10 @@
 									 time already scheduled to a faculty member*/
 	$noTimeOverlapRoom = false; /*flag noting if a class time to schedule overlaps with a class
 									 time already scheduled to a specific room*/
+	$facultyMissingFlag = false;    //checks for existance of file
+	$coursesMissingFlag = false;	//checks for existance of file
+	$classTimesMissingFlag = false;	//checks for existance of file
+	$roomsMissingFlag = false;		//checks for existance of file
 	
 	//Variable declarations
 	$ctsIndex = 0;    // Courses to schedule index for 
@@ -266,9 +271,6 @@
 		$addRooms->printer();
 		array_push($arrayOfRooms, $addRooms);
 	}
-	// NEED TO ALSO CREATE AN ARRAY OF FACULTY MEMBERS
-	//THIS ARRAY WILL BE USED TO DETERMINE WHICH FACULTY NEEDS ADDITIONAL COURSES TO SATISFY THEIR MIN. HOURS TO TEACH.
-	//DETAILS FOR PSEUDOCODE IS AT THE END OF THE ALGORITHM
 
 	//Create an array of faculty members
 	$arrayOfFaculty = array();
@@ -393,11 +395,14 @@
 			if (count($facultyPQ) == 0)
 			{
 				// Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
+				$outFile = fopen("generatedFiles/unscheduled.txt", "w");
+				
 				echo "<br>EMPTY PQ   $currentSectionNumber<br>";
 				while($scheduledSections < ($daySections + $nightSections))
 				{
 					array_push($unscheduledCourses2, $courseNamer."-".$currentSectionNumber);
-					
+					$output = "$courseNamer-$currentSectionNumber:  No faculty member selected this course in preferences.\r";
+					fwrite($outFile, $output);
 					$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 0)";
 					$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 					$scheduledSections++;
@@ -405,11 +410,14 @@
 				}
 				for($i = 0; $i < $coursesToSchedule[$ctsIndex]->internetSections; $i++)
 				{
+					$output = "$courseNamer-$currentSectionNumber:  Internet section. Must be scheduled manually.\r";
+					fwrite($outFile, $output);
 					$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 1)";
 					$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 					$scheduledSections++;
 					$currentSectionNumber++;
-				}			
+				}	
+				fclose($outFile);
 			}
 			else // we have a priority queue of faculty members who wish to teach the current course
 			{
@@ -468,7 +476,7 @@
 											break;
 					}
 					
-					//The following if statement checks to see if a faculty member's current preference is schedulable or if they even made a preference
+					/*The following if statement checks to see if a faculty member's current preference is schedulable or if they even made a preference
 					if(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0))
 					{
 						//add course and section number (currentSectionNumber) to listOfUnscheduledCourses 
@@ -482,8 +490,8 @@
 						//$currentSectionNumber++;
 						//"No more sections available for preferred time chosen";
 						//$currentSectionNumber++;
-					}
-					else
+					}*/
+					if(!(($dayType == true and $daySectionsRemaining == 0) OR ($nightType == true and $nightSectionsRemaining == 0)))
 					{
 						$foundRoom = false;
 						$arrayOfTimesIndex = 0;
@@ -503,8 +511,6 @@
 								$alreadyInSession = false;
 								$inSessionCheck = $classTimes[$classTimesIndex]->minutes." ".$classTimes[$classTimesIndex]->daysOfWeek."/";
 								$inSessionCheck = $inSessionCheck.$arrayOfTimes[$arrayOfTimesIndex];
-								
-								
 								
 								if(!in_array($inSessionCheck, $coursesToSchedule[$ctsIndex]->inSession))// or ((count(array_intersect(str_split($inSessionCheck), str_split(trim($classTimes[$classTimesIndex]->daysOfWeek)))) == 0)))
 								{
@@ -859,16 +865,29 @@
 				
 			}//endelse
 			
-			//We reach this block because the priority queue is empty or we ran out of class times or we could have ran out of courses to schedule
+			//We reach this block because the priority queue is empty or we ran out of class times
 			if(($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections)))
 			{
 				// Pushes the sections that haven't been scheduled into the list of unscheduled sections
 				while($scheduledSections < ($daySections + $nightSections))
 				{
+					
 					echo "<br><h3> ENTERED TEST LOOP </h3><br>";
 					$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
 					array_push($unscheduledCourses, $courseToPush);
+					$outFile = fopen("generatedFiles/unscheduled.txt", "w");
+					$output = "$courseToPush:  ";
+					if($facultyPQIndex >= count($facultyPQ))
+					{
+						$output = $output . "Not enough faculty chose this course to fill in all sections.\r"
+					}
+					if($classTimesIndex >= count($classTimes))
+					{
+						$output = $output . "Unable to find time slot that was not in conflict.\r";
+					}
 					
+					
+					fwrite($outFile, $output);
 					$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 0)";
 					$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 					$scheduledSections++;
