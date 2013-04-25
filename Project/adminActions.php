@@ -1,6 +1,6 @@
 <?php 
 	include("includes/header.php");
-	include("includes/global.php");
+	include_once("includes/global.php");
 	doActions();
 ?>
 
