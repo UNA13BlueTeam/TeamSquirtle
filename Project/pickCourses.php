@@ -1,6 +1,7 @@
 <?php include("includes/header.php"); ?>
 
     <h1>Pick Courses</h1>
+	<a href="removePreferences.php"><button>Remove existing preferences</button></a>
     <!-- <div class="purpleBox"> -->
     <form class="" id="chooseCourse" name="chooseCourse" method="post" action="doPickCourses.php">
     <!-- <h2 for="course">Courses:</h2> -->

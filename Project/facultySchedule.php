@@ -17,7 +17,10 @@
 	echo "<h3>".$deptInfo[1]."</h3>";
 ?>
 <div class="homeSchedule">
-	<h4>Schedule</h4>
+	<h4>Schedule</h4> 
+	<a href="adminHome.php"><button>Admin View</button></a>
+	<a href="roomSchedule.php"><button>Room View</button></a>
+	<a href="scheduleHome.php"><button>Student View</button></a>
 	<?php
  		$roomQuery = "SELECT * FROM users where permission = '2'";
  		$results = mysqli_query($link, $roomQuery);
@@ -62,7 +65,7 @@
 			<li> <a href="manageClass.php" id="classes">Manage Classes</a> </li>
 			<li> <a href="manageFaculty.php" id="faculty">Manage Faculty</a> </li>
 			<li> <a href="preSchedulingPage.php" id="schedule">Schedule Courses!</a> </li>
-			<li> <a href="adminHome.php" id="deadline">Change Deadline</a></li>
+			<li> <a href="manageSchedule.php" id="deadline">Manage Scheduled Courses</a></li>
             <li> <a href="viewPDF.php" id="deadline">View and Download Schedule in PDF</a></li>
 			<li> <a href="help.php" id="deadline">Help</a></li>
 		</ul>
