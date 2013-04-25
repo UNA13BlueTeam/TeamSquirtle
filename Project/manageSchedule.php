@@ -47,7 +47,7 @@
 						$times = preg_split('/\s+/', trim($row['timesOfDay']));
 						for($i = 0; $i < count($times); $i++)
 						{
-							echo "<option value='".$row['minutes']." ".$row['daysOfWeek']."/"."'>".$row['minutes']." ".$row['daysOfWeek']."/".$times[$i]."</option>";
+							echo "<option value='".$row['minutes']." ".$row['daysOfWeek']."/".$times[$i]."'>".$row['minutes']." ".$row['daysOfWeek']."/".$times[$i]."</option>";
 						}
 					}
 				?>

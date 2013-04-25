@@ -15,6 +15,6 @@
 		$delete = "DELETE FROM $db.unscheduledCourses WHERE course = '".trim($tempCourse[0])."' and section = '".trim($tempCourse[1])."'";
 		mysqli_query($link, $delete);
 	}
-	//header("Location: manageSchedule.php");
+	header("Location: manageSchedule.php");
 	
 include("includes/footer.php");?>
