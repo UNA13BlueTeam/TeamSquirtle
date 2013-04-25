@@ -1,0 +1,24 @@
+Throwaway Codes Index:
+	TeamSquirtle/Project/ThrowawayCodes/Scanner Testing
+		available rooms pseudocode (from Skydrive -> Design Docs)
+		AvailableRoomsScanner.php
+		
+		class times pseudocode (from Skydrive -> Design Docs)
+		classtimesscanner.php
+		
+		conflict times pseudocode (from Skydrive -> Design Docs)
+		conflicttimesscanner.php
+		
+		courses to schedule pseudocode (from Skydrive -> Design Docs)
+		ctsscanner.php
+		
+		faculty pseudocode (from Skydrive -> Design Docs)
+		facultyScanner.php
+		
+		password pseudocode (somebody's got it, I think Cody does)
+		passwordScanner.php
+		
+		prereq pseudocode (from Skydrive -> Design Docs)
+		prereqscanner.php
+		
+		

@@ -1,9 +1,0 @@
-Testing:	Prerequisite file upload
-
-Tested by:	Jared Cox
-
-Testing date:	April 10, 2013
-
-File name				Testing Result (E = expected result; U = unexpected result)
-prereq001.txt		(U)Gave me an error with max elements on the line.  Fixed that, then got
-						an insertion failed error on an empty line.

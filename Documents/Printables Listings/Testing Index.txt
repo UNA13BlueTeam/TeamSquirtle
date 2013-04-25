@@ -1,0 +1,116 @@
+Testing Index:  
+	(Test files binder should be built in this order,
+		this is basically the index/table of contents
+		page for the test files)
+	Singular Test Cases
+		TeamSquirtle/TestFiles/availableRooms
+			File Index
+			No Error Files
+			One Error Files
+			Multiple Error Files
+			
+		TeamSquirtle/TestFiles/classtimes
+			File Index
+			No Error Files
+			One Error Files
+			Multiple Error Files
+			
+		TeamSquirtle/TestFiles/conflicttimes
+			File Index
+			No Error Files
+			One Error Files
+			Multiple Error Files
+			
+		TeamSquirtle/TestFiles/coursestoschedule
+			File Index
+			No Error Files
+			One Error Files
+			Multiple Error Files
+			
+		TeamSquirtle/TestFiles/facultyMembers
+			File Index
+			No Error Files
+			One Error Files
+			Multiple Error Files
+			
+		TeamSquirtle/TestFiles/passwordscanner		(may just ignore this one?)
+			P1
+			P2
+		TeamSquirtle/TestFiles/prerequisites
+			File Index
+			No Error Files
+			One Error Files
+			Multiple Error Files
+			
+		
+	Complete Scenarios
+		TeamSquirtle/TestFiles/SchedulingAlgorithmTestScenarios
+			/Small Scenarios/
+				No Error/Scenario1
+					7 txt files (alpha order, preference file last)
+					Schedule Output file
+					Array View file					
+				One Error/Scenario1
+					8 txt files (INDEX-FILE first, as it details the 
+								errors in the scenario.  PREFERENCE 
+								last, after the 6 files that would be
+								uploaded)
+				Many Errors/Scenario1
+					8 txt files (INDEX-FILE first, as it details the 
+								errors in the scenario.  PREFERENCE 
+								last, after the 6 files that would be
+								uploaded)
+		
+		TeamSquirtle/TestFiles/SchedulingAlgorithmTestScenarios
+			/Medium Scenarios/	
+				No Error/Scenario1
+					7 txt files (alpha order, preference file last)
+				No Error/Scenario2
+					7 txt files (ignore "description.txt", preference file last)
+					schedule output file
+					array view file
+				No Error/Scenario3
+					7 txt files (alpha order, preference file last)
+				One Error/Scenario1
+					READ BEFORE TESTING file (details the errors in
+												the scenario)
+					7 txt files (alpha order, preference file last)
+				One Error/Scenario2
+					FILE-INDEX file (details errors in the scenario)
+					7 txt files (alpha order, preference file last)
+				Many Errors/Scenario1
+					READ BEFORE TESTING file (details the errors in
+													the scenario)
+					7 txt files (alpha order, preference file last)
+				Many Errors/Scenario2
+					FILE-INDEX file (details errors in the scenario)
+					7 txt files (alpha order, preference file last)
+		
+		TeamSquirtle/TestFiles/SchedulingAlgorithmTestScenarios
+			/Large Scenarios/	
+				No Error/Scenario1
+					7 txt files (alpha order, preference file last)
+				No Error/Scenario2
+					Schedule Output
+					7 txt file (alpha order, preference file last)
+					(maybe Testing Results Overview)
+				One Error/Scenario1
+					READ BEFORE TESTING file (details the errors in
+												the scenario)
+					7 txt files (alpha order, preference file last)
+				One Error/Scenario2
+					FILE-INDEX file (details errors in the scenario)
+					7 txt files (alpha order, preference file last)
+				Many Errors/Scenario1
+					READ BEFORE TESTING file (details the errors in
+												the scenario)
+					7 txt files (alpha order, preference file last)
+				Many Errors/Scenario2
+					FILE-INDEX file (details errors in the scenario)
+					7 txt files (alpha order, preference file last)
+					
+				
+					
+				
+						
+		

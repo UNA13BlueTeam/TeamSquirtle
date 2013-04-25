@@ -1,0 +1,35 @@
+I don't know how/where to classify the following:
+
+	Everything about:
+		Project/css
+			   /fpdf17
+			   /generatedFiles
+			   /img
+			   /includes
+			   /restricted
+			   /setup
+	
+	adminSetUp.php
+	conflicts.php (this may be an unneccessary file)
+	doAdminSetup.php
+	doFacultySetup.php
+	doSetup.php
+	facultyScanner.php (probably can be deleted)
+	facultySetup.php
+	setup.php
+	timeSlots.php (another maybe unneccessary)
+	
+	TeamSquirtle/phpMyAdmin
+		Don't have a clue what we should do with this as far
+		as compiling our documentation and whatnot
+		
+	TeamSquirtle/Mockups
+		All of our Mockups are in the Spec Doc so they may not
+		need to go in the rest of our documentation.  If it does,
+		I don't know where it needs to go.
+		
+	TeamSquirtle/Documents
+		We might print out the Project Docs and include them
+		Helper Docs are probably unneccessary
+		And I'm assuming Cody is already keeping up with all of the
+			Client/Team questions and all of our minutes.

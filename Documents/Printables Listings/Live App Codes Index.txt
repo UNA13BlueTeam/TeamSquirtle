@@ -1,0 +1,74 @@
+Live App Codes Index
+	(Doing my best to organize by functionality, I will need help with this)
+	Universal Functionality
+		global.php (there's also a global.php in includes/, one is probably unneccessary)
+		index.php
+		login.php
+		logout.php
+		
+	Admin-Specific Functionality
+		Home
+			adminHome.php
+			manageClass.php
+			manageTimeSlots.php
+			manageFaculty.php
+			manageRooms.php
+			manageSchedule.php
+			help.php
+		Manage Classes
+			addClass.php
+			doAddClass.php
+			TeamSquirtle/TestFiles/coursestoschedule/SQASignOff
+			TeamSquirtle/TestFiles/prerequisites/SQASignOff
+			TeamSquirtle/TestFiles/conflicttimes/SQASignOff
+			removeCourse.php
+			doRemoveCourse.php
+		Manage Time Slots
+			addTimeSlot.php
+			doAddTimeSlot.php
+			TeamSquirtle/TestFiles/classtimes/SQASignOff
+			doRemoveTimeSlots.php
+		Manage Faculty
+			addFaculty.php
+			doAddFaculty.php
+			TeamSquirtle/TestFiles/faculty/SQASignOff
+			doRemoveFaculty.php
+		Manage Rooms
+			addRoom.php
+			doAddRoom.php
+			TeamSquirtle/TestFiles/availableRooms/SQASignOff
+			doRemoveRooms.php
+		Manage Schedule
+			doRemoveScheduledCourses.php
+			removeCourse.php
+		Options
+			adminActions.php
+	
+	Faculty-Specific Functionality
+		Home
+			facultyHome.php
+			facultyHelp.php
+		Preference Management
+			pickCourses.php
+			timePreference.php
+			doPickCourses.php
+	
+	Scheduling Algorithm
+		Project/Scanners/schedulingAlgorithmPseudocode
+		classes.php
+		preSchedulingPage.php
+		schedulingAlgorithm.php	
+		
+	Schedule-View Related
+		facultySchedule.php
+		pdf.php
+		roomSchedule.php
+		scheduleHome.php
+		viewPDF.php
+		viewSchedule.php
+	
+
+		
+		
+			
+		
