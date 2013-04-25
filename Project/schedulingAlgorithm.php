@@ -313,6 +313,7 @@
 	if(($facultyMissingFlag == false) and ($coursesMissingFlag == false) and ($classTimesMissingFlag == false) and ($roomsMissingFlag == false))
 	{
 		//Main loop to iterate through array of courses to schedule
+		$outFile = fopen("generatedFiles/unscheduled.txt", "w");
 		while ($ctsIndex < count($coursesToSchedule))
 		{//while there are courses left to schedule
 		
@@ -395,7 +396,6 @@
 			if (count($facultyPQ) == 0)
 			{
 				// Put courseToSchedule[ctsIndex] on array of unscheduled courses “No faculty selected coursesToSchedule[ctsIndex].courseName”
-				$outFile = fopen("generatedFiles/unscheduled.txt", "w");
 				
 				echo "<br>EMPTY PQ   $currentSectionNumber<br>";
 				while($scheduledSections < ($daySections + $nightSections))
@@ -410,14 +410,13 @@
 				}
 				for($i = 0; $i < $coursesToSchedule[$ctsIndex]->internetSections; $i++)
 				{
-					$output = "$courseNamer-$currentSectionNumber:  Internet section. Must be scheduled manually.\r";
+					$output = "$courseNamer-$currentSectionNumber:  Internet section must be scheduled manually.\r";
 					fwrite($outFile, $output);
 					$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 1)";
 					$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 					$scheduledSections++;
 					$currentSectionNumber++;
 				}	
-				fclose($outFile);
 			}
 			else // we have a priority queue of faculty members who wish to teach the current course
 			{
@@ -866,7 +865,7 @@
 			}//endelse
 			
 			//We reach this block because the priority queue is empty or we ran out of class times
-			if(($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSections)))
+			if(($scheduledSections < ($daySections + $nightSections + $coursesToSchedule[$ctsIndex]->internetSection)))
 			{
 				// Pushes the sections that haven't been scheduled into the list of unscheduled sections
 				while($scheduledSections < ($daySections + $nightSections))
@@ -875,11 +874,10 @@
 					echo "<br><h3> ENTERED TEST LOOP </h3><br>";
 					$courseToPush = $coursesToSchedule[$ctsIndex]->name."-".$currentSectionNumber;
 					array_push($unscheduledCourses, $courseToPush);
-					$outFile = fopen("generatedFiles/unscheduled.txt", "w");
 					$output = "$courseToPush:  ";
 					if($facultyPQIndex >= count($facultyPQ))
 					{
-						$output = $output . "Not enough faculty chose this course to fill in all sections.\r"
+						$output = $output . "Not enough faculty chose this course to fill in all sections.\r";
 					}
 					if($classTimesIndex >= count($classTimes))
 					{
@@ -892,10 +890,13 @@
 					$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 					$scheduledSections++;
 					$currentSectionNumber++;
+					
 				}
 				for($i = 0; $i < $coursesToSchedule[$ctsIndex]->internetSections; $i++)
 				{
 					$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 1)";
+					$output = "$courseToPush: Internet sections GARBLE must be scheduled manually.\r";
+					fwrite($outFile, $output);
 					$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 					$scheduledSections++;
 					$currentSectionNumber++;
@@ -929,6 +930,7 @@
 	
 	// Prints out the array of faculty members that have not met their minimum hours requirement
 	// Also prints to a file named facultyMinimumRequirements.txt in the generated files folder
+	fclose($outFile);
 	$outFile = fopen("generatedFiles/facultyMinimumRequirements.txt", "w");
 	
 	for($i = 0; $i < count($arrayOfFaculty); $i++)
