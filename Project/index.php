@@ -13,9 +13,9 @@
     <body>
     <div class="nav">
     <a href="index.php">University of North Alabama</a>
-    <form action="index.php" method="POST">
+    <form action="scheduleHome.php" method="POST">
         <input type="hidden" name="loggingIn" value="true">
-        <input type="submit" value="Log In" id="login">
+        <input type="submit" value="View Schedule" id="login">
     </form>
     <?php
         global $host, $user, $pass, $db, $port;
@@ -37,7 +37,7 @@
         if(!isset($_POST['flag']) and !isset($_POST['loggingIn']))
         {
             // $_SESSION['loggedIn'] = false;
-            include("scheduleHome.php");
+			include("login.php");
         }elseif(!isset($_POST['flag'])){
             include("login.php");
         }else
@@ -46,25 +46,21 @@
             $username = $_POST['username'];
             global $host, $user, $pass, $db, $port;
             $link = mysqli_connect($host, $user, $pass, $db, $port);
-            $query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+            
+			$query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
             $result = mysqli_query($link, $query);
             $temp = array();
             $temp = mysqli_fetch_assoc($result);
-            $auth = $temp['permission'];
+            
+			$auth = $temp['permission'];
             $setup = $temp['firstLogOn'];
             $firstname = $temp['firstName'];
             $lastname = $temp['lastName'];
             $deptName = $temp['deptName'];
             $semesterName = $temp['semesterName'];
-            echo($setup);
-            // while($row = mysqli_fetch_row($result))
-            // {
-            //     foreach($row as &$value)
-            //     {
-            //         array_push($_SESSION, $value);
-            //     }
-            // }
-            $_SESSION['permission'] = $auth;
+			
+			$_SESSION['permission'] = $auth;
+			
             if($auth==1)
             {
                 $_SESSION['loggedIn'] = true;
@@ -98,11 +94,11 @@
             }else
             {
                 // User fails authentication. Output login page.
-                // $_SESSION['loggedIn'] = false;
+                $_SESSION['loggedIn'] = false;
                 $_SESSION['username'] = NULL;
                 $_SESSION['permission'] = NULL;
                 include("login.php");
-                echo("<p> There was a problem logging in. Please try again.</p>");
+                echo("<p style='color:red; float:left;'> There was a problem logging in. Please try again.</p>");
             }
         }
     ?>
