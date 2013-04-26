@@ -1,4 +1,4 @@
-<?php include("includes/facultyHeader.php"); ?>
+<?php include("includes/header.php"); ?>
 
 <h1>Remove Preferences</h1><br />
 <hr /><br />

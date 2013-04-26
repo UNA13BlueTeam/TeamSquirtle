@@ -53,7 +53,8 @@
   <ul>
     <li><a href="facultyHome.php" id="home">Home</a></li>
     <li><a href="viewschedule.php" id="timeSlots">View Schedules</a> </li>
-    <li><a href="Pickcourses.php" id="building">Pick Courses</a></li>
+    <li><a href="pickCourses.php" id="pickCourses">Pick Courses</a></li>
+	<li><a href="facultyActions.php" id="changePassword">Change Password</a></li>
     <li><a href="facultyHelp.php" id="help">Help</a></li>
   </ul>
 </div>

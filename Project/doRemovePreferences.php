@@ -1,5 +1,6 @@
-<?php include("includes/facultyHeader.php"); 
+<?php include("includes/global.php"); 
 
+	global $host, $user, $pass, $db, $port;
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
 	
 	$checkedPrefs = $_POST['check'];
