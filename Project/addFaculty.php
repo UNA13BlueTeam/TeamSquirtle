@@ -8,7 +8,7 @@
 		<input type="hidden" name="flag" value="form">
 		<div class="row">
 			<label for="name">Name: </label>
-			<input id="name" name="name" type="text" maxlength="25"/>
+			<input id="name" name="name" placeholder="Ex. Smith, John" type="text" maxlength="25"/>
 		</div> <br> <hr>
 		<div class="row">
 			<label for="yos">Years of Service: </label>

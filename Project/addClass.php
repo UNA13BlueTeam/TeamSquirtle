@@ -39,11 +39,11 @@
 		</div> <br> <hr>
 		<div class="row">
 			<label for="prereq">Prerequisites</label>
-			<input id="prereq" name="prereq" type="text" maxlength="15"/>
+			<input id="prereq" name="prereq" placeholder="Ex. AB110&nbsp;&nbsp;AB120" type="text" maxlength="15"/>
 		</div> <br> <hr>
 		<div class="row">
 			<label for="conflict">Conflicts</label>
-			<input id="conflict" name="conflict" type="text" maxlength="15"/>
+			<input id="conflict" name="conflict" placeholder="Ex. TR/09:30&nbsp;&nbsp;MWF/13:00" type="text" maxlength="200"/>
 		</div> <br> <hr>
 			<input id="button" type="submit" name="submit" value="Submit" />
 			<input id="button" type="reset" name="reset" value="Reset"  />

@@ -17,7 +17,7 @@
 		</div> <br> <hr>
 		<div class="row">
 			<label for="conflict">Start Time</label>
-			<input id="timesOfDay" name="timesOfDay" type="text" size="15" maxlength="231"/>
+			<input id="timesOfDay" name="timesOfDay" placeholder="Ex. 00:00" type="text" size="15" maxlength="231"/>
 		</div> <br> <hr>
 		<div class="row">
 			<input type="submit" name="submit" value="Submit" />

@@ -20,13 +20,15 @@
 		</div> <br> <hr>
 		<div class="row">
 			<label for="roomName">Room Name</label>
-			<input id="roomName" name="roomName" type="text" size="15" maxlength="15"/>
-		</div> <br> <hr>
+			<input id="roomName" name="roomName" type="text" placeholder="Ex. Keller&nbsp;&nbsp;210" size="15" maxlength="15"/>
+			<br>
+		</div><hr>
 		<div class="row">
 			<input type="submit" name="submit" value="Submit" />
 			<input type="reset" name="submit" value="Reset"  />
 		</div>
 	</form>
+	<br><br>
 </div>
 
 <div class="goldBox">
