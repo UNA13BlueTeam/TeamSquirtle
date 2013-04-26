@@ -9,8 +9,8 @@
 	global $host, $user, $pass, $db, $port;
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
 
-	$un = $_SESSION["username"];
-	$infoQuery = "SELECT * FROM users WHERE username = '$un'";
+	$un = $_SESSION["username"];								//I don't think this block of statements (12-18) need
+	$infoQuery = "SELECT * FROM users WHERE username = '$un'";	//to happen on the login page. Can we fix that?
 	$infoResults = mysqli_query($link, $infoQuery);
 	$userInfo = mysqli_fetch_assoc($infoResults);
 	$deptName 	= $userInfo['deptName'];
