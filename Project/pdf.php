@@ -10,9 +10,9 @@ class PDF extends FPDF
 
     function ScheduleTable($title)
     {
-        $this->Cell(40, 10, $title, 15);
+        $this->Multicell(0, 11, $title, 15);
         $this->Ln();
-        $this->SetXY(10, 45);
+        $this->SetXY(10, 62);
         $this->SetFont('', 'B', '10');
         $this->SetFillColor(128, 128, 128);
         $this->SetTextColor(255);
@@ -29,7 +29,7 @@ class PDF extends FPDF
         $fill = false;
         global $host, $user, $pass, $db, $port;
         $link = mysqli_connect($host, $user, $pass, $db, $port);
-        $scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC";
+        $scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC, section ASC";
         $results = mysqli_query($link, $scheduledQuery);
         while($row = mysqli_fetch_assoc($results))
         {
