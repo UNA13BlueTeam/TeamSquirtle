@@ -1,9 +1,10 @@
 <?php 
-	include("includes/header.php"); 
+	include("includes/header.php");
+	include_once("includes/global.php");
 ?>
 
 <?php
-	global $host, $user, $pass, $db, $port;
+	global $host, $user, $pass, $db, $port, $deptName;
  	$link = mysqli_connect($host, $user, $pass, $db, $port);
 	
 	// Gets the department name and semester name from the database
@@ -11,7 +12,7 @@
 	$result = mysqli_query($link, $query);
 	$deptInfo = mysqli_fetch_row($result);
 	
-	echo("<h1>".$deptInfo[0]."</h1>");
+	echo("<h1>".$deptName."</h1>");
 	echo ("<h2>".$_SESSION['firstname']." ".$_SESSION['lastname']."</h2>");
 	echo("<h3> Admin </h3>");
 	echo "<h3>".$deptInfo[1]."</h3>";
@@ -22,7 +23,7 @@
 	<a href="roomSchedule.php"><button>Room View</button></a>	
 	<a href="scheduleHome.php"><button>Student View</button></a>
 	<?php
- 		$scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC";
+ 		$scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC, section ASC";
  		$results = mysqli_query($link, $scheduledQuery);
  		$scheduled = array();
 
