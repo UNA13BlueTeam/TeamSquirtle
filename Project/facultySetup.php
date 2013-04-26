@@ -37,9 +37,9 @@
             </form>
         </div>
         <?php 
-            if(isset($_POST['invalid']))
+            if(isset($_POST['mismatched']))
             {
-                if($_POST['invalid']==true)
+                if($_POST['mismatched']==true)
                 {
                     echo('<h5 style="color:red;">Your passwords did not match. Please try again.</h5>');
                 }

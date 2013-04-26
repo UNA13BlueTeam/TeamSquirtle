@@ -17,8 +17,23 @@
 	}
 	else
 	{
-		$_POST['invalid'] = true;
-		header("Location: facultySetUp.php");
+		if($password != $passCheck)
+		{
+			$_POST['mismatched'] = true;
+		}
+		else
+		{
+			$_POST['invalid'] = true;
+		}
+
+		if($_POST['actions'] == true)
+		{
+			header("Location: facultyActions.php");
+		}
+		else
+		{
+			header("Location: facultySetup.php");
+		}
 	}
 	
 	
