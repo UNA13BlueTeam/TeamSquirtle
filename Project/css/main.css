@@ -113,6 +113,10 @@ div.homeSchedule{
 	text-align:middle;
 }
 
+div.homeSchedule #manageSchedule{
+	float:left;
+}
+
 div.homeLinks{
 	border-radius: 7px;
 	/*border-style: solid;
@@ -135,6 +139,7 @@ div.homeLinks{
 }
 
 div.purpleBox{
+
 	display: block;
 
 	border-radius: 7px;
@@ -178,6 +183,10 @@ div.purpleBox#login div.row img{
 	margin: 79px;
 }
 
+div.purpleBox#manageSchedule{
+	margin-bottom: 15px;
+}
+
 div.goldBox{
 	display: block;
 
@@ -201,7 +210,7 @@ div.goldBox{
 }
 
 form.inputForm div.row{
-	margin-botto3: 1p5;
+	/*margin-bottom: 15;*/
 	height: auto;
 }
 
@@ -216,6 +225,18 @@ form.inputForm div.row input, select{
 
 form.inputForm input#button{
 	height: auto;
+}
+
+div.instructions{
+	float:right;
+	color: black;
+	font-size: 10pt;
+	margin-top:5px;
+}
+
+div.instructions p{
+	float:right;
+	margin: 0px;
 }
 
 div.footer{
