@@ -64,7 +64,7 @@
  				$semester = str_replace(' ', '', $semesterName);
  				$fileName = "generatedFiles/schedule.pdf";
  				$archive = "generatedFiles/schedules/".$semester.".pdf";
- 				$title = 'Schedule for Department of '.$deptName;
+ 				$title = "Schedule for Department of ".$deptName."\n\n".$semesterName;
 
  				$pdf = new PDF();
  				$pdf->SetFont('Helvetica', '', 30);
@@ -80,6 +80,7 @@
  				generatePrereqs();
  				generateConflicts();
 
+				clearFaculty();
  				clearClasses();
  				clearClassTimes();
  				clearRooms();

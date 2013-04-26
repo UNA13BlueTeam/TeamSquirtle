@@ -1,6 +1,6 @@
 <?php 
 	include("includes/header.php");
-	include("includes/global.php");
+	include_once("includes/global.php");
 ?>
 
 <h1>Schedule</h1>
@@ -20,7 +20,7 @@
             	<th>Instructor</th>
             </tr>
 			');
-			// $row = mysqli_fetch_row($results, MYSQLI_BOTH);
+			
 		echo("<tr></tr>");
 			while($row = mysqli_fetch_assoc($results))
 			{
