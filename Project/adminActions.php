@@ -55,11 +55,11 @@
  		global $host, $user, $pass, $db, $port, $deptName, $semesterName;
  		$link = mysqli_connect($host, $user, $pass, $db, $port);
  		if(isset($_POST)){
- 			if(isset($_POST['department']))
+ 			if(isset($_POST['department']) and $_POST['department'] != NULL)
  			{
  				$query = "UPDATE users SET deptName = '".$_POST['department']."'";
  				mysqli_query($link, $query);
- 			}elseif(isset($_POST['newSemester']))
+ 			}elseif(isset($_POST['newSemester']) and $_POST['newSemester'] != NULL)
  			{
  				$semester = str_replace(' ', '', $semesterName);
  				$fileName = "generatedFiles/schedule.pdf";
@@ -91,7 +91,7 @@
  				$query = "UPDATE users SET semesterName = '".$_POST['newSemesterName']."'";
  				mysqli_query($link, $query);
  				header("Location: adminHome.php");
- 			}elseif(isset($_POST['deadline']))
+ 			}elseif(isset($_POST['deadline']) and $_POST['deadline'] != NULL)
  			{
  				$deadline = $_POST['deadline'];
  				// $deadline = date('YmdHi');
@@ -101,7 +101,7 @@
  				$query = "UPDATE users SET deadline = ".$deadline;
  				mysqli_query($link, $query);
 
- 			}elseif(isset($_POST['nameFlag']))
+ 			}elseif(isset($_POST['nameFlag']) and $_POST['nameFlag'] != NULL)
  			{
  				global $un;
  				$query = "UPDATE users SET firstName = '".$_POST['firstName']."', lastName = '".$_POST['lastName']."' WHERE username = '".$un."'";
