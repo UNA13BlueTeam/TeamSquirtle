@@ -7,6 +7,9 @@
 	// error_reporting(E_ERROR);
 
 	date_default_timezone_set('America/Chicago');
+	if(isset($_SESSION['loggedIn']) == false or $_SESSION['loggedIn'] == false){
+		header("Location: logout.php");
+	}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -16,7 +19,7 @@
 		<link rel="icon" type="image/png" href="img/squirtle.png">
 	</head>
 	<body>
-		<?php global $deptAbbrev;
+		<?php
 			$auth = $_SESSION['permission'];
 			if($auth == 1)
 			{
@@ -44,7 +47,6 @@
 							<a href="facultyHome.php" id="home">Home</a>&nbsp;|&nbsp;
 							<a href="viewSchedule.php" id="timeSlots">View Schedules</a> &nbsp;|&nbsp;
 							<a href="pickCourses.php" id="building">Pick Courses</a>&nbsp;|&nbsp;
-							<a href="facultySetup.php" id="building">Options</a>&nbsp;|&nbsp;
 							<a href="facultyHelp.php" id="help">Help</a>&nbsp;|&nbsp;
 							<a href="logout.php" id="logout">Log Out</a>
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
