@@ -63,7 +63,7 @@
 				 The deadline was '.strftime("%B %d, %Y", $deadline).'.</p>');
 	}
 	
-	//header("Location: pickCourses.php");
+	header("Location: pickCourses.php");
 	
 	include("includes/footer.php"); 
 ?>
