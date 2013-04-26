@@ -6,116 +6,13 @@
 
 <h1>Manage Schedule</h1><br />
 
-<legend style="font-size:30px">Add Scheduled Course</legend>
-<div class="purpleBox">
-	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddScheduledCourse.php">
-		<input type="hidden" name="flag" value="form">
-		<div class="row">
-			<label for="course">Course</label>
-			<select name="course">
-				<?php
-					$query = "SELECT * FROM unscheduledCourses WHERE internet = 0";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_assoc($result))
-					{
-						echo "<option value='".$row['course']."-".$row['section']."'>".$row['course']."-".$row['section']."</option>";
-					}
-				?>
-			</select>
-		</div> <br> <hr>
-		<div class="row">
-			<label for="instructor">Instructor</label>
-			<select name="instructor">
-				<?php
-					$query = "SELECT * FROM users WHERE permission = 2";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_assoc($result))
-					{
-						echo "<option value='".$row['username']."'>".$row['firstName']." ".$row['lastName']."</option>";
-					}
-				?>
-			</select>
-		</div> <br> <hr>
-		<div class="row">
-			<label for="times">Time Slot</label>
-			<select name="times">
-				<?php
-					$query = "SELECT * FROM timeSlots";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_assoc($result))
-					{
-						$times = preg_split('/\s+/', trim($row['timesOfDay']));
-						for($i = 0; $i < count($times); $i++)
-						{
-							echo "<option value='".$row['minutes']." ".$row['daysOfWeek']."/".$times[$i]."'>".$row['minutes']." ".$row['daysOfWeek']."/".$times[$i]."</option>";
-						}
-					}
-				?>
-			</select>
-		</div> <br> <hr>
-		<div class="row">
-			<label for="rooms">Room</label>
-			<select name="rooms">
-				<?php
-					$query = "SELECT * FROM rooms";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_assoc($result))
-					{
-						echo "<option value='".$row['roomName']."'>".$row['roomName']."</option>";
-					}
-				?>
-			</select>
-		</div> <br> <hr>
-		<div class="row">
-			<input type="submit" name="submit" value="Submit" />
-			<input type="reset" name="submit" value="Reset"  />
-		</div>
-	</form>
-</div>
 
 
-<legend style="font-size:30px">Add Internet Course</legend>
-<div class="purpleBox">
-	<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddInternetCourse.php">
-		<input type="hidden" name="flag" value="form">
-		<div class="row">
-			<label for="course">Course</label>
-			<select name="course">
-				<?php
-					$query = "SELECT * FROM unscheduledCourses WHERE internet = 1";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_assoc($result))
-					{
-						echo "<option value='".$row['course']."-".$row['section']."'>".$row['course']."-".$row['section']."</option>";
-					}
-				?>
-			</select>
-		</div> <br> <hr>
-		<div class="row">
-			<label for="instructor">Instructor</label>
-			<select name="instructor">
-				<?php
-					$query = "SELECT * FROM users WHERE permission = 2";
-					$result = mysqli_query($link, $query);
-					while($row = mysqli_fetch_assoc($result))
-					{
-						echo "<option value='".$row['username']."'>".$row['firstName']." ".$row['lastName']."</option>";
-					}
-				?>
-			</select>
-		</div> <br> <hr>
-		<div class="row">
-			<input type="submit" name="submit" value="Submit" />
-			<input type="reset" name="submit" value="Reset"  />
-		</div>
-	</form>
-</div>
-
-<form name="RemoveScheduleForm" method="post" action="doRemoveScheduledCourses.php">
-<div class="homeSchedule">
+<div class="homeSchedule" id="manageSchedule">
+	<form name="RemoveScheduleForm" method="post" action="doRemoveScheduledCourses.php">
 	<h4>Schedule</h4>
 	<?php
-		$scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC";
+		$scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC, section ASC";
  		$results = mysqli_query($link, $scheduledQuery);
  		$scheduled = array();
 
@@ -156,6 +53,113 @@
 			<input type="submit" name="submit" value="Remove" />
 			<input type="reset" name="submit" value="Reset"  />
 		</div>
+	</form>
+</div>
+
+<div class="row">
+	<div class="purpleBox" id="manageSchedule">
+		<legend style="font-size:30px">Add Scheduled Course</legend>
+		<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddScheduledCourse.php">
+			<input type="hidden" name="flag" value="form">
+			<div class="row">
+				<label for="course">Course</label>
+				<select name="course">
+					<?php
+						$query = "SELECT * FROM unscheduledCourses WHERE internet = 0";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_assoc($result))
+						{
+							echo "<option value='".$row['course']."-".$row['section']."'>".$row['course']."-".$row['section']."</option>";
+						}
+					?>
+				</select>
+			</div> <br> <hr>
+			<div class="row">
+				<label for="instructor">Instructor</label>
+				<select name="instructor">
+					<?php
+						$query = "SELECT * FROM users WHERE permission = 2";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_assoc($result))
+						{
+							echo "<option value='".$row['username']."'>".$row['firstName']." ".$row['lastName']."</option>";
+						}
+					?>
+				</select>
+			</div> <br> <hr>
+			<div class="row">
+				<label for="times">Time Slot</label>
+				<select name="times">
+					<?php
+						$query = "SELECT * FROM timeSlots";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_assoc($result))
+						{
+							$times = preg_split('/\s+/', trim($row['timesOfDay']));
+							for($i = 0; $i < count($times); $i++)
+							{
+								echo "<option value='".$row['minutes']." ".$row['daysOfWeek']."/".$times[$i]."'>".$row['minutes']." ".$row['daysOfWeek']."/".$times[$i]."</option>";
+							}
+						}
+					?>
+				</select>
+			</div> <br> <hr>
+			<div class="row">
+				<label for="rooms">Room</label>
+				<select name="rooms">
+					<?php
+						$query = "SELECT * FROM rooms";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_assoc($result))
+						{
+							echo "<option value='".$row['roomName']."'>".$row['roomName']."</option>";
+						}
+					?>
+				</select>
+			</div> <br> <hr>
+			<div class="row">
+				<input type="submit" name="submit" value="Submit" />
+				<input type="reset" name="submit" value="Reset"  />
+			</div>
+		</form>
+	</div>
+
+	<div class="goldBox">
+		<legend style="font-size:30px">Add Internet Course</legend>
+		<form class="inputForm" id="scheduleForm" name="scheduleForm" method="post" action="doAddInternetCourse.php">
+			<input type="hidden" name="flag" value="form">
+			<div class="row">
+				<label for="course">Course</label>
+				<select name="course">
+					<?php
+						$query = "SELECT * FROM unscheduledCourses WHERE internet = 1";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_assoc($result))
+						{
+							echo "<option value='".$row['course']."-".$row['section']."'>".$row['course']."-".$row['section']."</option>";
+						}
+					?>
+				</select>
+			</div> <br> <hr>
+			<div class="row">
+				<label for="instructor">Instructor</label>
+				<select name="instructor">
+					<?php
+						$query = "SELECT * FROM users WHERE permission = 2";
+						$result = mysqli_query($link, $query);
+						while($row = mysqli_fetch_assoc($result))
+						{
+							echo "<option value='".$row['username']."'>".$row['firstName']." ".$row['lastName']."</option>";
+						}
+					?>
+				</select>
+			</div> <br> <hr>
+			<div class="row">
+				<input type="submit" name="submit" value="Submit" />
+				<input type="reset" name="submit" value="Reset"  />
+			</div>
+		</form>
+	</div>
 </div>
 
 <?php include("includes/footer.php"); ?>
