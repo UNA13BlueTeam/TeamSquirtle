@@ -9,28 +9,13 @@
 	global $host, $user, $pass, $db, $port;
 	$link = mysqli_connect($host, $user, $pass, $db, $port);
 
-	if(isset($_SESSION['loggedIn']))
-	{
-		if($_SESSION['loggedIn']===true)
-		{
-			// echo("loggedIn = true <br>");
-			
-			$un = $_SESSION["username"];
-			$infoQuery = "SELECT * FROM users WHERE username = '$un'";
-			$infoResults = mysqli_query($link, $infoQuery);
-			$userInfo = mysqli_fetch_assoc($infoResults);
-			$deptName 	= $userInfo['deptName'];
-			$semesterName = $userInfo['semesterName'];
-			$deadline = $userInfo['deadline'];
-
-		}else
-		{
-			// echo("LoggedIn = false <br>");
-		}
-	}else
-	{
-		// echo("loggedIn unset. <br>");
-	}
+	$un = $_SESSION["username"];
+	$infoQuery = "SELECT * FROM users WHERE username = '$un'";
+	$infoResults = mysqli_query($link, $infoQuery);
+	$userInfo = mysqli_fetch_assoc($infoResults);
+	$deptName 	= $userInfo['deptName'];
+	$semesterName = $userInfo['semesterName'];
+	$deadline = $userInfo['deadline'];
 
 ################################################################
 // Table Clearing Functions
