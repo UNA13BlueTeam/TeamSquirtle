@@ -1,10 +1,9 @@
 <?php
 session_start();
 include("includes/db.php");
-//include("includes/global.php");
-include("pdf.php");
+include("includes/global.php");
+include("schedulePDF.php");
 
- //require('getInfo.php');\
 global $host, $user, $pass, $db, $port;
 $title = "Schedule for Department";
 

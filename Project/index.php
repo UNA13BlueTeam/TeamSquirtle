@@ -13,7 +13,7 @@
     <body>
     <div class="nav">
     <a href="index.php">University of North Alabama</a>
-    <form action="scheduleHome.php" method="POST">
+    <form action="viewSchedulePDF.php" method="POST">
         <input type="hidden" name="loggingIn" value="true">
         <input type="submit" value="View Schedule" id="login">
     </form>
