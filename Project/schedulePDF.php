@@ -27,7 +27,7 @@ class PDF extends FPDF
         $fill = false;
         global $host, $user, $pass, $db, $port;
         $link = mysqli_connect($host, $user, $pass, $db, $port);
-        $scheduledQuery = "SELECT distinct course FROM scheduledCourses ORDER BY course ASC";
+        $scheduledQuery = "SELECT * FROM scheduledCourses ORDER BY course ASC";
         $results = mysqli_query($link, $scheduledQuery);
         while($row = mysqli_fetch_assoc($results))
         {
@@ -44,7 +44,7 @@ class PDF extends FPDF
                 $resultGetName = mysqli_query($link, $getName);
                 $name = mysqli_fetch_assoc($resultGetName);
                 $this->Cell(50, 6, "", 'LR', 0, 'L', $fill);
-                $this->Cell(130, 6, $subrow['section']." ".$subrow['timeSlot']." ".$name['firstName']." ".$name['lastName'], 'LR', 0, 'L', $fill);
+                $this->Cell(130, 6, $subrow['section']." ".$subrow['timeSlot']."     ".$name['firstName']." ".$name['lastName']."     ".$subrow['roomName'], 'LR', 0, 'L', $fill);
                 $this->Ln();
                 $fill =! $fill;
             }
