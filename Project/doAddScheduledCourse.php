@@ -121,10 +121,6 @@
 				$timeToScheduleRoom = preg_split('/[\s+\/]/', $time);
 				$alreadyTeachingRoom = preg_split('/[\s+\/]/', $alreadyTeachingRooms[$i]);
 				
-				// Debugging statements
-				print_r($timeToScheduleRoom);
-				print_r($alreadyTeachingRoom);
-				
 				// $difference = the amount of minutes between the time in array of times 
 							// and the time they are already teaching
 				$difference = round(abs(strtotime($timeToScheduleRoom[2]) - strtotime($alreadyTeachingRoom[2])) / 60,2);
