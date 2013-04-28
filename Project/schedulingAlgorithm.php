@@ -877,7 +877,7 @@
 					$output = "$courseToPush:  ";
 					if($facultyPQIndex >= count($facultyPQ))
 					{
-						$output = $output . "Not enough faculty chose this course to fill in all sections.\r";
+						$output = $output . "Section was not chosen by any faculty member.\r";
 					}
 					if($classTimesIndex >= count($classTimes))
 					{
