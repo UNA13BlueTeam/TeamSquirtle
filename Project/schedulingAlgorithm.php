@@ -895,7 +895,7 @@
 				for($i = 0; $i < $coursesToSchedule[$ctsIndex]->internetSections; $i++)
 				{
 					$pushUnscheduledQuery = "INSERT INTO unscheduledCourses (course, section, internet) VALUES ('$courseNamer', '$currentSectionNumber', 1)";
-					$output = "$courseToPush: Internet sections GARBLE must be scheduled manually.\r";
+					$output = "$courseToPush: Internet sections must be scheduled manually.\r";
 					fwrite($outFile, $output);
 					$pushUnscheduledResult = mysqli_query($link, $pushUnscheduledQuery);
 					$scheduledSections++;
