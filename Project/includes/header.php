@@ -32,7 +32,7 @@
 							<a href="manageRooms.php" id="building">Manage Rooms</a>&nbsp;|&nbsp;
 							<a href="manageClass.php" id="classes">Manage Classes</a>&nbsp;|&nbsp;
 							<a href="manageFaculty.php" id="faculty">Manage Faculty</a>&nbsp;|&nbsp;
-							<a href="help.php" id="help">Help</a>&nbsp;|&nbsp;
+							<a href="includes/UserManual.pdf" id="help">Help</a>&nbsp;|&nbsp;
 							<a href="adminActions.php" id="help">Options</a>&nbsp;|&nbsp;
 							<a href="logout.php" id="logout">Log Out</a>
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
@@ -47,7 +47,7 @@
 							<a href="facultyHome.php" id="home">Home</a>&nbsp;|&nbsp;
 							<a href="viewSchedule.php" id="timeSlots">View Schedules</a> &nbsp;|&nbsp;
 							<a href="pickCourses.php" id="building">Pick Courses</a>&nbsp;|&nbsp;
-							<a href="facultyHelp.php" id="help">Help</a>&nbsp;|&nbsp;
+							<a href="includes/FacultyHelp.pdf" id="help">Help</a>&nbsp;|&nbsp;
 							<a href="logout.php" id="logout">Log Out</a>
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
 						</nav>
@@ -63,7 +63,7 @@
 							<a href="manageRooms.php" id="building">Manage Rooms</a>
 							<a href="manageClass.php" id="classes">Manage Classes</a>
 							<a href="manageFaculty.php" id="faculty">Manage Faculty</a>
-							<a href="help.php" id="help">Help</a>
+							<a href="includes/UserManual.pdf" id="help">Help</a>
 							<a href="logout.php" id="logout">Log Out</a>
 							<img src="img/unaLogo.png" alt="UNA Logo" id="logo" />
 						</nav>

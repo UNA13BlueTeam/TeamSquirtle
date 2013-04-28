@@ -1,5 +1,4 @@
 <?php 
-	// session_start();
 	include("includes/header.php");
 ?>
   
@@ -25,7 +24,6 @@
  		$scheduledQuery = "SELECT * FROM scheduledCourses WHERE facultyUser = '$facultyUser' ORDER BY course ASC";
  		$results = mysqli_query($link, $scheduledQuery);
  		$scheduled = array();
-		// $rows = count($scheduled); // define number of rows
 
 		echo('<table class="schedule">
             <tr>
@@ -34,7 +32,6 @@
             	<th>Location</th>
             </tr>
 			');
-			// $row = mysqli_fetch_row($results, MYSQLI_BOTH);
 		echo("<tr></tr>");
 			while($row = mysqli_fetch_assoc($results))
 			{
@@ -55,7 +52,7 @@
     <li><a href="viewschedule.php" id="timeSlots">View Schedules</a> </li>
     <li><a href="pickCourses.php" id="pickCourses">Pick Courses</a></li>
 	<li><a href="facultyActions.php" id="changePassword">Change Password</a></li>
-    <li><a href="facultyHelp.php" id="help">Help</a></li>
+    <li><a href="includes/FacultyHelp.pdf" id="help">Help</a></li>
   </ul>
 </div>
 <?php include ('includes/footer.php');?>

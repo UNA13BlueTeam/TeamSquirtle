@@ -77,7 +77,7 @@
 			<li> <a href="preSchedulingPage.php" id="schedule">Schedule Courses!</a> </li>
 			<li> <a href="manageSchedule.php" id="deadline">Manage Scheduled Courses</a></li>
             <li> <a href="viewPDF.php" id="deadline">View and Download Schedule in PDF</a></li>
-			<li> <a href="help.php" id="deadline">Help</a></li>
+			<li> <a href="includes/UserManual.pdf" id="deadline">Help</a></li>
 		</ul>
 </div>
 <?php include("includes/footer.php"); ?>
