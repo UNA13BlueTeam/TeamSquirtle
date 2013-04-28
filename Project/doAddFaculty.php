@@ -159,7 +159,7 @@ include("includes/footer.php");
 				}
 			}  
 				
-			if($errorFlag == true)
+			if(($errorFlag == true) && (strlen($line) != 0))
 			{
 				// If faculty already exist, then delete before submitting
 					
@@ -220,8 +220,11 @@ include("includes/footer.php");
 			}
 			else
 			{
-				echo $lineNumber . ": $line*" . "<br>";
-				echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
+				if(strlen($line) != 0)
+				{
+					echo $lineNumber . ": $line*" . "<br>";
+					echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
+				}
 			}						
 		}//end while loop  
 		return $errorInFile;
