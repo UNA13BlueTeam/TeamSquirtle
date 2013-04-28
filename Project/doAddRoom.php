@@ -52,6 +52,7 @@
         $roomInfo = array ();
         $lineNumber=1;
         $i=0;
+		$error = false;
          
         $inputFile = fopen ($fileName,"r");
         if($inputFile == NULL)
@@ -80,11 +81,16 @@
 	        	}           
 	        	if(strlen($line)!= 2)
 	        	{
-	        	    getInfo($line,$lineNumber,$roomInfo,$i); //process line information to determine if it is in valid form.
+	        	    $error = getInfo($line,$lineNumber,$roomInfo,$i); //process line information to determine if it is in valid form.
+					if($error)
+					{
+						$errorInFile = true;
+					}
 	        	   $lineNumber= $lineNumber + 1;
 	        	}
 	        }//end while loop  
         }//end else
+		return $errorInFile;
     }
     //************************************************************************************************
     // FUNCTIONS DEFINITIONS
@@ -364,6 +370,7 @@
         	}
 			echo $lineNumber . ":$line" . "<br>";
         }
+		return $errorInFile;
     }//end function    
       
 	         
@@ -408,6 +415,8 @@
 	        else 
 	        {
 	            printf("Error: Expecting a white space or tab after %s on line %d <br>",$line[$index-1],$lineNumber);
+				echo("$lineNumber:$line\r");
+				echo("<p class=\"error\"> Error discovered on line $lineNumber. Attempting to continue uploading file.</p>");
 	            return false;
 	        }
 	        

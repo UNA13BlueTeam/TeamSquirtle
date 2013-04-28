@@ -103,7 +103,7 @@ include("includes/footer.php");
 		
 		$lineNumber = 0; 
 		
-		
+		$errorInFile = false;
 		while(!feof($readFile))
 		{
 			$facultyName = "";
@@ -114,8 +114,8 @@ include("includes/footer.php");
 			$lineIndex = 0;
 			$line = fgets($readFile);
 			$line = trim($line);	
-			$errorFlag = false;
-			$errorInFile = false;
+			$errorFlag = true;
+			
 			
 			$lineNumber++;
 				
