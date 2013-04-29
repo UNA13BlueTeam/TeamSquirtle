@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("includes/db.php");
-include("includes/global.php");
+//include("includes/global.php");
 include("schedulePDF.php");
 
 global $host, $user, $pass, $db, $port;

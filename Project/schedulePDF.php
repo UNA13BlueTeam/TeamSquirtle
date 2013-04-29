@@ -44,7 +44,7 @@ class PDF extends FPDF
                 $resultGetName = mysqli_query($link, $getName);
                 $name = mysqli_fetch_assoc($resultGetName);
                 $this->Cell(50, 6, "", 'LR', 0, 'L', $fill);
-                $this->Cell(130, 6, $subrow['section']." ".$subrow['timeSlot']."     ".$name['firstName']." ".$name['lastName']."     ".$subrow['roomName'], 'LR', 0, 'L', $fill);
+                $this->Cell(130, 6, $subrow['section']."    ".$subrow['timeSlot']."     ".$name['firstName']." ".$name['lastName']."     ".$subrow['roomName'], 'LR', 0, 'L', $fill);
                 $this->Ln();
                 $fill =! $fill;
             }
