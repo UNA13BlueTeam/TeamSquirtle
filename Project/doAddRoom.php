@@ -18,7 +18,7 @@
 	{	
 		$type = $_POST['roomType'];
 		$size = $_POST['size'];
-		$name = $_POST['roomName'];
+		$name = strtoupper($_POST['roomName']);
 		
 		$outForm = "$type $size $name";
 		
