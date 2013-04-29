@@ -1,4 +1,3 @@
 *.pages
 .DS_Store
 *.db
-Project/includes/db.php
