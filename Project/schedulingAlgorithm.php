@@ -948,6 +948,6 @@
 	fclose($outFile);
 	
 	// Redirects back to the homepage. Comment to see debugging statements
-	//header("Location: adminHome.php");
+	header("Location: adminHome.php");
 	// We would start scheduling the faculty members that haven't met their minimum hours requirement here
 ?>
