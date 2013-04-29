@@ -1,5 +1,5 @@
 <?php 
-	$host = "127.0.0.1";
+	$host = "tunnel.pagodabox.com";
 	$user = "leonie";
 	$pass = "4EzvHW5C";
 	$db = "teamsquirtle";
