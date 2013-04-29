@@ -8,7 +8,7 @@
  	$link = mysqli_connect($host, $user, $pass, $db, $port);
 	
 	// Gets the department name and semester name from the database
-	$query = "SELECT deptName, semesterName FROM users WHERE username = 'admin'";
+	$query = "SELECT deptName, semesterName FROM users WHERE username = 'dpthead'";
 	$result = mysqli_query($link, $query);
 	$deptInfo = mysqli_fetch_row($result);
 	
