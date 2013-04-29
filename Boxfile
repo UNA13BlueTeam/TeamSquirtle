@@ -1,5 +1,6 @@
 web1:
     name: terese
+    php_display_errors: "0"
     php_extensions: 
         - mysqli
 db1:
