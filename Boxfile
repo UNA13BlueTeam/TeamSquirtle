@@ -1,5 +1,5 @@
 web1: #component type & number
-  name: teamsquirtle            #component settings
+  name: terese            #component settings
 	php_extensions: [mcrypt, mysqli, mbstring]
 db1: #component type & number 
   name: teamsquirtle            #component settings
