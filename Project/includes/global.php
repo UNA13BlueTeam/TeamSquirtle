@@ -1,6 +1,6 @@
 <?php
 	// session_start();
-    include_once("../db.php");
+    include_once("db.php");
 	//include_once("php_error.php");
 	// error_reporting(E_ERROR);
 

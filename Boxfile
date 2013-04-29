@@ -1,6 +1,7 @@
 web1:
   name: terese
-	php_extensions: mysqli
+	php_extensions: 
+		- mysqli
 db1:
   name: teamsquirtle
   type: mysql
