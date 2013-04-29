@@ -12,7 +12,7 @@
 	{
 		// Get variables from input form
 		$minutes = $_POST['minutes'];
-		$daysOfWeek = $_POST['daysOfWeek'];
+		$daysOfWeek = strtoupper($_POST['daysOfWeek']);
 		$timesOfDay = $_POST['timesOfDay'];
 		
 		$outForm = "$minutes $daysOfWeek"."/"."$timesOfDay";

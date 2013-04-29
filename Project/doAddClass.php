@@ -14,7 +14,7 @@
 	{
     	echo("<p>inserting</p>");
 		// Get variables from input form
-		$courseName = $_POST['course'];
+		$courseName = strtoupper($_POST['course']);
 		$dsection = $_POST['dsection'];
 		$nsection = $_POST['nsection'];
 		$isection = $_POST['isection'];
