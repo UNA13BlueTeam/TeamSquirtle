@@ -28,7 +28,7 @@
 
 		echo('<table class="schedule">
             <tr>
-            	<th>Rome</th>
+            	<th>Room</th>
             	<th>Information</th>
             </tr>
                 ');
