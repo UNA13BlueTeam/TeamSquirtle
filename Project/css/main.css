@@ -1,0 +1,358 @@
+.nav li{
+	display: inline;
+	margin-right: 4px;
+}
+
+.nav img{
+	float:right;
+}
+.nav{
+	background: #333;
+	color: white;
+	width: 100%;
+	padding: 30px;
+	padding-bottom: 14px;
+	margin: -30px;
+	margin-bottom: 5px;
+	-webkit-box-shadow:  0px 5px 10px 2px #ccc;
+        	box-shadow:  0px 5px 10px 2px #ccc;
+}
+.nav a{
+	font-family: helvetica;
+	font-size: 16pt;
+	color: white;
+	text-decoration: none;
+	/*border-right-style: solid;*/
+	border-width: 1px;
+	border-color: white;
+}
+
+.nav #logout{
+	border-width: 0px;
+	border-style: none;
+}
+
+.nav a:hover{
+	color: #ddd;
+}
+
+div.row{
+	width: 100%;
+}
+
+div.row img{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+input#login{
+    background:none!important;
+     border:none; 
+     padding:0!important;
+
+    font-family: helvetica;
+	font-size: 16pt;
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+
+	float:right;
+}
+
+input#login:hover{
+	color: #ddd;
+}
+
+body{
+	min-width:1200px;
+	padding: 20px;
+	font-family: Helvetica;
+	background: #eee;
+}
+div.content{
+	width: 100%;
+}
+body a{
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+}
+
+body a:hover{
+	color: #aaa;
+}
+
+footer{
+	
+}
+
+div.floater{
+	float:left;
+	margin-right: 90px;
+}
+
+div.homeSchedule{
+/*	
+	border-style: solid;
+	border-radius: 7px;
+	border-width: 2px;
+	border-color: #472783;
+	background-color: #beb0d9;
+	color: #472783;
+*/
+	border-radius: 7px;
+	-webkit-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+	   -moz-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+	        box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+
+	width: 840px;
+	/*width: 25%;*/
+	float:left;
+	margin-right:10px;
+	padding: 8px;
+	text-align:middle;
+}
+
+div.homeSchedule #manageSchedule{
+	float:left;
+}
+
+div.homeLinks{
+	border-radius: 7px;
+	/*border-style: solid;
+	border-width: 1px;
+	border-color: #fcc233;*/
+	background-color: #fce5ac;
+	color: #472783;
+	
+	-webkit-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+       -moz-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+            box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+
+	height: 400px;
+	min-width: 325px;
+	width: 15%;
+	float:left;
+	padding: 5px;	
+	text-align:middle;
+	float: right;
+}
+
+div.purpleBox{
+
+	display: block;
+
+	border-radius: 7px;
+	/*border-style: solid;
+	border-width: 1px;
+	border-color: #472783;*/
+	background-color: #beb0d9;
+	color: #472783;
+
+	-webkit-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.2) inset;
+       -moz-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.2) inset;
+            box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.2) inset;
+
+	min-height: 400px;
+	width: 25%;
+	float:left;
+	margin-right:5%;
+	padding: 7px;
+	text-align:middle;
+}
+
+div.purpleBox#login{
+	margin: 0px auto;
+	float: none;
+}
+div.purpleBox#login div.row{
+	margin: 0px auto;
+	width: 100%;
+	clear:both;
+}
+
+div.purpleBox#login div.row input[type="text"], input[type="password"]{
+	float:right;
+}
+
+div.purpleBox#login div.row input[type="submit"]{
+	margin-left:38%;
+}
+
+div.purpleBox#login div.row img{
+	margin: 79px;
+}
+
+div.purpleBox#manageSchedule{
+	margin-bottom: 15px;
+}
+
+div.goldBox{
+	display: block;
+
+	border-radius: 7px;
+	/*border-style: solid;
+	border-width: 1px;
+	border-color: #fcc233;*/
+	background-color: #fce5ac;
+	color: #472783;
+	
+	-webkit-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+       -moz-box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+            box-shadow: 1px 3px 15px 5px rgba(0, 0, 0, 0.15) inset;
+
+	min-height: 400px;
+	width: 25%;
+	float:left;
+	margin-right:5%;
+	padding: 7px;	
+	text-align:middle;		
+}
+
+form.inputForm div.row{
+	/*margin-bottom: 15;*/
+	height: auto;
+}
+
+form.inputForm label{
+	float: left;
+}
+
+form.inputForm div.row input, select{
+	float: right;
+	height: inherit;
+}
+
+form.inputForm input#button{
+	height: auto;
+}
+
+div.instructions{
+	float:right;
+	color: black;
+	font-size: 10pt;
+	margin-top:5px;
+}
+
+div.instructions p{
+	float:right;
+	margin: 0px;
+}
+
+div.footer{
+	padding-top: 20px;
+	clear: both;
+}
+
+p.error{
+	font-weight: bold;
+	color: red;
+}
+
+p.warning{
+	font-weight: bold;
+	color: orange;
+}
+
+td#section{
+	text-align: right;
+}
+
+.schedule {
+    border: solid #472783 2px;
+    border-radius: 6px;
+    box-shadow: 0 2px 2px #472783; 
+    background-color: #beb0d9;
+    border-spacing: 0;
+    width: 95%;
+    margin-left:auto; 
+    margin-right: auto;
+}
+.schedule tr:hover {
+    background: LemonChiffon;
+    transition: all 0.1s ease-in-out;     
+}    
+    
+.schedule td, .schedule th {
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    height: 30px;
+    padding: 10px;
+    text-align: left;    
+}
+
+.schedule th {
+    background-color: aliceblue; 
+    background-image: linear-gradient(top, #ebf3fc, LemonChiffon);
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;        
+    border-top: none;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+}
+
+.schedule td:first-child, .schedule th:first-child {
+    border-left: none;
+}
+
+.schedule th:first-child {
+    border-radius: 6px 0 0 0;
+}
+
+.schedule th:last-child {
+    border-radius: 0 6px 0 0;
+}
+.schedule tr:last-child td:first-child {
+    border-radius: 0 0 0 6px;
+}
+
+.schedule tr:last-child td:last-child {
+    border-radius: 0 0 6px 0;
+}
+
+.manage {
+    border: solid #472783 2px;
+    border-radius: 6px;
+    box-shadow: 0 2px 2px #472783; 
+    background-color: #beb0d9;
+    border-spacing: 0;
+    width: 70%;
+}
+.manage tr:hover {
+    background: LemonChiffon;
+    transition: all 0.1s ease-in-out;     
+}    
+    
+.manage td, .manage th {
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    height: 30px;
+    padding: 10px;
+    text-align: left;    
+}
+
+.manage th {
+    background-color: aliceblue; 
+    background-image: linear-gradient(top, #ebf3fc, LemonChiffon);
+    box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;        
+    border-top: none;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+    font-size: 30px;
+}
+
+.manage td:first-child, .manage th:first-child {
+    border-left: none;
+}
+
+.manage th:first-child {
+    border-radius: 6px 0 0 0;
+}
+
+.manage th:last-child {
+    border-radius: 0 6px 0 0;
+}
+.manage tr:last-child td:first-child {
+    border-radius: 0 0 0 6px;
+}
+
+.manage tr:last-child td:last-child {
+    border-radius: 0 0 6px 0;
+}
