@@ -77,6 +77,8 @@
 		global $link;
 		$query = "TRUNCATE TABLE scheduledCourses";
 		mysqli_query($link, $query);
+		$query = "TRUNCATE TABLE unscheduledCourses";
+		mysqli_query($link, $query);
 	}
 
 ################################################################
